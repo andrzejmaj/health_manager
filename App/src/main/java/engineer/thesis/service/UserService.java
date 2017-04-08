@@ -12,17 +12,14 @@ import java.util.Optional;
 
 public class UserService {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    UserRepository userRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public Optional<User> findByEmail(String email) {
-        User user  = userRepository.findByEmail(email);
-
-        if (user != null) {
-            return Optional.of(user);
-        }else{
-            return Optional.empty();
-        }
-
+        return Optional.ofNullable(userRepository.findByEmail(email));
     }
 }

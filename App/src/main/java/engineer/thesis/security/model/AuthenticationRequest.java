@@ -1,4 +1,4 @@
-package engineer.thesis.model.json;
+package engineer.thesis.security.model;
 
 import lombok.Data;
 

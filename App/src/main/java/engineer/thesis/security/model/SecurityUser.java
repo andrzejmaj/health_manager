@@ -17,7 +17,11 @@ public class SecurityUser implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     private boolean isEnabled;
 
-
+    public SecurityUser(Long id, String email, String password) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

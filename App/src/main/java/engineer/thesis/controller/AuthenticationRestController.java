@@ -1,11 +1,9 @@
 package engineer.thesis.controller;
 
 import engineer.thesis.model.User;
-import engineer.thesis.model.json.AuthenticationRequest;
+import engineer.thesis.security.model.AuthenticationRequest;
 import engineer.thesis.repository.UserRepository;
-import engineer.thesis.security.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
