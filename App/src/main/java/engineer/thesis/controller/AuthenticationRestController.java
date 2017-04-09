@@ -1,11 +1,11 @@
 package engineer.thesis.controller;
 
 import engineer.thesis.model.User;
+import engineer.thesis.security.TokenUtils;
 import engineer.thesis.security.model.AuthenticationRequest;
 import engineer.thesis.repository.UserRepository;
 import engineer.thesis.security.model.AuthenticationResponse;
 import engineer.thesis.security.model.SecurityUser;
-import engineer.thesis.security.TokenUtil;
 import engineer.thesis.security.model.SecurityUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class AuthenticationRestController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private TokenUtil tokenUtil;
+    private TokenUtils tokenUtil;
 
 
     @Autowired
@@ -45,7 +45,7 @@ public class AuthenticationRestController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        User user = userRepository.findByEmail(authenticationRequest.getEmail()));
+        User user = userRepository.findByEmail(authenticationRequest.getEmail());
         SecurityUser SecurityUser = SecurityUserFactory.create(user);
 
         String token = tokenUtil.generateToken(SecurityUser, device);
