@@ -3,12 +3,14 @@ package engineer.thesis.service;
 import engineer.thesis.model.User;
 import engineer.thesis.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 /**
  * Created by Kamil on 2017-04-08.
  */
+
 
 public class UserService {
 

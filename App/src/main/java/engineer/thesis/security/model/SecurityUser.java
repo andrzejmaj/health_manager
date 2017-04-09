@@ -15,7 +15,7 @@ public class SecurityUser implements UserDetails {
     private String email;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
-    private boolean isEnabled;
+
 
     public SecurityUser(Long id, String email, String password) {
         this.id = id;
@@ -55,6 +55,6 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isEnabled;
+        return true;
     }
 }
