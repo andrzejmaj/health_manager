@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.mobile.device.Device;
 
-/**
- * Created by Kamil on 2017-04-08.
- */
 @RestController
 public class AuthenticationRestController {
 

@@ -19,8 +19,6 @@ public class AdminRestService {
     @Autowired
     public static UserRepository userRepository;
 
-
-
     @RequestMapping(path = "/users" ,  method = RequestMethod.GET)
     public static List<User> getUsers() {
         return userRepository.findAll();
