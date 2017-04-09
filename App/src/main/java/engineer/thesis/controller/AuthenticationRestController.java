@@ -3,6 +3,10 @@ package engineer.thesis.controller;
 import engineer.thesis.model.User;
 import engineer.thesis.security.model.AuthenticationRequest;
 import engineer.thesis.repository.UserRepository;
+import engineer.thesis.security.model.AuthenticationResponse;
+import engineer.thesis.security.model.SecurityUser;
+import engineer.thesis.security.TokenUtil;
+import engineer.thesis.security.model.SecurityUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,25 +26,35 @@ public class AuthenticationRestController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private TokenUtil tokenUtil;
+
+
+    @Autowired
     private UserRepository userRepository;
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
-            @RequestBody AuthenticationRequest authenticationRequest , Device device){
+            @RequestBody AuthenticationRequest authenticationRequest, Device device) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getEmail(),
                         authenticationRequest.getPassword()
                 )
-            );
+        );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        User user = userRepository.findByEmail(authenticationRequest.getEmail());
+        User user = userRepository.findByEmail(authenticationRequest.getEmail()));
+        SecurityUser SecurityUser = SecurityUserFactory.create(user);
+
+        String token = tokenUtil.generateToken(SecurityUser, device);
 
 
+        return ResponseEntity.ok(new AuthenticationResponse(token));
     }
+
+
 }
 
 
