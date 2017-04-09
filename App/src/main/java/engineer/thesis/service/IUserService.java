@@ -1,9 +1,13 @@
 package engineer.thesis.service;
 
 import engineer.thesis.model.User;
+import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
+@Service
 public interface IUserService {
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
 }

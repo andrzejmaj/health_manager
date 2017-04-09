@@ -2,9 +2,6 @@ package engineer.thesis.security.model;
 
 import lombok.Data;
 
-/**
- * Created by Kamil on 2017-04-08.
- */
 @Data
 public class AuthenticationRequest {
 
