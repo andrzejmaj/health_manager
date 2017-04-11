@@ -1,6 +1,13 @@
 package engineer.thesis.security.model;
 
-public class AuthenticationResponse {
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+public class AuthenticationResponse implements Serializable {
+
+    private final long serialVersionUID = 1L;
 
     private final String token;
 

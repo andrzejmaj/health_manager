@@ -24,6 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public SecurityUser loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email:" + email + "not found"));
+        System.out.println(user);
         return SecurityUserFactory.create(user);
     }
 }

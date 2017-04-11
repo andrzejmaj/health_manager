@@ -35,7 +35,7 @@ public class AuthenticationRestController {
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody AuthenticationRequest authenticationRequest, Device device) {
-
+        System.out.println(authenticationRequest);
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getEmail(),

@@ -34,9 +34,9 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(tokenHeader);
-
+        System.out.println(token);
         String email = tokenUtils.getUsername(token);
-
+        System.out.println(email);
         if ( SecurityContextHolder.getContext().getAuthentication() == null){
 
             User user = userRepository.findByEmail(email);

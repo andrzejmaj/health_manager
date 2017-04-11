@@ -9,24 +9,26 @@ import java.nio.file.attribute.UserDefinedFileAttributeView;
  * Created by Kamil on 2017-04-07.
  */
 
-@Entity
 @Data
+@Entity
+@Table(name = "users")
 public class User {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique=true, nullable = false)
+    @GeneratedValue
     private Long id;
 
 
-    @Column(name = "EMAIL", nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "ROLE", nullable = false)
+    @Column(name = "role", nullable = false)
     private UserRole role;
 
     public Long getId() {
