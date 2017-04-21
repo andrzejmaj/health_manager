@@ -2,11 +2,8 @@ package engineer.thesis.controller;
 
 import engineer.thesis.model.User;
 import engineer.thesis.security.TokenUtils;
-import engineer.thesis.security.model.AuthenticationRequest;
+import engineer.thesis.security.model.*;
 import engineer.thesis.repository.UserRepository;
-import engineer.thesis.security.model.AuthenticationResponse;
-import engineer.thesis.security.model.SecurityUser;
-import engineer.thesis.security.model.SecurityUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -54,6 +51,11 @@ public class AuthenticationRestController {
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 
+    @RequestMapping(path = "/register", method = RequestMethod.POST)
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
+
+
+    }
 
 }
 
