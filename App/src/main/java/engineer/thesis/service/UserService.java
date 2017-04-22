@@ -31,7 +31,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<User> registerNewUser(RegisterRequest registerRequest) {
+    public Optional<User> registerNewUser(RegisterRequest registerRequest, UserRole userRole) {
 
         if (emailExists(registerRequest.getEmail())) {
             return Optional.empty();
@@ -40,7 +40,7 @@ public class UserService implements IUserService {
         final User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(UserRole.ROLE_PATIENT);
+        user.setRole(userRole);
 
         userRepository.save(user);
 

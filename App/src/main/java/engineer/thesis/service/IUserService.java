@@ -1,6 +1,7 @@
 package engineer.thesis.service;
 
 import engineer.thesis.model.User;
+import engineer.thesis.model.UserRole;
 import engineer.thesis.security.model.RegisterRequest;
 import org.springframework.stereotype.Service;
 
@@ -11,5 +12,5 @@ public interface IUserService {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> registerNewUser(RegisterRequest registerRequest);
+    Optional<User> registerNewUser(RegisterRequest registerRequest, UserRole userRole);
 }

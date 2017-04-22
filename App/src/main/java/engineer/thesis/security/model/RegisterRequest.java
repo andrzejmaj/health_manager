@@ -1,6 +1,8 @@
 package engineer.thesis.security.model;
 
+import engineer.thesis.model.UserRole;
 import lombok.Data;
+import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 
 /**
  * Created by Kamil on 2017-04-21.
@@ -12,13 +14,15 @@ public class RegisterRequest {
     String surName;
     String email;
     String password;
+    UserRole role;
 
     public RegisterRequest() {
 
     }
 
-    public RegisterRequest(String fisrtName, String surName, String email) {
+    public RegisterRequest(String fisrtName, String surName, String email, UserRole userRole) {
         this.fisrtName = fisrtName;
+        this.role = userRole;
         this.surName = surName;
         this.email = email;
     }
