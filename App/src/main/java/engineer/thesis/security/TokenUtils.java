@@ -39,9 +39,11 @@ public class TokenUtils {
 
         Map<String, Object> claims = new HashMap<>();
 
+
         claims.put("sub", userDetails.getUsername());
         claims.put("audience", this.generateAudience(device));
         claims.put("created", this.getCurrentDate());
+        claims.put("scopes", "ROLE_PATIENT");
 
         return this.buildToken(claims);
     }
