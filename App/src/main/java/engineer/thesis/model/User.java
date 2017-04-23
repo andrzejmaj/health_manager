@@ -14,12 +14,10 @@ import java.nio.file.attribute.UserDefinedFileAttributeView;
 @Table(name = "users")
 public class User {
 
-
     @Id
-    @Column(name = "id", unique=true, nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     @GeneratedValue
     private Long id;
-
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
