@@ -60,6 +60,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/register",
                         "/login",
+                        "/resetPassword",
+                        "/changePassword",
+                        "/updatePassword",
                         "/"
                 ).permitAll()
                 .antMatchers(HttpMethod.GET, "/users").permitAll()
