@@ -25,6 +25,8 @@ springBoot {
 }
 
 dependencies {
+	compile group: 'javax.mail', name: 'mail', version: '1.5.0-b01'
+	compile group: 'org.springframework', name: 'spring-context-support', version: '3.2.2.RELEASE'
     compile( 'io.jsonwebtoken:jjwt:0.7.0')
     compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web')
