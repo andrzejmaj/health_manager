@@ -11,9 +11,12 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Base64;
 
 @Component
 public class TokenUtils {
+
+    private static final String encodedKey = Base64.getEncoder().encodeToString("secret_super_secret".getBytes());
 
     private final String AUDIENCE_WEB = "web";
     private final String AUDIENCE_TABLET = "tablet";
@@ -53,7 +56,7 @@ public class TokenUtils {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(this.generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS256, "secret_super_secret")
+                .signWith(SignatureAlgorithm.HS256, encodedKey)
                 .compact();
     }
 
