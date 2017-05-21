@@ -32,7 +32,7 @@ jar {
 
 apply plugin: 'docker'
 
-group = 'springio'
+group = 'healthmanager'
 
 dependencies {
 	compile group: 'javax.mail', name: 'mail', version: '1.5.0-b01'

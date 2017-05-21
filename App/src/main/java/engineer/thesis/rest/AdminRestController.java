@@ -46,7 +46,7 @@ public class AdminRestController {
             return ResponseEntity.badRequest().build();
         }
 //        User user = new User();
-//        user.setEmail(registerRequest.getEmail());
+//        er.setEmail(registerRequest.getEmail());
 //        user.setPassword(registerRequest.getPassword());
 //        user.setRole(UserRole.ROLE_PATIENT);
 //        userRepository.save(user);
