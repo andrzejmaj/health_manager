@@ -26,7 +26,7 @@ springBoot {
 }
 
 jar {
-	baseName = 'springbootdocker'
+	baseName = 'gs-spring-boot-docker'
 	version =  '0.1.0'
 }
 
