@@ -7,6 +7,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath('se.transmode.gradle:gradle-docker:1.2')
 	}
 }
 
@@ -24,6 +25,15 @@ springBoot {
     mainClass = "enigeeer.thesis.HealthManagerApplication"
 }
 
+jar {
+	baseName = 'springbootdocker'
+	version =  '0.1.0'
+}
+
+apply plugin: 'docker'
+
+group = 'springio'
+
 dependencies {
 	compile group: 'javax.mail', name: 'mail', version: '1.5.0-b01'
 	compile group: 'org.springframework', name: 'spring-context-support', version: '3.2.2.RELEASE'
@@ -38,5 +48,16 @@ dependencies {
 	runtime('org.postgresql:postgresql')
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
 
+task buildDocker(type: Docker, dependsOn: build) {
+	push = false
+	applicationName = jar.baseName
+	dockerfile = file('src/main/docker/Dockerfile')
+	doFirst {
+		copy {
+			from jar
+			into stageDir
+		}
+	}
 }
