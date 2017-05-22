@@ -40,7 +40,7 @@ dependencies {
     compile (group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.0')
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.25.1'
     runtime('org.postgresql:postgresql')
-    provided('org.projectlombok:lombok')
+    compile('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
