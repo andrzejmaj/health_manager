@@ -46,7 +46,7 @@ public class AuthenticationRestController {
     private UserService userService;
 
     @Autowired
-    private AdminRestController adminRestController;
+    public AdminRestController adminRestController;
 
     @Autowired
     private MailService mailService;
