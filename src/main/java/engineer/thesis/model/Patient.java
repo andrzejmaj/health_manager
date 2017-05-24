@@ -27,7 +27,4 @@ public class Patient {
     private PersonalDetails emergencyContact;
 
 
-
-
-
 }
