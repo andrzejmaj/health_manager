@@ -20,7 +20,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'checkstyle'
 
 checkstyle {
-    configFile = new File(rootDir, "checkstyle.xml")
+    configFile = new File(rootDir, "google_checks.xml")
     toolVersion = '6.7'
 }
 
