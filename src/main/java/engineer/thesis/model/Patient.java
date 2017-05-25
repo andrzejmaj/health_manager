@@ -19,11 +19,11 @@ public class Patient {
     private String insuranceNumber;
 
     @OneToOne
-    @JoinColumn(name = "personal_details", unique = true, nullable = false)
+    @JoinColumn(name = "personal_details_id", unique = true, nullable = false)
     private PersonalDetails personalDetails;
 
     @OneToOne
-    @JoinColumn(name = "emergency_contact")
+    @JoinColumn(name = "emergency_contact_id")
     private PersonalDetails emergencyContact;
 
 
