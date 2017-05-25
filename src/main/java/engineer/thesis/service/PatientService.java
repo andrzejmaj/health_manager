@@ -23,19 +23,13 @@ public class PatientService implements IPatientService {
     @Override
     public PatientDTO findById(Long id) throws NoSuchElementException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
-        PatientDTO p = new PatientDTO(patient.orElseThrow(() -> {
-            throw new NoSuchElementException("Patient not found");
-        }));
-         return  p;
+        return new PatientDTO(patient.orElseThrow(NoSuchElementException::new));
     }
 
     @Override
     public PatientDTO findByPesel(String pesel) throws NoSuchElementException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findPatientByPesel(pesel));
-        PatientDTO p =  new PatientDTO(patient.orElseThrow(() -> {
-            throw new NoSuchElementException("Patient not found");
-        }));
-        return  p;
+        return new PatientDTO(patient.orElseThrow(NoSuchElementException::new));
     }
 
 }
