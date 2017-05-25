@@ -11,19 +11,19 @@ import javax.persistence.*;
 public class Patient {
 
     @Id
-    @Column(name = "id", unique = true, nullable = false)
+    @Column(name = "id", nullable = false)
     @GeneratedValue
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "insurance_number", unique = true, nullable = false)
+    @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;
 
     @OneToOne
-    @JoinColumn(name = "personal_details_id", unique = true, nullable = false)
+    @JoinColumn(name = "personal_details_id", nullable = false)
     private PersonalDetails personalDetails;
 
     @OneToOne
