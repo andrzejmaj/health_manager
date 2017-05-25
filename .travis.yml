@@ -1,3 +1,12 @@
 language: java
 jdk:
-  - oraclejdk8 
+  - oraclejdk8
+
+addons:
+  sonarqube:
+    organization: "blokekipa"
+    token:
+      security: "057cc7e808304e27a87a8af3005b1bcc19b73aa7"
+
+script:
+  - sonar-scanner
