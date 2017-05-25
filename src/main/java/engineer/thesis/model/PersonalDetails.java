@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "hm_personal_detail")
+@Table(name = "hm_personal_detail", schema = "hmanager")
 public class PersonalDetails {
 
     @Id

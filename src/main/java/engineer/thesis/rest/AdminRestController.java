@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by Kamil on 2017-04-07.
- */
 @RestController
 public class AdminRestController {
 
