@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 
-    Patient findPatientByPesel(String pesel);
+    Patient findByPersonalDetails_Pesel(String pesel);
 
 }
