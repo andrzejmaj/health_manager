@@ -13,10 +13,10 @@ public class Patient {
     @Column(name = "id", nullable = false)
     @GeneratedValue
     private Long id;
-    
+
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private Long userId;
+    private User user;
 
     @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;
