@@ -26,12 +26,9 @@ public class AdminRestController {
 
     public UserService userService;
 
-    public AuthenticationRestController authenticationRestController;
-
     @Autowired
-    public AdminRestController(UserService userService, AuthenticationRestController authenticationRestController) {
+    public AdminRestController(UserService userService) {
         this.userService = userService;
-        this.authenticationRestController = authenticationRestController;
     }
 
 
