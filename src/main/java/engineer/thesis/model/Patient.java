@@ -15,6 +15,10 @@ public class Patient {
     @GeneratedValue
     private Long id;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private Long userId;
+
     @Column(name = "insurance_number", unique = true, nullable = false)
     private String insuranceNumber;
 
