@@ -43,9 +43,9 @@ public class PersonalDetails {
     private String city;
 
     @Column(name = "building_number")
-    private int buildingNumber;
+    private Integer buildingNumber;
 
     @Column(name = "flat_number")
-    private int flatNumber;
+    private Integer flatNumber;
 
 }

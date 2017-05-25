@@ -18,8 +18,8 @@ public class PatientDTO {
     private final String country;
     private final String street;
     private final String city;
-    private final int buildingNumber;
-    private final int flatNumber;
+    private final Integer buildingNumber;
+    private final Integer flatNumber;
 
     public PatientDTO(Patient patient) {
         this.id = patient.getId();
