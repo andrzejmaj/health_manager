@@ -8,7 +8,6 @@ import engineer.thesis.security.TokenUtils;
 import engineer.thesis.security.model.AuthenticationRequest;
 import engineer.thesis.security.model.AuthenticationResponse;
 import engineer.thesis.security.model.RegisterRequest;
-import engineer.thesis.security.model.SecurityUser;
 import engineer.thesis.security.service.UserDetailsServiceImpl;
 import engineer.thesis.service.UserService;
 import engineer.thesis.utils.MailService;
@@ -82,19 +81,19 @@ public class AuthenticationRestController {
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
 //        System.out.println(registerRequest);
 //
-//        Optional<User> userOptional = userService.registerNewUser(registerRequest, UserRole.ROLE_PATIENT);
+//        Optional<User> userOptional = userService.registerNewUser(registerRequest, UserRole.PATIENT);
 //        if (!userOptional.isPresent()) {
 //            return ResponseEntity.badRequest().build();
 //        }
 //        User user = new User();
 //        user.setEmail(registerRequest.getEmail());
 //        user.setPassword(registerRequest.getPassword());
-//        user.setRole(UserRole.ROLE_PATIENT);
+//        user.setRole(UserRole.PATIENT);
 //        userRepository.save(user);
 
 
-        registerRequest.setRole(UserRole.ROLE_PATIENT);
-        return adminRestController.registerDoctor(registerRequest, UserRole.ROLE_PATIENT);
+        registerRequest.setRole(UserRole.PATIENT);
+        return adminRestController.registerDoctor(registerRequest, UserRole.PATIENT);
     }
 
     @RequestMapping(path = "/resetPassword", method = RequestMethod.POST)

@@ -43,7 +43,7 @@ public class TokenUtils {
         claims.put("sub", userDetails.getUsername());
         claims.put("audience", this.generateAudience(device));
         claims.put("created", this.getCurrentDate());
-        claims.put("scopes", "ROLE_PATIENT");
+        claims.put("scopes", "PATIENT");
 
         return this.buildToken(claims);
     }

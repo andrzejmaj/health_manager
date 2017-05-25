@@ -40,7 +40,7 @@ public class AdminRestController {
 //        User user = new User();
 //        user.setEmail(registerRequest.getEmail());
 //        user.setPassword(registerRequest.getPassword());
-//        user.setRole(UserRole.ROLE_PATIENT);
+//        user.setRole(UserRole.PATIENT);
 //        userRepository.save(user);
         return ResponseEntity.ok(new RegisterResponse("random Hindus"));
     }
