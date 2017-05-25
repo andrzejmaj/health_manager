@@ -1,15 +1,15 @@
 package engineer.thesis.service;
 
 
-import engineer.thesis.model.Patient;
+import engineer.thesis.model.dto.PatientDTO;
 
 import java.util.List;
 
 public interface IPatientService {
 
-    List<Patient> getAllPatients();
+    List<PatientDTO> getAllPatients();
 
-    Patient findByPesel(String pesel);
+    PatientDTO findByPesel(String pesel);
 
-    Patient findById(Long id);
+    PatientDTO findById(Long id);
 }
