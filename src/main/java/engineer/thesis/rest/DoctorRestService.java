@@ -23,7 +23,7 @@ public class DoctorRestService {
     }
 
 
-    @RequestMapping(path = "/patients" ,  method = RequestMethod.GET)
+    @RequestMapping(path = "/sthelse" ,  method = RequestMethod.GET)
     public static List<String> getPatients() {
         return patients;
     }
