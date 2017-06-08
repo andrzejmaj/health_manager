@@ -1,7 +1,8 @@
 package engineer.thesis.service;
 
-
+import engineer.thesis.model.dto.CurrentStateDTO;
 import engineer.thesis.model.dto.PatientDTO;
+import engineer.thesis.model.dto.PatientMedicalInformationDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,4 +17,8 @@ public interface IPatientService {
     PatientDTO findById(Long id);
 
     List<PatientDTO> findPatientsByLastName(String lastName);
+
+    List<CurrentStateDTO> getPatientCurrentCondition(Long id);
+
+    PatientMedicalInformationDTO getPatientMedicalInformation(Long id);
 }

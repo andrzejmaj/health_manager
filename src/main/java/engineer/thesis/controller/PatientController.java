@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 public class PatientController {
@@ -49,4 +50,23 @@ public class PatientController {
         List<PatientDTO> patients = patientService.findPatientsByLastName(lastName);
         return new ResponseEntity<Object>(patients, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/patients/{id}/currentState", method = RequestMethod.GET)
+    public ResponseEntity<?> getPatientCurrentState(@PathVariable(value = "id") Long id) {
+        try {
+            return new ResponseEntity<Object>(patientService.getPatientCurrentCondition(id), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<Object>(new ErrorDTO("Patient not found"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(value = "/patients/{id}/medicalInformation", method = RequestMethod.GET)
+    public ResponseEntity<?> getPatientMedicalInformation(@PathVariable(value = "id") Long id) {
+        try {
+            return new ResponseEntity<Object>(patientService.getPatientMedicalInformation(id), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<Object>(new ErrorDTO("Patient not found"), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
