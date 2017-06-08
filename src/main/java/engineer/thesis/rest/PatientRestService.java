@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Kamil on 2017-04-07.
- */
 @RestController
 public class PatientRestService {
     public static final List<String> diseases = new ArrayList<>();

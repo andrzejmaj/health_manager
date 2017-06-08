@@ -14,4 +14,6 @@ public interface IPatientService {
     PatientDTO findByPesel(String pesel);
 
     PatientDTO findById(Long id);
+
+    List<PatientDTO> findPatientsByLastName(String lastName);
 }

@@ -2,27 +2,22 @@ package engineer.thesis.security.model;
 
 import engineer.thesis.model.UserRole;
 import lombok.Data;
-
-/**
- * Created by Kamil on 2017-04-21.
- */
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class RegisterRequest {
-    String fisrtName;
-    String surName;
+    String firstName;
+    String lastName;
     String email;
     String password;
     UserRole role;
 
-    public RegisterRequest() {
-
-    }
-
-    public RegisterRequest(String fisrtName, String surName, String email, UserRole userRole) {
-        this.fisrtName = fisrtName;
-        this.role = userRole;
-        this.surName = surName;
+    public RegisterRequest(String firstName, String lastName, String email, UserRole userRole, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
+        this.password = password;
+        this.role = userRole;
     }
 }

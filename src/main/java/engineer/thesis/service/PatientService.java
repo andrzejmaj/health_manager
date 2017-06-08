@@ -34,4 +34,8 @@ public class PatientService implements IPatientService {
         return new PatientDTO(patient.orElseThrow(NoSuchElementException::new));
     }
 
+    @Override
+    public List<PatientDTO> findPatientsByLastName(String lastName) {
+        return patientRepository.findByPersonalDetails_LastNameLike(lastName).stream().map(PatientDTO::new).collect(Collectors.toList());
+    }
 }

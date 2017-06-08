@@ -30,13 +30,9 @@ public class AdminRestController {
 
 
     @RequestMapping("/admin/register_doctor")
-    public ResponseEntity<?> registerDoctor(@RequestBody RegisterRequest registerRequest, UserRole role) {
+    public ResponseEntity<?> registerDoctor(@RequestBody RegisterRequest registerRequest) {
         System.out.println(registerRequest);
 
-        Optional<User> userOptional = userService.registerNewUser(registerRequest, role);
-        if (!userOptional.isPresent()) {
-            return ResponseEntity.badRequest().build();
-        }
 //        User user = new User();
 //        user.setEmail(registerRequest.getEmail());
 //        user.setPassword(registerRequest.getPassword());

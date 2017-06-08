@@ -1,11 +1,17 @@
 package engineer.thesis.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "hm_patient" , schema = "hmanager")
 public class Patient {
 
@@ -15,13 +21,13 @@ public class Patient {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "personal_details_id", nullable = false)
     private PersonalDetails personalDetails;
 

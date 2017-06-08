@@ -1,12 +1,18 @@
 package engineer.thesis.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "hm_personal_detail", schema = "hmanager")
 public class PersonalDetails {
 

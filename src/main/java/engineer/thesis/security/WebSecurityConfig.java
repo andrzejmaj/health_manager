@@ -1,6 +1,7 @@
 package engineer.thesis.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableOAuth2Sso
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -45,15 +47,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().exceptionHandling().
-                authenticationEntryPoint(entryPoint).and()
 
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        http
+            .csrf()
+                .disable()
+            .exceptionHandling()
+                .authenticationEntryPoint(entryPoint)
 
-                .authorizeRequests()
+            .and()
 
+            .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+            .and()
+            .authorizeRequests()
                 .antMatchers("/admin/**")
-                .hasRole("PATIENT")
+                    .hasRole("PATIENT")
                 .antMatchers(
                         "/register",
                         "/login",
@@ -62,9 +71,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/updatePassword",
                         "/"
                 ).permitAll()
-                .antMatchers(HttpMethod.GET, "/users").permitAll()
+                .antMatchers(HttpMethod.GET, "/users").authenticated()
                 .antMatchers(HttpMethod.GET, "/patients").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
 
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 

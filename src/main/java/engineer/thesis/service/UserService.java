@@ -39,20 +39,18 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<User> registerNewUser(RegisterRequest registerRequest, UserRole userRole) {
+    public Optional<User> registerNewUser(RegisterRequest registerRequest) {
 
         if (emailExists(registerRequest.getEmail())) {
             return Optional.empty();
         }
 
-        final User user = new User();
+        User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(userRole);
+        user.setRole(UserRole.PATIENT);
 
-        userRepository.save(user);
-
-        return Optional.of(user);
+        return Optional.of(userRepository.save(user));
     }
 
     private boolean emailExists(String email) {

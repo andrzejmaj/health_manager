@@ -79,21 +79,18 @@ public class AuthenticationRestController {
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-//        System.out.println(registerRequest);
-//
-//        Optional<User> userOptional = userService.registerNewUser(registerRequest, UserRole.PATIENT);
-//        if (!userOptional.isPresent()) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//        User user = new User();
-//        user.setEmail(registerRequest.getEmail());
-//        user.setPassword(registerRequest.getPassword());
-//        user.setRole(UserRole.PATIENT);
-//        userRepository.save(user);
 
+        System.out.println("Register" + registerRequest);
 
         registerRequest.setRole(UserRole.PATIENT);
-        return adminRestController.registerDoctor(registerRequest, UserRole.PATIENT);
+
+        Optional<User> userOptional = userService.registerNewUser(registerRequest);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok("Operation successful");
+
     }
 
     @RequestMapping(path = "/resetPassword", method = RequestMethod.POST)
