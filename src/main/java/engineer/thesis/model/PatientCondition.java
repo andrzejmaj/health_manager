@@ -2,7 +2,6 @@ package engineer.thesis.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 
@@ -17,6 +16,7 @@ public class PatientCondition {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
 

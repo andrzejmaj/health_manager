@@ -7,7 +7,6 @@ import engineer.thesis.model.dto.PatientDTO;
 import engineer.thesis.model.dto.PatientMedicalInformationDTO;
 import engineer.thesis.repository.CurrentConditionRepository;
 import engineer.thesis.repository.CurrentDrugRepository;
-import engineer.thesis.repository.MedicalInformationRepository;
 import engineer.thesis.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +25,6 @@ public class PatientService implements IPatientService {
 
     @Autowired
     CurrentDrugRepository currentDrugRepository;
-
-    @Autowired
-    MedicalInformationRepository medicalInformationRepository;
 
     @Override
     public List<PatientDTO> getAllPatients() {
@@ -62,7 +58,7 @@ public class PatientService implements IPatientService {
             if (currentState.containsKey(conditionId)) {
                 currentState.get(conditionId).getTakenDrugs().add(new DrugDTO(drug.getDrug()));
             } else {
-                CurrentStateDTO state = new CurrentStateDTO(drug, new ArrayList<DrugDTO>(Arrays.asList(new DrugDTO(drug.getDrug()))));
+                CurrentStateDTO state = new CurrentStateDTO(drug, new ArrayList<>(Arrays.asList(new DrugDTO(drug.getDrug()))));
                 currentState.put(conditionId, state);
             }
         });
@@ -71,8 +67,8 @@ public class PatientService implements IPatientService {
 
     @Override
     public PatientMedicalInformationDTO getPatientMedicalInformation(Long id) throws NoSuchElementException {
-        findById(id);
-        return new PatientMedicalInformationDTO(medicalInformationRepository.findByPatientId(id));
+        Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
+        return new PatientMedicalInformationDTO(patient.orElseThrow(NoSuchElementException::new));
     }
 
 

@@ -12,12 +12,12 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "hm_patient" , schema = "hmanager")
+@Table(name = "hm_patient", schema = "hmanager")
 public class Patient {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
@@ -35,5 +35,7 @@ public class Patient {
     @JoinColumn(name = "emergency_contact_id")
     private PersonalDetails emergencyContact;
 
+    @OneToOne(mappedBy = "patient")
+    private MedicalInformation medicalInformation;
 
 }
