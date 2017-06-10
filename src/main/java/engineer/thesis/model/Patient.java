@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -35,7 +36,9 @@ public class Patient {
     @JoinColumn(name = "emergency_contact_id")
     private PersonalDetails emergencyContact;
 
-    @OneToOne(mappedBy = "patient")
+    @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
     private MedicalInformation medicalInformation;
 
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private List<MedicalHistory> medicalHistories;
 }

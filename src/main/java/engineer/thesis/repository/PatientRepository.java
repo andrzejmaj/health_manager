@@ -1,5 +1,6 @@
 package engineer.thesis.repository;
 
+import engineer.thesis.model.MedicalHistory;
 import engineer.thesis.model.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

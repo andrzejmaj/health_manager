@@ -1,10 +1,7 @@
 package engineer.thesis.service;
 
 import engineer.thesis.model.*;
-import engineer.thesis.model.dto.CurrentStateDTO;
-import engineer.thesis.model.dto.DrugDTO;
-import engineer.thesis.model.dto.PatientDTO;
-import engineer.thesis.model.dto.PatientMedicalInformationDTO;
+import engineer.thesis.model.dto.*;
 import engineer.thesis.repository.CurrentConditionRepository;
 import engineer.thesis.repository.CurrentDrugRepository;
 import engineer.thesis.repository.PatientRepository;
@@ -71,5 +68,13 @@ public class PatientService implements IPatientService {
         return new PatientMedicalInformationDTO(patient.orElseThrow(NoSuchElementException::new));
     }
 
-
+    @Override
+    public List<MedicalHistoryDTO> getPatientMedicalHistory(Long id) throws NoSuchElementException {
+        Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
+        if (patient.isPresent()) {
+            return patient.get().getMedicalHistories().stream().map(MedicalHistoryDTO::new).collect(Collectors.toList());
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
 }

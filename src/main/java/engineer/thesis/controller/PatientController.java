@@ -69,4 +69,13 @@ public class PatientController {
         }
     }
 
+    @RequestMapping(value = "/patients/{id}/medicalHistory", method = RequestMethod.GET)
+    public ResponseEntity<?> getPatientMedicalHistory(@PathVariable(value = "id") Long id) {
+        try {
+            return new ResponseEntity<Object>(patientService.getPatientMedicalHistory(id), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<Object>(new ErrorDTO("Patient not found"), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
