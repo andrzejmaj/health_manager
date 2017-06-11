@@ -6,11 +6,15 @@ package engineer.thesis.medcom.controllers;
  */
 final class RequestMappings {
 
+    static final class ARCHIVE {
+        static final String GET_TREE = "/medcom/archive/tree";
+    }
+
     static final class INSTANCES {
-        static final String GET_ALL_INSTANCES = "/medcom/instances";
-        static final String GET_INSTANCE_INFO = "/medcom/instances/{instanceId}";
-        static final String GET_INSTANCE_DICOM = "/medcom/instances/{instanceId}/dicom";
-        static final String GET_INSTANCE_IMAGE = "/medcom/instances/{instanceId}/rendered";
+        static final String GET_ALL = "/medcom/instances";
+        static final String GET_INFO = "/medcom/instances/{instanceId}";
+        static final String GET_DICOM = "/medcom/instances/{instanceId}/dicom";
+        static final String GET_RENDERED_IMAGE = "/medcom/instances/{instanceId}/rendered";
     }
 
 }

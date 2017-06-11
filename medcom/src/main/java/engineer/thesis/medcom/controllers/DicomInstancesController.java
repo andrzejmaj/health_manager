@@ -1,8 +1,15 @@
 package engineer.thesis.medcom.controllers;
 
+import engineer.thesis.medcom.dicom.repository.ArchiveRepository;
+import engineer.thesis.medcom.model.DicomInstance;
+import org.dcm4che3.data.UID;
+import org.dcm4che3.io.DicomOutputStream;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -12,15 +19,22 @@ import java.util.List;
 @RestController
 public class DicomInstancesController {
 
+    private final ArchiveRepository archiveRepository;
 
-    @GetMapping(RequestMappings.INSTANCES.GET_ALL_INSTANCES)
-    public List<?> getDicomInstancesList() {
-        //TODO
-        return null;
+    @Autowired
+    public DicomInstancesController(ArchiveRepository archiveRepository) {
+        this.archiveRepository = archiveRepository;
     }
 
-    @GetMapping(RequestMappings.INSTANCES.GET_INSTANCE_DICOM)
-    public void getRawDicomInstance() {
+    @GetMapping(RequestMappings.INSTANCES.GET_ALL)
+    public List<DicomInstance> getDicomInstancesList() {
+        return archiveRepository.findAllInstances();
+    }
+
+    @GetMapping(value = RequestMappings.INSTANCES.GET_DICOM, produces = "application/dicom")
+    public void getRawDicomInstance(HttpServletResponse response) throws IOException {
+
+        DicomOutputStream out = new DicomOutputStream(response.getOutputStream(), UID.ExplicitVRLittleEndian);
         //TODO
     }
 

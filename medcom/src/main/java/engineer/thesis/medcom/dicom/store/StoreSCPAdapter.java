@@ -13,7 +13,10 @@ import javax.annotation.PostConstruct;
 @Component
 public class StoreSCPAdapter {
     private final static Logger logger = Logger.getLogger(StoreSCPAdapter.class);
-    private final static String ARCHIVE_FILEPATH = "{00080018}.dcm"; // <SOPInstanceUID>.dcm
+
+    // <PatientID>/<StudyInstanceUID>/<SeriesInstanceUID>/<SOPInstanceUID>.dcm
+    private final static String ARCHIVE_FILEPATH = "{00100020}/{0020000D}/{0020000E}/{00080018}.dcm'";
+
     private final static String DEFAULT_ARGS_TEMPLATE =
             "--accept-unknown --directory %s --filepath %s -b %s:%d";
 
