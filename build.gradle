@@ -21,6 +21,9 @@ apply plugin: 'org.springframework.boot'
 
 repositories {
     mavenCentral()
+    maven {
+        url "http://www.dcm4che.org/maven2"
+    }
 }
 
 sourceCompatibility = 1.8

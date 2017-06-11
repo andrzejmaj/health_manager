@@ -1,4 +1,4 @@
-package engineer.thesis.medcom;
+package engineer.thesis.medcom.controllers;
 
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.service.IPatientService;
