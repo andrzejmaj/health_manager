@@ -12,7 +12,7 @@ public interface IUserService {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> registerNewUser(RegisterRequest registerRequest, UserRole userRole);
+    Optional<User> registerNewUser(RegisterRequest registerRequest);
 
     void createPasswordResetTokenForUser(User user, String token);
 

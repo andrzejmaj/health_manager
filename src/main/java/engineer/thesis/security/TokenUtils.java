@@ -43,12 +43,12 @@ public class TokenUtils {
         claims.put("sub", userDetails.getUsername());
         claims.put("audience", this.generateAudience(device));
         claims.put("created", this.getCurrentDate());
-        claims.put("scopes", "ROLE_PATIENT");
+        claims.put("scopes", "PATIENT");
 
         return this.buildToken(claims);
     }
 
-    public String buildToken(Map<String, Object> claims) {
+    private String buildToken(Map<String, Object> claims) {
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -67,7 +67,7 @@ public class TokenUtils {
         }
     }
 
-    public String getAudience(String token) {
+    private String getAudience(String token) {
         try {
             final Claims claims = this.getClaims(token);
             return (String) claims.get("audience");
@@ -76,7 +76,7 @@ public class TokenUtils {
         }
     }
 
-    public Date getExpirationDate(String token) {
+    private Date getExpirationDate(String token) {
         try {
             final Claims claims = this.getClaims(token);
             return claims.getExpiration();
@@ -85,7 +85,7 @@ public class TokenUtils {
         }
     }
 
-    public Date getCreatedDate(String token) {
+    private Date getCreatedDate(String token) {
         try {
             final Claims claims = this.getClaims(token);
             return (Date) claims.get("created");
@@ -118,11 +118,9 @@ public class TokenUtils {
         return audience;
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    Boolean validateToken(String token, UserDetails userDetails) {
         SecurityUser user = (SecurityUser) userDetails;
         final String username = this.getUsername(token);
-        final Date created = this.getCreatedDate(token);
-        final Date expiration = this.getExpirationDate(token);
         return (username.equals(user.getUsername()) && !(this.isTokenExpired(token)));
     }
 }

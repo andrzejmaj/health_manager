@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by Kamil on 2017-04-07.
- */
 @RestController
 public class AdminRestController {
 
@@ -32,17 +29,13 @@ public class AdminRestController {
 
 
     @RequestMapping("/admin/register_doctor")
-    public ResponseEntity<?> registerDoctor(@RequestBody RegisterRequest registerRequest, UserRole role) {
+    public ResponseEntity<?> registerDoctor(@RequestBody RegisterRequest registerRequest) {
         System.out.println(registerRequest);
 
-        Optional<User> userOptional = userService.registerNewUser(registerRequest, role);
-        if (!userOptional.isPresent()) {
-            return ResponseEntity.badRequest().build();
-        }
 //        User user = new User();
 //        user.setEmail(registerRequest.getEmail());
 //        user.setPassword(registerRequest.getPassword());
-//        user.setRole(UserRole.ROLE_PATIENT);
+//        user.setRole(UserRole.PATIENT);
 //        userRepository.save(user);
         return ResponseEntity.ok(new RegisterResponse("random Hindus"));
     }

@@ -7,11 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Kamil on 2017-04-07.
- */
-
-
 @RestController
 public class DoctorRestService {
     public static final List<String>  patients = new ArrayList<>();
@@ -22,8 +17,7 @@ public class DoctorRestService {
         patients.add("patient3");
     }
 
-
-    @RequestMapping(path = "/patients" ,  method = RequestMethod.GET)
+    @RequestMapping(path = "/sthelse" ,  method = RequestMethod.GET)
     public static List<String> getPatients() {
         return patients;
     }

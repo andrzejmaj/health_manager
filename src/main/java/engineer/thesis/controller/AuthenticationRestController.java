@@ -8,7 +8,6 @@ import engineer.thesis.security.TokenUtils;
 import engineer.thesis.security.model.AuthenticationRequest;
 import engineer.thesis.security.model.AuthenticationResponse;
 import engineer.thesis.security.model.RegisterRequest;
-import engineer.thesis.security.model.SecurityUser;
 import engineer.thesis.security.service.UserDetailsServiceImpl;
 import engineer.thesis.service.UserService;
 import engineer.thesis.utils.MailService;
@@ -80,21 +79,18 @@ public class AuthenticationRestController {
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-//        System.out.println(registerRequest);
-//
-//        Optional<User> userOptional = userService.registerNewUser(registerRequest, UserRole.ROLE_PATIENT);
-//        if (!userOptional.isPresent()) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//        User user = new User();
-//        user.setEmail(registerRequest.getEmail());
-//        user.setPassword(registerRequest.getPassword());
-//        user.setRole(UserRole.ROLE_PATIENT);
-//        userRepository.save(user);
 
+        System.out.println("Register" + registerRequest);
 
-        registerRequest.setRole(UserRole.ROLE_PATIENT);
-        return adminRestController.registerDoctor(registerRequest, UserRole.ROLE_PATIENT);
+        registerRequest.setRole(UserRole.PATIENT);
+
+        Optional<User> userOptional = userService.registerNewUser(registerRequest);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok("Operation successful");
+
     }
 
     @RequestMapping(path = "/resetPassword", method = RequestMethod.POST)

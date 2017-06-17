@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    @Autowired
     private final IUserService userService;
 
-    @Autowired
     public UserDetailsServiceImpl(IUserService userService) {
         this.userService = userService;
     }
@@ -24,12 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email:" + email + "not found"));
-        System.out.println("userdetails found user:"+ user);
         return SecurityUserFactory.create(user);
     }
-
-
-
-
-
 }

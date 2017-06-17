@@ -1,5 +1,6 @@
 package engineer.thesis.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,8 +9,8 @@ import java.util.Collection;
 
 
 public class SecurityUser implements UserDetails {
+
     private Long id;
-    @Getter
     private String email;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
@@ -26,6 +27,7 @@ public class SecurityUser implements UserDetails {
         return null;
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return password;
@@ -46,6 +48,7 @@ public class SecurityUser implements UserDetails {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
