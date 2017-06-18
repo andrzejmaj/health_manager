@@ -1,5 +1,6 @@
 package engineer.thesis.service;
 
+import engineer.thesis.model.PersonalDetails;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
 import engineer.thesis.model.dto.UserDTO;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -47,10 +49,10 @@ public class UserService implements IUserService {
         }
 
         User user = new User();
-        user.set
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole(UserRole.PATIENT);
+        user.setPersonalDetails(new PersonalDetails());
 
         return Optional.of(userRepository.save(user));
     }

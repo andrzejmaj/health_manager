@@ -33,5 +33,5 @@ public class User {
     @OneToOne
     @JoinColumn(name = "personal_details_id")
     private PersonalDetails personalDetails;
-    
+
 }
