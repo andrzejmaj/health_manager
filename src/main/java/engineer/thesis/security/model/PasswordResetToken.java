@@ -2,6 +2,7 @@ package engineer.thesis.security.model;
 
 import engineer.thesis.model.User;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,12 +10,10 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "reset_tokens")
+@NoArgsConstructor
 public class PasswordResetToken {
 
     private static final Long EXPIRATION = 1000L;
-
-    public PasswordResetToken() {
-    }
 
     public PasswordResetToken(String token, User user) {
         this.token = token;

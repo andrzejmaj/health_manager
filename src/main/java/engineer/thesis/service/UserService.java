@@ -2,6 +2,7 @@ package engineer.thesis.service;
 
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
+import engineer.thesis.model.dto.UserDTO;
 import engineer.thesis.repository.PasswordResetTokenRepository;
 import engineer.thesis.repository.UserRepository;
 import engineer.thesis.security.model.PasswordResetToken;
@@ -46,6 +47,7 @@ public class UserService implements IUserService {
         }
 
         User user = new User();
+        user.set
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole(UserRole.PATIENT);
@@ -64,19 +66,19 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public String checkReceivedToken(long id, String token) {
+    public Boolean isResetPasswordTokenValid(long id, String token) {
         PasswordResetToken passwordToken =
                 passwordTokenRepository.findByToken(token);
         if ((passwordToken == null) || (passwordToken.getUser()
                 .getId() != id)) {
-            return "INVALID_TOKEN";
+            return false;
         }
 
         Calendar cal = Calendar.getInstance();
         if ((passwordToken.getExpiryDate()
                 .getTime() - cal.getTime()
                 .getTime()) <= 0) {
-            return "EXPIRED";
+            return false;
         }
 
         User user = passwordToken.getUser();
@@ -84,12 +86,24 @@ public class UserService implements IUserService {
                 user, null, Arrays.asList(
                 new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
         SecurityContextHolder.getContext().setAuthentication(auth);
-        return null;
+        return true;
     }
 
     @Override
     public void changeUserPassword(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> updateUser(UserDTO userDTO) {
+        Optional<User> user = Optional.of(userRepository.findByEmail(userDTO.getEmail()));
+        if (user.isPresent()) {
+            user.get().setEmail(userDTO.getEmail());
+            user.get().setRole(UserRole.valueOf(userDTO.getRole()));
+            user.get().setImageUrl(userDTO.getImgUrl());
+            return Optional.of(userRepository.save(user.get()));
+        }
+        return Optional.empty();
     }
 }
