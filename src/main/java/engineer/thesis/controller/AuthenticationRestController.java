@@ -42,10 +42,27 @@ public class AuthenticationRestController {
     @Autowired
     private MailService mailService;
 
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
+    @RequestMapping(path = "/sample/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
-            @RequestBody AuthenticationRequest authenticationRequest, Device device) {
+            @RequestBody AuthenticationRequest authenticationRequest) {
         System.out.println(authenticationRequest);
+
+        Device myDevice = new Device() {
+            @Override
+            public boolean isNormal() {
+                return true;
+            }
+
+            @Override
+            public boolean isMobile() {
+                return false;
+            }
+
+            @Override
+            public boolean isTablet() {
+                return false;
+            }
+        };
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -60,7 +77,7 @@ public class AuthenticationRestController {
                 authenticationRequest.getEmail()
         );
 
-        String token = tokenUtil.generateToken(securityUser, device);
+        String token = tokenUtil.generateToken(securityUser, myDevice);
 
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
