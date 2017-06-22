@@ -1,13 +1,16 @@
 package engineer.thesis.controller;
 
 import engineer.thesis.model.User;
+import engineer.thesis.security.model.SecurityUser;
 import engineer.thesis.security.model.UpdatePasswordRequest;
 import engineer.thesis.service.UserService;
 import engineer.thesis.utils.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,11 +54,14 @@ public class UserController {
     @RequestMapping(path = "/users/updatePassword", method = RequestMethod.POST)
     public ResponseEntity<?> changePassword(@RequestBody UpdatePasswordRequest updatePasswordData) {
 
-
-        User user =
-                (User) SecurityContextHolder.getContext()
-                        .getAuthentication().getPrincipal();
-        userService.changeUserPassword(user, updatePasswordData.getPassword());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("IS AUTHENTICATED: " + authentication.isAuthenticated());
+        System.out.println("GET PRINCIPAL: " + authentication.getPrincipal());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+        System.out.println(securityUser.getUsername());
+        System.out.println(securityUser.getPassword());
+        userService.changeUserPassword(securityUser.getUsername(), updatePasswordData.getPassword());
         return ResponseEntity.ok("Operation successful");
     }
 

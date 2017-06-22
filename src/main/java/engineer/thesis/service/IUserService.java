@@ -21,5 +21,5 @@ public interface IUserService {
 
     Boolean isResetPasswordTokenValid(long id, String token);
 
-    void changeUserPassword(User user, String password);
+    void changeUserPassword(String email, String password);
 }

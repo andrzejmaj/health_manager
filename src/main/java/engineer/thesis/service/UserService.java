@@ -91,7 +91,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void changeUserPassword(User user, String password) {
+    public void changeUserPassword(String email, String password) {
+        System.out.println("CHANGE PASSWORD" + email);
+        User user = userRepository.findByEmail(email);
+        System.out.println("FIND USER" + user);
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
