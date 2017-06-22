@@ -1,16 +1,14 @@
 package engineer.thesis.controller;
 
 import engineer.thesis.model.User;
+import engineer.thesis.security.model.UpdatePasswordRequest;
 import engineer.thesis.service.UserService;
 import engineer.thesis.utils.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -51,11 +49,13 @@ public class UserController {
     }
 
     @RequestMapping(path = "/users/updatePassword", method = RequestMethod.POST)
-    public ResponseEntity<?> changePassword(@RequestParam("password") String password) {
+    public ResponseEntity<?> changePassword(@RequestBody UpdatePasswordRequest updatePasswordData) {
+
+
         User user =
                 (User) SecurityContextHolder.getContext()
                         .getAuthentication().getPrincipal();
-        userService.changeUserPassword(user, password);
+        userService.changeUserPassword(user, updatePasswordData.getPassword());
         return ResponseEntity.ok("Operation successful");
     }
 

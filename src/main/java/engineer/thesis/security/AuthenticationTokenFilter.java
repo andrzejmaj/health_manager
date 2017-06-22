@@ -36,7 +36,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         if (token != null) {
             token = token.replace("Bearer ", "");
         }
-        
+
         String email = tokenUtils.getUsername(token);
         System.out.println("email in authenticationTokenFilter " + email);
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
