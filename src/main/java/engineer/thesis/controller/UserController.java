@@ -29,12 +29,14 @@ public class UserController {
 
     @RequestMapping(path = "/users/resetPassword", method = RequestMethod.POST)
     public ResponseEntity<?> resetPassword(HttpServletRequest request,
-                                           @RequestParam("email") String email) {
+                                           @RequestBody String email) {
 
+        System.out.println("Inside reset password controller");
         Optional<User> user = userService.findByEmail(email);
         if (!user.isPresent()) {
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("User not found");
         }
+        System.out.println("Reset password User found: " + user.get());
         String token = UUID.randomUUID().toString();
         userService.createPasswordResetTokenForUser(user.get(), token);
         mailService.send(mailService.constructResetTokenEmail(request.getPathInfo(),

@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "reset_tokens")
+@Table(name = "hm_reset_token", schema = "hmanager")
 @NoArgsConstructor
 public class PasswordResetToken {
 
@@ -22,7 +22,8 @@ public class PasswordResetToken {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "token")
