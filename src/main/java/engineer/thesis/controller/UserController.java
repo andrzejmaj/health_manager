@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,17 +46,20 @@ public class UserController {
         return ResponseEntity.ok("Operation successful");
     }
 
-    @RequestMapping(path = "/users/changePassword", method = RequestMethod.GET)
-    public ResponseEntity<?> redirectFromChangePassword(@RequestParam("id") long id, @RequestParam("token") String token) {
-        if (userService.isResetPasswordTokenValid(id, token) != null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token expired");
+    @RequestMapping(path = "/users/updatePasswordWithToken", method = RequestMethod.POST)
+    public ResponseEntity<?> changePassword(@RequestBody String newPassword,
+                                            @RequestParam("email") String email,
+                                            @RequestParam("token") String token) {
+        if (!userService.isResetPasswordTokenValid(email, token)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token is not valid");
         }
+
+        userService.changeUserPassword(email, newPassword);
         return ResponseEntity.ok("Operation successful");
     }
 
     @RequestMapping(path = "/users/updatePassword", method = RequestMethod.POST)
     public ResponseEntity<?> changePassword(@RequestBody UpdatePasswordRequest updatePasswordData) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("IS AUTHENTICATED: " + authentication.isAuthenticated());
         System.out.println("GET PRINCIPAL: " + authentication.getPrincipal());
@@ -67,4 +71,18 @@ public class UserController {
         return ResponseEntity.ok("Operation successful");
     }
 
+    @RequestMapping(path = "/users/{id}/updateEmail", method = RequestMethod.POST)
+    public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @RequestBody String email) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+
+        if (!userService.canPerformUserAction(id, securityUser)) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN);
+        }
+
+        userService.updateUserEmail(id, email);
+
+        return ResponseEntity.ok("Operation successful");
+    }
 }

@@ -19,7 +19,9 @@ public interface IUserService {
 
     void createPasswordResetTokenForUser(User user, String token);
 
-    Boolean isResetPasswordTokenValid(long id, String token);
+    Boolean isResetPasswordTokenValid(String email, String token);
 
     void changeUserPassword(String email, String password);
+
+    Optional<User> updateUserEmail(Long id, String newEmail);
 }

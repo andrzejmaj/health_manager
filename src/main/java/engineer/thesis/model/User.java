@@ -30,7 +30,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "personal_details_id")
     private PersonalDetails personalDetails;
 

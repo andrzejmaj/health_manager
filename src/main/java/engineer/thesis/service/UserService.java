@@ -8,6 +8,7 @@ import engineer.thesis.repository.PasswordResetTokenRepository;
 import engineer.thesis.repository.UserRepository;
 import engineer.thesis.security.model.PasswordResetToken;
 import engineer.thesis.security.model.RegisterRequest;
+import engineer.thesis.security.model.SecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,10 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService implements IUserService {
@@ -48,10 +46,24 @@ public class UserService implements IUserService {
             return Optional.empty();
         }
 
+        PersonalDetails personalDetails = new PersonalDetails();
+        personalDetails.setBirthDate(new Date());
+        personalDetails.setBuildingNumber(4);
+        personalDetails.setCity("Cracow");
+        personalDetails.setCountry("Poland");
+        personalDetails.setFirstName("Andrzej");
+        personalDetails.setLastName("Maj");
+        personalDetails.setStreet("Ulica");
+        personalDetails.setFlatNumber(4);
+        personalDetails.setPhoneNumber("123456789");
+        personalDetails.setGender("Male");
+        personalDetails.setPesel("1234567890");
+
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole(UserRole.PATIENT);
+        user.setPersonalDetails(personalDetails);
 
         return Optional.of(userRepository.save(user));
     }
@@ -68,27 +80,20 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Boolean isResetPasswordTokenValid(long id, String token) {
+    public Boolean isResetPasswordTokenValid(String email, String token) {
+        System.out.println(email);
         PasswordResetToken passwordToken =
                 passwordTokenRepository.findByToken(token);
-        if ((passwordToken == null) || (passwordToken.getUser()
-                .getId() != id)) {
+        System.out.println(passwordToken.getUser().getEmail());
+        if (!Objects.equals(passwordToken.getUser().getEmail(), email)) {
+            System.out.println("Email does not match");
             return false;
         }
 
         Calendar cal = Calendar.getInstance();
-        if ((passwordToken.getExpiryDate()
+        return (passwordToken.getExpiryDate()
                 .getTime() - cal.getTime()
-                .getTime()) <= 0) {
-            return false;
-        }
-
-        User user = passwordToken.getUser();
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user, null, Arrays.asList(
-                new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        return true;
+                .getTime()) > 0;
     }
 
     @Override
@@ -110,5 +115,19 @@ public class UserService implements IUserService {
             return Optional.of(userRepository.save(user.get()));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> updateUserEmail(Long id, String newEmail) {
+        Optional<User> user = Optional.of(userRepository.findOne(id));
+        if (user.isPresent()) {
+            user.get().setEmail(newEmail);
+            return Optional.of(userRepository.save(user.get()));
+        }
+        return Optional.empty();
+    }
+
+    public boolean canPerformUserAction(Long id, SecurityUser currentUser) {
+        return id.equals(currentUser.getId()) || currentUser.getUserRole() == UserRole.ADMIN;
     }
 }

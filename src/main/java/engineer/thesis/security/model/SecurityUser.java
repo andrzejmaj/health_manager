@@ -1,6 +1,7 @@
 package engineer.thesis.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import engineer.thesis.model.UserRole;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,13 +14,15 @@ public class SecurityUser implements UserDetails {
     private Long id;
     private String email;
     private String password;
+    private UserRole userRole;
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public SecurityUser(Long id, String email, String password) {
+    public SecurityUser(Long id, String email, String password, UserRole role) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.userRole = role;
     }
 
     @Override
@@ -57,5 +60,17 @@ public class SecurityUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
     }
 }
