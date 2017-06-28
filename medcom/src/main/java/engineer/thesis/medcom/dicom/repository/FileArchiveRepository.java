@@ -1,11 +1,14 @@
 package engineer.thesis.medcom.dicom.repository;
 
+import engineer.thesis.medcom.dicom.store.StoreSCPAdapter;
 import engineer.thesis.medcom.model.*;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -18,6 +21,8 @@ import static engineer.thesis.medcom.utils.FileUtils.shallowDirectorySearch;
  */
 @Repository
 public class FileArchiveRepository implements ArchiveRepository {
+
+    private final static Logger logger = Logger.getLogger(StoreSCPAdapter.class);
 
     private static final String DICOM_EXTENSION = ".dcm";
     private static final Predicate<File> IS_DICOM_FILE = (file) -> {
@@ -90,6 +95,14 @@ public class FileArchiveRepository implements ArchiveRepository {
         return DicomArchive.builder()
                 .patients(patients)
                 .build();
+    }
+
+    @Override
+    public Optional<File> getInstanceFile(String patientId, String studyInstanceUid, String seriesInstanceUid, String sopInstanceUid) {
+        String filePath = storageDirectory + '/' + patientId + '/' + studyInstanceUid + '/' + seriesInstanceUid + '/' + sopInstanceUid + DICOM_EXTENSION;
+        File instance = new File(filePath);
+
+        return(instance.isFile()) ? Optional.of(instance) : Optional.empty();
     }
 
     private DicomInstance buildInstance(File dicomFile) {

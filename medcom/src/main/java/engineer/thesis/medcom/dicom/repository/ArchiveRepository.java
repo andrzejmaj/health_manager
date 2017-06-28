@@ -3,7 +3,9 @@ package engineer.thesis.medcom.dicom.repository;
 import engineer.thesis.medcom.model.DicomArchive;
 import engineer.thesis.medcom.model.DicomInstance;
 
+import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author MKlaman
@@ -11,8 +13,10 @@ import java.util.List;
  */
 public interface ArchiveRepository {
 
-    public List<DicomInstance> findAllInstances();
+    List<DicomInstance> findAllInstances();
 
-    public DicomArchive getFullArchiveTree();
+    DicomArchive getFullArchiveTree();
+
+    Optional<File> getInstanceFile(String patientId, String studyInstanceUid, String seriesInstanceUid, String sopInstanceUid);
 
 }

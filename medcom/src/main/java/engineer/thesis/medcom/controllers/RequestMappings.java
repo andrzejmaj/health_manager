@@ -8,6 +8,7 @@ final class RequestMappings {
 
     static final class ARCHIVE {
         static final String GET_TREE = "/medcom/archive/tree";
+        static final String GET_DICOM = "/medcom/patients/{patientId}/studies/{studyId}/series/{seriesId}/instances/{instanceId}";
     }
 
     static final class INSTANCES {

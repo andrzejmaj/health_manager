@@ -1,4 +1,4 @@
-package engineer.thesis.medcom.dicom.repository.exceptions;
+package engineer.thesis.medcom.model.exceptions;
 
 /**
  * @author MKlaman

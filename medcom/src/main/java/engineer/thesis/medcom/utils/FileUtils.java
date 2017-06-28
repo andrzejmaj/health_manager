@@ -1,6 +1,6 @@
 package engineer.thesis.medcom.utils;
 
-import engineer.thesis.medcom.dicom.repository.exceptions.ArchiveIOException;
+import engineer.thesis.medcom.model.exceptions.ArchiveIOException;
 
 import java.io.File;
 import java.util.ArrayList;
