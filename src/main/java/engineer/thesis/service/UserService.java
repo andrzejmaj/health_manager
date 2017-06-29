@@ -22,18 +22,14 @@ import java.util.*;
 @Service
 public class UserService implements IUserService {
 
-    private final UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
-
-    private final PasswordResetTokenRepository passwordTokenRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordResetTokenRepository passwordTokenRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.passwordTokenRepository = passwordTokenRepository;
-    }
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    PasswordResetTokenRepository passwordTokenRepository;
 
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
