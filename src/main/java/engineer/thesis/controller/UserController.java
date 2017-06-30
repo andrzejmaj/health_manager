@@ -2,11 +2,14 @@ package engineer.thesis.controller;
 
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
-import engineer.thesis.model.dto.ErrorDTO;
+import engineer.thesis.model.dto.ResetPasswordDTO;
+import engineer.thesis.model.dto.ResponseDTO;
 import engineer.thesis.security.TokenUtils;
 import engineer.thesis.security.model.*;
 import engineer.thesis.service.UserService;
 import engineer.thesis.utils.MailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,6 +45,10 @@ public class UserController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    private final Logger log = LoggerFactory.getLogger(UserController.class);
+
+    private static final String NOT_ALLOWED_MESSAGE = "You are not allowed to perform this operation";
+
     //TODO:
     // 1. Probably only UserService should be autowired here
     // 2. Make class with responses
@@ -52,7 +60,6 @@ public class UserController {
      *
      * @param authenticationRequest (email, password)
      * @return created user's token
-     *
      */
 
     @RequestMapping(path = RequestMappings.USERS.LOGIN, method = RequestMethod.POST)
@@ -109,27 +116,15 @@ public class UserController {
 
     @RequestMapping(path = RequestMappings.USERS.REGISTER, method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-
-        //TODO:
-        // role should not be fixed as patient
-        // figure out how to change it
-        registerRequest.setRole(UserRole.PATIENT);
-        
-        //TODO:
-        // change it: contoller should only return response provided by UserService
-        Optional<User> userOptional = userService.registerNewUser(registerRequest);
-        if (!userOptional.isPresent()) {
-            return new ResponseEntity<>("Registration failed", HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>("User was registered successfully", HttpStatus.OK);
+        ResponseDTO response = userService.registerNewUser(registerRequest);
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     /**
      * Reset user's password
      *
      * @param request - metadata
-     * @param email - users email
+     * @param email   - users email
      * @return message if success
      */
 
@@ -137,33 +132,24 @@ public class UserController {
     public ResponseEntity<?> resetPassword(HttpServletRequest request,
                                            @RequestBody String email) {
 
-        Optional<User> user = userService.findByEmail(email);
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        ResponseDTO response = userService.resetUserPassword(email);
+
+        if (response.getStatus() == HttpStatus.OK) {
+            ResetPasswordDTO data = (ResetPasswordDTO) response.getData();
+            mailService.send(mailService.constructResetTokenEmail(request.getPathInfo(),
+                    request.getLocale(), data.getToken(), data.getUserId(), data.getEmail()));
         }
 
-        //TODO:
-        // add to reset password token table isActive
-        // property and disable it after used
-
-        String token = UUID.randomUUID().toString();
-        userService.createPasswordResetTokenForUser(user.get(), token);
-
-        //TODO:
-        // probably we should move mail service to UserService
-
-        mailService.send(mailService.constructResetTokenEmail(request.getPathInfo(),
-                request.getLocale(), token, user.get()));
-
-        return new ResponseEntity<>("Password was reset successfully", HttpStatus.OK);
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     /**
      * Update user's password using token which was sent to user after reset
      *
      * @param newPassword - new password provided by user
-     * @param email - user's email
-     * @param token - token which user received
+     * @param email       - user's email
+     * @param token       - token which user received
      * @return - message if password was updated successfully
      */
 
@@ -171,22 +157,14 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody String newPassword,
                                             @RequestParam("email") String email,
                                             @RequestParam("token") String token) {
-        //TODO:
-        // 1. move to UserService
-        // 2. make this method private
-        // 3. remove it from UserService interface
-        if (!userService.isResetPasswordTokenValid(email, token)) {
-            return new ResponseEntity<>("Token is not valid", HttpStatus.FORBIDDEN);
-        }
 
         //TODO:
         // inside changeUserPassword there should be some
         // validator methods (check if user can change password,
         // is new password same as old one etc.) to
         // return proper response (not only operation successful)
-        userService.changeUserPassword(email, newPassword);
-
-        return new ResponseEntity<>("Password was updated successfully", HttpStatus.OK);
+        ResponseDTO response = userService.changeUserPasswordWithToken(email, token, newPassword);
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     /**
@@ -198,23 +176,16 @@ public class UserController {
 
     @RequestMapping(path = RequestMappings.USERS.UPDATE_PASSWORD, method = RequestMethod.POST)
     public ResponseEntity<?> changePassword(@RequestBody UpdatePasswordRequest updatePasswordData) {
-
-        //TODO:
-        // Add some loggers f.e to see authenticated user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
-
         //TODO:
         // Same as above. Add validators and return proper response
-        userService.changeUserPassword(securityUser.getUsername(), updatePasswordData.getPassword());
-
-        return new ResponseEntity<>("Password was updated successfully", HttpStatus.OK);
+        ResponseDTO response = userService.changeUserPassword(getCurrentUser().getUsername(), updatePasswordData.getPassword());
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     /**
      * Update user's email
      *
-     * @param id - id of user
+     * @param id    - id of user
      * @param email - user's new email
      * @return - message if email was updated successfully
      */
@@ -222,19 +193,25 @@ public class UserController {
     @RequestMapping(path = RequestMappings.USERS.UPDATE_EMAIL, method = RequestMethod.POST)
     public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @RequestBody String email) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
-
-        //TODO:
-        // Probably should be moved to  UserService
-        if (!userService.canPerformUserAction(id, securityUser)) {
-            return new ResponseEntity<>("You are not allowed to perform this action", HttpStatus.FORBIDDEN);
+        if (!canPerformUserAction(id, getCurrentUser())) {
+            return new ResponseEntity<>(NOT_ALLOWED_MESSAGE, HttpStatus.FORBIDDEN);
         }
 
-        //TODO:
-        // validate if new email is not as old one
-        userService.updateUserEmail(id, email);
-
-        return new ResponseEntity<>("Email was updated successfully", HttpStatus.OK);
+        ResponseDTO response = userService.updateUserEmail(id, email);
+        return new ResponseEntity<>(userService.updateUserEmail(id, email), response.getStatus());
     }
+
+    private SecurityUser getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (SecurityUser) authentication.getPrincipal();
+    }
+
+    private boolean canPerformUserAction(Long id, SecurityUser currentUser) {
+        return id.equals(currentUser.getId()) || currentUser.getUserRole() == UserRole.ADMIN;
+    }
+
+    private boolean canPerformUserAction(String email, SecurityUser currentUser) {
+        return email.equals(currentUser.getEmail()) || currentUser.getUserRole() == UserRole.ADMIN;
+    }
+
 }

@@ -4,6 +4,8 @@ import lombok.Value;
 import org.springframework.http.ResponseEntity;
 
 @Value
-public class ErrorDTO extends ResponseEntity {
+public class ErrorDTO {
     String reason;
+
+
 }

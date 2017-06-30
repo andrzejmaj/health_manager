@@ -16,15 +16,15 @@ public class MailService {
     private JavaMailSender mailSender;
 
     public SimpleMailMessage constructResetTokenEmail(
-            String contextPath, Locale locale, String token, User user) {
+            String contextPath, Locale locale, String token, Long id, String email) {
         String url = "http://localhost:8080/changePassword?id=" +
-                user.getId() + "&token=" + token;
+                id + "&token=" + token;
         String message = "Your password has been reset.\n Please click on link below to set your new password.";
-        return constructEmail("Reset Password", message + " \r\n" + url, user);
+        return constructEmail("Reset Password", message + " \r\n" + url, email);
     }
 
     private SimpleMailMessage constructEmail(String subject, String body,
-                                             User user) {
+                                             String sendTo) {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setSubject(subject);
         email.setText(body);

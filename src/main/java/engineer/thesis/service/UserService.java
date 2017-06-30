@@ -1,19 +1,16 @@
 package engineer.thesis.service;
 
-import engineer.thesis.model.PersonalDetails;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
+import engineer.thesis.model.dto.ResetPasswordDTO;
+import engineer.thesis.model.dto.ResponseDTO;
 import engineer.thesis.model.dto.UserDTO;
 import engineer.thesis.repository.PasswordResetTokenRepository;
 import engineer.thesis.repository.UserRepository;
 import engineer.thesis.security.model.PasswordResetToken;
 import engineer.thesis.security.model.RegisterRequest;
-import engineer.thesis.security.model.SecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,47 +33,158 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<User> registerNewUser(RegisterRequest registerRequest) {
+    public ResponseDTO registerNewUser(RegisterRequest registerRequest) {
 
-        if (emailExists(registerRequest.getEmail())) {
-            return Optional.empty();
+        ResponseDTO response = new ResponseDTO();
+
+        if (userExists(registerRequest.getEmail())) {
+            response.setMessage("Email is already taken.");
+            response.setStatus(HttpStatus.CONFLICT);
         }
-
-        PersonalDetails personalDetails = new PersonalDetails();
-        personalDetails.setBirthDate(new Date());
-        personalDetails.setBuildingNumber(4);
-        personalDetails.setCity("Cracow");
-        personalDetails.setCountry("Poland");
-        personalDetails.setFirstName("Andrzej");
-        personalDetails.setLastName("Maj");
-        personalDetails.setStreet("Ulica");
-        personalDetails.setFlatNumber(4);
-        personalDetails.setPhoneNumber("123456789");
-        personalDetails.setGender("Male");
-        personalDetails.setPesel("1234567890");
 
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole(UserRole.PATIENT);
-        user.setPersonalDetails(personalDetails);
 
-        return Optional.of(userRepository.save(user));
+        userRepository.save(user);
+
+        response.setStatus(HttpStatus.OK);
+        response.setMessage("User successfully registered");
+
+        return response;
     }
 
-    private boolean emailExists(String email) {
+    @Override
+    public ResponseDTO updateUser(UserDTO userDTO) {
+
+        ResponseDTO response = new ResponseDTO();
+        Optional<User> user = Optional.of(userRepository.findByEmail(userDTO.getEmail()));
+
+        if (!user.isPresent()) {
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setMessage("User not found in database");
+
+        } else {
+            user.get().setEmail(userDTO.getEmail());
+            user.get().setRole(UserRole.valueOf(userDTO.getRole()));
+            user.get().setImageUrl(userDTO.getImgUrl());
+
+            response.setStatus(HttpStatus.OK);
+            response.setMessage("User was successfully updated");
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseDTO changeUserPassword(String email, String password) {
+
+        ResponseDTO response = new ResponseDTO();
+        Optional<User> user = Optional.of(userRepository.findByEmail(email));
+
+        if (!user.isPresent()) {
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setMessage("User not found in database");
+
+        } else {
+            user.get().setPassword(passwordEncoder.encode(password));
+            userRepository.save(user.get());
+
+            response.setStatus(HttpStatus.OK);
+            response.setMessage("Password has been changed successfully");
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseDTO changeUserPasswordWithToken(String email, String token, String password) {
+
+        ResponseDTO response = new ResponseDTO();
+        Optional<User> user = Optional.of(userRepository.findByEmail(email));
+
+        if (!user.isPresent()) {
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setMessage("User not found in database");
+        }
+
+        else if (isResetPasswordTokenValid(email, token)) {
+            response.setStatus(HttpStatus.FORBIDDEN);
+            response.setMessage("Token is not valid");
+        }
+
+        else {
+
+            user.get().setPassword(passwordEncoder.encode(password));
+            userRepository.save(user.get());
+
+            response.setStatus(HttpStatus.OK);
+            response.setMessage("Password has been changed successfully");
+        }
+
+        return response;
+    }
+
+
+    @Override
+    public ResponseDTO updateUserEmail(Long id, String newEmail) {
+
+        ResponseDTO response = new ResponseDTO();
+        Optional<User> user = Optional.of(userRepository.findOne(id));
+
+        if (!user.isPresent()) {
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setMessage("User not found in database");
+
+        } else {
+            user.get().setEmail(newEmail);
+            userRepository.save(user.get());
+            response.setStatus(HttpStatus.OK);
+            response.setMessage("Email updated successfully");
+        }
+
+        return response;
+    }
+
+    public ResponseDTO resetUserPassword(String email) {
+
+        ResponseDTO response = new ResponseDTO();
+        Optional<User> user = Optional.of(userRepository.findByEmail(email));
+        if (!user.isPresent()) {
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setMessage("User not found in database");
+        } else {
+            String token = UUID.randomUUID().toString();
+
+            //TODO:
+            // add to reset password token table isActive
+            // property and disable it after used
+            createPasswordResetTokenForUser(user.get(), token);
+
+            ResetPasswordDTO resetPassword = new ResetPasswordDTO();
+
+            resetPassword.setEmail(user.get().getEmail());
+            resetPassword.setUserId(user.get().getId());
+            resetPassword.setToken(token);
+
+            response.setStatus(HttpStatus.OK);
+            response.setMessage("Token created successfully");
+            response.setData(resetPassword);
+        }
+
+        return response;
+    }
+
+    private boolean userExists(String email) {
         return userRepository.findByEmail(email) != null;
     }
 
-    @Override
-    public void createPasswordResetTokenForUser(User user, String token) {
-        PasswordResetToken resetToken = new PasswordResetToken(token, user);
-        System.out.println("CREATE PASSWORD TOKEN FOR USER: " + resetToken);
-        passwordTokenRepository.save(resetToken);
+    private boolean userExists(Long id) {
+        return userRepository.findOne(id) != null;
     }
 
-    @Override
-    public Boolean isResetPasswordTokenValid(String email, String token) {
+    private Boolean isResetPasswordTokenValid(String email, String token) {
         System.out.println(email);
         PasswordResetToken passwordToken =
                 passwordTokenRepository.findByToken(token);
@@ -92,38 +200,8 @@ public class UserService implements IUserService {
                 .getTime()) > 0;
     }
 
-    @Override
-    public void changeUserPassword(String email, String password) {
-        System.out.println("CHANGE PASSWORD" + email);
-        User user = userRepository.findByEmail(email);
-        System.out.println("FIND USER" + user);
-        user.setPassword(passwordEncoder.encode(password));
-        userRepository.save(user);
-    }
-
-    @Override
-    public Optional<User> updateUser(UserDTO userDTO) {
-        Optional<User> user = Optional.of(userRepository.findByEmail(userDTO.getEmail()));
-        if (user.isPresent()) {
-            user.get().setEmail(userDTO.getEmail());
-            user.get().setRole(UserRole.valueOf(userDTO.getRole()));
-            user.get().setImageUrl(userDTO.getImgUrl());
-            return Optional.of(userRepository.save(user.get()));
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<User> updateUserEmail(Long id, String newEmail) {
-        Optional<User> user = Optional.of(userRepository.findOne(id));
-        if (user.isPresent()) {
-            user.get().setEmail(newEmail);
-            return Optional.of(userRepository.save(user.get()));
-        }
-        return Optional.empty();
-    }
-
-    public boolean canPerformUserAction(Long id, SecurityUser currentUser) {
-        return id.equals(currentUser.getId()) || currentUser.getUserRole() == UserRole.ADMIN;
+    private void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken resetToken = new PasswordResetToken(token, user);
+        passwordTokenRepository.save(resetToken);
     }
 }
