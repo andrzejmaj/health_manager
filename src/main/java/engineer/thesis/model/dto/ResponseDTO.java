@@ -1,7 +1,9 @@
 package engineer.thesis.model.dto;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+@AllArgsConstructor
 public class ResponseDTO {
 
     private HttpStatus status;

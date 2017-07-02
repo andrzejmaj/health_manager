@@ -61,15 +61,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             .and()
             .authorizeRequests()
+                // TODO: 01.07.17
+                // change later to some variables
                 .antMatchers("/admin/**")
                     .hasRole("PATIENT")
                 .antMatchers(
-                        "/register",
-                        "/login",
-                        "/resetPassword",
-                        "/changePassword",
-                        "/updatePassword",
-                        "/"
+                        "/users/register",
+                        "/users/login",
+                        "/users/resetPassword",
+                        "/",
+                        ///for test remove/move to protected
+                        "/personaldetails/*",
+                        "/users/{id}/pesonaldetails",
+                        "/patients/**"
                 ).permitAll()
                 .antMatchers(HttpMethod.GET, "/users").authenticated()
                 .antMatchers(HttpMethod.GET, "/patients").authenticated()

@@ -1,7 +1,10 @@
 package engineer.thesis.service;
 
+import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
+import com.sun.org.apache.xerces.internal.impl.dv.dtd.NOTATIONDatatypeValidator;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
+import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.model.dto.ResetPasswordDTO;
 import engineer.thesis.model.dto.ResponseDTO;
 import engineer.thesis.model.dto.UserDTO;
@@ -9,28 +12,67 @@ import engineer.thesis.repository.PasswordResetTokenRepository;
 import engineer.thesis.repository.UserRepository;
 import engineer.thesis.security.model.PasswordResetToken;
 import engineer.thesis.security.model.RegisterRequest;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.rmi.NotBoundException;
 import java.util.*;
 
 @Service
 public class UserService implements IUserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    PasswordResetTokenRepository passwordTokenRepository;
+    private PasswordResetTokenRepository passwordTokenRepository;
+
+    @Autowired
+    private PersonalDetailsService personalDetailsService;
 
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
+
+    @Override
+    public ResponseDTO getPersonalDetails(Long id) throws NotFoundException, NotBoundException {
+        User user = userRepository.findOne(id);
+
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        if (user.getPersonalDetails() == null) {
+            throw new NotBoundException("User doesn't have personal details");
+        }
+
+        return new ResponseDTO(HttpStatus.OK, "OK", user.getPersonalDetails());
+    }
+
+
+    @Override
+    public ResponseDTO savePersonalDetails(PersonalDetailDTO personalDetailDTO, Long userId) throws NotFoundException  {
+
+        User user = userRepository.findOne(userId);
+
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        user.setPersonalDetails(personalDetailsService.mapFromDTO(personalDetailDTO));
+
+        userRepository.save(user);
+
+        return new ResponseDTO(HttpStatus.OK, "OK", user.getPersonalDetails());
+    }
+
+
 
     @Override
     public ResponseDTO registerNewUser(RegisterRequest registerRequest) {
@@ -59,7 +101,7 @@ public class UserService implements IUserService {
     public ResponseDTO updateUser(UserDTO userDTO) {
 
         ResponseDTO response = new ResponseDTO();
-        Optional<User> user = Optional.of(userRepository.findByEmail(userDTO.getEmail()));
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDTO.getEmail()));
 
         if (!user.isPresent()) {
             response.setStatus(HttpStatus.NOT_FOUND);
@@ -81,7 +123,7 @@ public class UserService implements IUserService {
     public ResponseDTO changeUserPassword(String email, String password) {
 
         ResponseDTO response = new ResponseDTO();
-        Optional<User> user = Optional.of(userRepository.findByEmail(email));
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
 
         if (!user.isPresent()) {
             response.setStatus(HttpStatus.NOT_FOUND);
@@ -102,7 +144,7 @@ public class UserService implements IUserService {
     public ResponseDTO changeUserPasswordWithToken(String email, String token, String password) {
 
         ResponseDTO response = new ResponseDTO();
-        Optional<User> user = Optional.of(userRepository.findByEmail(email));
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
 
         if (!user.isPresent()) {
             response.setStatus(HttpStatus.NOT_FOUND);
@@ -131,7 +173,7 @@ public class UserService implements IUserService {
     public ResponseDTO updateUserEmail(Long id, String newEmail) {
 
         ResponseDTO response = new ResponseDTO();
-        Optional<User> user = Optional.of(userRepository.findOne(id));
+        Optional<User> user = Optional.ofNullable(userRepository.findOne(id));
 
         if (!user.isPresent()) {
             response.setStatus(HttpStatus.NOT_FOUND);
@@ -150,7 +192,7 @@ public class UserService implements IUserService {
     public ResponseDTO resetUserPassword(String email) {
 
         ResponseDTO response = new ResponseDTO();
-        Optional<User> user = Optional.of(userRepository.findByEmail(email));
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
         if (!user.isPresent()) {
             response.setStatus(HttpStatus.NOT_FOUND);
             response.setMessage("User not found in database");
@@ -175,6 +217,9 @@ public class UserService implements IUserService {
 
         return response;
     }
+
+
+
 
     private boolean userExists(String email) {
         return userRepository.findByEmail(email) != null;

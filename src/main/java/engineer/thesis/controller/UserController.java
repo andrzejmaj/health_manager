@@ -1,13 +1,17 @@
 package engineer.thesis.controller;
 
+import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
+import com.sun.org.apache.regexp.internal.RE;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
+import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.model.dto.ResetPasswordDTO;
 import engineer.thesis.model.dto.ResponseDTO;
 import engineer.thesis.security.TokenUtils;
 import engineer.thesis.security.model.*;
 import engineer.thesis.service.UserService;
 import engineer.thesis.utils.MailService;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
+import java.rmi.NotBoundException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,6 +53,7 @@ public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private static final String NOT_ALLOWED_MESSAGE = "You are not allowed to perform this operation";
+    private static final String NOT_FOUND = "Something was not found";
 
     //TODO:
     // 1. Probably only UserService should be autowired here
@@ -129,8 +135,7 @@ public class UserController {
      */
 
     @RequestMapping(path = RequestMappings.USERS.RESET_PASSWORD, method = RequestMethod.POST)
-    public ResponseEntity<?> resetPassword(HttpServletRequest request,
-                                           @RequestBody String email) {
+    public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestBody String email) {
 
 
         ResponseDTO response = userService.resetUserPassword(email);
@@ -199,6 +204,29 @@ public class UserController {
 
         ResponseDTO response = userService.updateUserEmail(id, email);
         return new ResponseEntity<>(userService.updateUserEmail(id, email), response.getStatus());
+    }
+
+    @RequestMapping(path = RequestMappings.USERS.USER_PERSONAL_DETAILS, method = RequestMethod.GET)
+    public ResponseEntity<?> getPersonalDetails(@PathVariable Long id){
+        try {
+            ResponseDTO responseDTO = userService.getPersonalDetails(id);
+            return ResponseEntity.ok(responseDTO);
+        } catch (NotFoundException | NotBoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = RequestMappings.USERS.USER_PERSONAL_DETAILS, method = RequestMethod.POST)
+    public ResponseEntity<?> savePersonalDetails(@PathVariable Long id,
+                                                 @RequestBody PersonalDetailDTO personalDetail){
+        try {
+            ResponseDTO responseDTO = userService.savePersonalDetails(personalDetail, id);
+            return ResponseEntity.ok(responseDTO);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<Object>(NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
     }
 
     private SecurityUser getCurrentUser() {

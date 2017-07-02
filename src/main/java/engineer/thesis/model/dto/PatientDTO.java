@@ -1,38 +1,17 @@
 package engineer.thesis.model.dto;
 
-import engineer.thesis.model.Patient;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
-@Value
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class PatientDTO {
 
-    private final Long id;
-    private final String firstName;
-    private final String lastName;
-    private final String gender;
-    private final String pesel;
-    private final Date birthdate;
-    private final String phoneNumber;
-    private final String country;
-    private final String street;
-    private final String city;
-    private final Integer buildingNumber;
-    private final Integer flatNumber;
+    private Long id;
+    private PersonalDetailDTO personalDetails;
+    private PersonalDetailDTO emergencyContact;
+    private String insuranceNumber;
 
-    public PatientDTO(Patient patient) {
-        this.id = patient.getId();
-        this.firstName = patient.getPersonalDetails().getFirstName();
-        this.lastName = patient.getPersonalDetails().getLastName();
-        this.gender = patient.getPersonalDetails().getGender();
-        this.pesel = patient.getPersonalDetails().getPesel();
-        this.birthdate = patient.getPersonalDetails().getBirthDate();
-        this.phoneNumber = patient.getPersonalDetails().getPhoneNumber();
-        this.country = patient.getPersonalDetails().getCountry();
-        this.city = patient.getPersonalDetails().getCity();
-        this.street = patient.getPersonalDetails().getStreet();
-        this.buildingNumber = patient.getPersonalDetails().getBuildingNumber();
-        this.flatNumber = patient.getPersonalDetails().getFlatNumber();
-    }
 }

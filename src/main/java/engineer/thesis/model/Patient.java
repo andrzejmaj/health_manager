@@ -28,10 +28,6 @@ public class Patient {
     @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "personal_details_id", nullable = false)
-    private PersonalDetails personalDetails;
-
     @OneToOne
     @JoinColumn(name = "emergency_contact_id")
     private PersonalDetails emergencyContact;
