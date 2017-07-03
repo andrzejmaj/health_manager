@@ -13,12 +13,8 @@ import java.util.NoSuchElementException;
 @Service
 public class PersonalDetailsService implements IPersonalDetailsService {
 
-    private PersonalDetailsRepository personalDetailsRepository;
-
     @Autowired
-    public PersonalDetailsService(PatientRepository patientRepository, PersonalDetailsRepository personalDetailsRepository) {
-        this.personalDetailsRepository = personalDetailsRepository;
-    }
+    private PersonalDetailsRepository personalDetailsRepository;
 
 
     @Override
