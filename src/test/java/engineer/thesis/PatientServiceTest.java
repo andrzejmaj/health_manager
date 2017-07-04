@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,10 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -91,10 +90,13 @@ public class PatientServiceTest {
         patient.setUser(user);
         patient.setEmergencyContact(emergencyContact);
 
+
         Mockito.when(patientRepository.findAll()).thenReturn(Collections.singletonList(patient));
         Mockito.when(patientRepository.findOne(ID)).thenReturn(patient);
         Mockito.when(patientRepository.findByUser_PersonalDetails_Pesel(PESEL)).thenReturn(patient);
         Mockito.when(patientRepository.findByUser_PersonalDetails_LastNameLike(LAST_NAME)).thenReturn(Collections.singletonList(patient));
+        Mockito.when(patientRepository.save(Matchers.any(Patient.class))).thenReturn(patient);
+        Mockito.when(userService.findByEmail("mail@mail.pl")).thenReturn(Optional.of(user));
     }
 
     @Test
@@ -146,4 +148,19 @@ public class PatientServiceTest {
         List<PatientDTO> patient = patientService.findPatientsByLastName(LAST_NAME);
         assertThat(patient.size()).isEqualTo(1);
     }
+
+    @Test
+    public void saveNewPatient_Test() {
+        String LAST_NAME = "Smith";
+
+        PatientDTO expectedPatientDTO = new PatientDTO();
+        PersonalDetailDTO expectedPersonalDetailDTO = new PersonalDetailDTO();
+        expectedPatientDTO.setEmergencyContact(new PersonalDetailDTO());
+        expectedPersonalDetailDTO.setLastName(LAST_NAME);
+        expectedPatientDTO.setPersonalDetails(expectedPersonalDetailDTO);
+
+        PatientDTO patient = patientService.saveNewPatient(expectedPatientDTO, "mail@mail.pl");
+        assertThat(patient.getPersonalDetails().getLastName()).isEqualTo(expectedPersonalDetailDTO.getLastName());
+    }
+
 }
