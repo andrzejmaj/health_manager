@@ -3,6 +3,7 @@ package engineer.thesis.controller;
 import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.sun.org.apache.regexp.internal.RE;
 import engineer.thesis.exception.AlreadyExistsException;
+import engineer.thesis.exception.TokenExpiredException;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
 import engineer.thesis.model.dto.PersonalDetailDTO;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.rmi.NotBoundException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,7 +56,6 @@ public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private static final String NOT_ALLOWED_MESSAGE = "You are not allowed to perform this operation";
-    private static final String NOT_FOUND = "Something was not found";
 
     //TODO:
     // 1. Probably only UserService should be autowired here
@@ -140,17 +141,14 @@ public class UserController {
 
     @RequestMapping(path = RequestMappings.USERS.RESET_PASSWORD, method = RequestMethod.POST)
     public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestBody String email) {
-
-
-        ResponseDTO response = userService.resetUserPassword(email);
-
-        if (response.getStatus() == HttpStatus.OK) {
-            ResetPasswordDTO data = (ResetPasswordDTO) response.getData();
+        try {
+            ResetPasswordDTO data = userService.resetUserPassword(email);
             mailService.send(mailService.constructResetTokenEmail(request.getPathInfo(),
                     request.getLocale(), data.getToken(), data.getUserId(), data.getEmail()));
+            return new ResponseEntity<>(userService.resetUserPassword(email), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(response, response.getStatus());
     }
 
     /**
@@ -172,8 +170,11 @@ public class UserController {
         // validator methods (check if user can change password,
         // is new password same as old one etc.) to
         // return proper response (not only operation successful)
-        ResponseDTO response = userService.changeUserPasswordWithToken(email, token, newPassword);
-        return new ResponseEntity<>(response, response.getStatus());
+        try {
+            return new ResponseEntity<>(userService.changeUserPasswordWithToken(email, token, newPassword), HttpStatus.OK);
+        } catch (TokenExpiredException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
     }
 
     /**
@@ -187,8 +188,12 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody UpdatePasswordRequest updatePasswordData) {
         //TODO:
         // Same as above. Add validators and return proper response
-        ResponseDTO response = userService.changeUserPassword(getCurrentUser().getUsername(), updatePasswordData.getPassword());
-        return new ResponseEntity<>(response, response.getStatus());
+        try {
+            return new ResponseEntity<>(userService.changeUserPassword(getCurrentUser().getUsername(),
+                    updatePasswordData.getPassword()), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -201,34 +206,36 @@ public class UserController {
 
     @RequestMapping(path = RequestMappings.USERS.UPDATE_EMAIL, method = RequestMethod.POST)
     public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @RequestBody String email) {
-
         if (!canPerformUserAction(id, getCurrentUser())) {
             return new ResponseEntity<>(NOT_ALLOWED_MESSAGE, HttpStatus.FORBIDDEN);
         }
+        try {
+            return new ResponseEntity<>(userService.updateUserEmail(id, email), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
-        ResponseDTO response = userService.updateUserEmail(id, email);
-        return new ResponseEntity<>(userService.updateUserEmail(id, email), response.getStatus());
+
     }
 
-    @RequestMapping(value = { RequestMappings.USERS.USR_DET, RequestMappings.USERS.USR_OWN_DET }, method = RequestMethod.GET)
+    @RequestMapping(value = {RequestMappings.USERS.USR_DET, RequestMappings.USERS.USR_OWN_DET}, method = RequestMethod.GET)
     public ResponseEntity<?> getPersonalDetails(@PathVariable Optional<Long> id) {
         try {
             Long userId = id.isPresent() ? id.get() : getCurrentUser().getId();
             return ResponseEntity.ok(userService.getPersonalDetails(userId));
         } catch (NotFoundException | NotBoundException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(NOT_FOUND, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
-    @RequestMapping(value = { RequestMappings.USERS.USR_DET, RequestMappings.USERS.USR_OWN_DET }, method = RequestMethod.POST)
+    @RequestMapping(value = {RequestMappings.USERS.USR_DET, RequestMappings.USERS.USR_OWN_DET}, method = RequestMethod.POST)
     public ResponseEntity<?> savePersonalDetails(@PathVariable Optional<Long> id, @RequestBody PersonalDetailDTO personalDetail) {
         try {
             Long userId = id.isPresent() ? id.get() : getCurrentUser().getId();
             return ResponseEntity.ok(userService.savePersonalDetails(personalDetail, userId));
         } catch (NotFoundException e) {
             e.printStackTrace();
-            return new ResponseEntity<Object>(NOT_FOUND, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

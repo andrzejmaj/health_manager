@@ -1,9 +1,9 @@
 package engineer.thesis.service;
 
 import engineer.thesis.exception.AlreadyExistsException;
+import engineer.thesis.exception.TokenExpiredException;
 import engineer.thesis.model.User;
 import engineer.thesis.model.dto.PersonalDetailDTO;
-import engineer.thesis.model.dto.ResponseDTO;
 import engineer.thesis.model.dto.UserDTO;
 import engineer.thesis.security.model.RegisterRequest;
 import javassist.NotFoundException;
@@ -19,13 +19,13 @@ public interface IUserService {
 
     String registerNewUser(RegisterRequest registerRequest) throws AlreadyExistsException;
 
-    ResponseDTO updateUser(UserDTO userDTO);
+    UserDTO updateUser(UserDTO userDTO);
 
-    ResponseDTO changeUserPassword(String email, String password);
+    String changeUserPassword(String email, String password);
 
-    ResponseDTO changeUserPasswordWithToken(String email, String token, String password);
+    String changeUserPasswordWithToken(String email, String token, String password) throws TokenExpiredException;
 
-    ResponseDTO updateUserEmail(Long id, String newEmail);
+    String updateUserEmail(Long id, String newEmail);
 
     Optional<User> findByEmail(String email);
 

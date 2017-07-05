@@ -1,11 +1,11 @@
 package engineer.thesis.service;
 
 import engineer.thesis.exception.AlreadyExistsException;
+import engineer.thesis.exception.TokenExpiredException;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
 import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.model.dto.ResetPasswordDTO;
-import engineer.thesis.model.dto.ResponseDTO;
 import engineer.thesis.model.dto.UserDTO;
 import engineer.thesis.repository.PasswordResetTokenRepository;
 import engineer.thesis.repository.UserRepository;
@@ -13,7 +13,6 @@ import engineer.thesis.security.model.PasswordResetToken;
 import engineer.thesis.security.model.RegisterRequest;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,12 +40,7 @@ public class UserService implements IUserService {
 
     @Override
     public PersonalDetailDTO getPersonalDetails(Long id) throws NotFoundException, NotBoundException {
-
-        System.out.println("GET PERSONAL DETAILS: " + id);
-
         User user = userRepository.findOne(id);
-
-        System.out.println("GET USER: " + user);
 
         if (user == null) {
             throw new NotFoundException("User not found");
@@ -61,7 +55,7 @@ public class UserService implements IUserService {
 
 
     @Override
-    public PersonalDetailDTO savePersonalDetails(PersonalDetailDTO personalDetailDTO, Long userId) throws NotFoundException  {
+    public PersonalDetailDTO savePersonalDetails(PersonalDetailDTO personalDetailDTO, Long userId) throws NotFoundException {
 
         User user = userRepository.findOne(userId);
 
@@ -75,7 +69,6 @@ public class UserService implements IUserService {
 
         return personalDetailsService.mapToDTO(user.getPersonalDetails());
     }
-
 
 
     @Override
@@ -96,128 +89,86 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public ResponseDTO updateUser(UserDTO userDTO) {
-
-        ResponseDTO response = new ResponseDTO();
+    public UserDTO updateUser(UserDTO userDTO) {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDTO.getEmail()));
 
         if (!user.isPresent()) {
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setMessage("User not found in database");
-
-        } else {
-            user.get().setEmail(userDTO.getEmail());
-            user.get().setRole(UserRole.valueOf(userDTO.getRole()));
-            user.get().setImageUrl(userDTO.getImgUrl());
-
-            response.setStatus(HttpStatus.OK);
-            response.setMessage("User was successfully updated");
+            throw new NoSuchElementException("User not found");
         }
 
-        return response;
+        user.get().setEmail(userDTO.getEmail());
+        user.get().setRole(UserRole.valueOf(userDTO.getRole()));
+        user.get().setImageUrl(userDTO.getImgUrl());
+
+        return mapToDTO(user.get());
     }
 
     @Override
-    public ResponseDTO changeUserPassword(String email, String password) {
+    public String changeUserPassword(String email, String password) {
 
-        ResponseDTO response = new ResponseDTO();
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
 
         if (!user.isPresent()) {
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setMessage("User not found in database");
-
-        } else {
-            user.get().setPassword(passwordEncoder.encode(password));
-            userRepository.save(user.get());
-
-            response.setStatus(HttpStatus.OK);
-            response.setMessage("Password has been changed successfully");
+            throw new NoSuchElementException("User not found");
         }
 
-        return response;
+        user.get().setPassword(passwordEncoder.encode(password));
+        userRepository.save(user.get());
+
+        return "Password has been changed successfully";
     }
 
     @Override
-    public ResponseDTO changeUserPasswordWithToken(String email, String token, String password) {
-
-        ResponseDTO response = new ResponseDTO();
+    public String changeUserPasswordWithToken(String email, String token, String password) throws TokenExpiredException, NoSuchElementException {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
 
         if (!user.isPresent()) {
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setMessage("User not found in database");
+            throw new NoSuchElementException("User not found");
         }
 
-        else if (isResetPasswordTokenValid(email, token)) {
-            response.setStatus(HttpStatus.FORBIDDEN);
-            response.setMessage("Token is not valid");
+        if (isResetPasswordTokenValid(email, token)) {
+            throw new TokenExpiredException("Token is not valid");
         }
 
-        else {
+        user.get().setPassword(passwordEncoder.encode(password));
+        userRepository.save(user.get());
 
-            user.get().setPassword(passwordEncoder.encode(password));
-            userRepository.save(user.get());
-
-            response.setStatus(HttpStatus.OK);
-            response.setMessage("Password has been changed successfully");
-        }
-
-        return response;
+        return "Password has been changed successfully";
     }
 
-
     @Override
-    public ResponseDTO updateUserEmail(Long id, String newEmail) {
-
-        ResponseDTO response = new ResponseDTO();
+    public String updateUserEmail(Long id, String newEmail) {
         Optional<User> user = Optional.ofNullable(userRepository.findOne(id));
 
         if (!user.isPresent()) {
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setMessage("User not found in database");
-
-        } else {
-            user.get().setEmail(newEmail);
-            userRepository.save(user.get());
-            response.setStatus(HttpStatus.OK);
-            response.setMessage("Email updated successfully");
+            throw new NoSuchElementException("User not found");
         }
 
-        return response;
+        user.get().setEmail(newEmail);
+        userRepository.save(user.get());
+
+        return "Email updated successfully";
     }
 
-    public ResponseDTO resetUserPassword(String email) {
+    public ResetPasswordDTO resetUserPassword(String email) throws NoSuchElementException {
 
-        ResponseDTO response = new ResponseDTO();
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
         if (!user.isPresent()) {
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setMessage("User not found in database");
-        } else {
-            String token = UUID.randomUUID().toString();
-
-            //TODO:
-            // add to reset password token table isActive
-            // property and disable it after used
-            createPasswordResetTokenForUser(user.get(), token);
-
-            ResetPasswordDTO resetPassword = new ResetPasswordDTO();
-
-            resetPassword.setEmail(user.get().getEmail());
-            resetPassword.setUserId(user.get().getId());
-            resetPassword.setToken(token);
-
-            response.setStatus(HttpStatus.OK);
-            response.setMessage("Token created successfully");
-            response.setData(resetPassword);
+            throw new NoSuchElementException("User not found");
         }
 
-        return response;
+        String token = UUID.randomUUID().toString();
+        //TODO:
+        // add to reset password token table isActive
+        // property and disable it after used
+        createPasswordResetTokenForUser(user.get(), token);
+        ResetPasswordDTO resetPassword = new ResetPasswordDTO();
+        resetPassword.setEmail(user.get().getEmail());
+        resetPassword.setUserId(user.get().getId());
+        resetPassword.setToken(token);
+
+        return resetPassword;
     }
-
-
-
 
     private boolean userExists(String email) {
         return userRepository.findByEmail(email) != null;
@@ -246,5 +197,14 @@ public class UserService implements IUserService {
     private void createPasswordResetTokenForUser(User user, String token) {
         PasswordResetToken resetToken = new PasswordResetToken(token, user);
         passwordTokenRepository.save(resetToken);
+    }
+
+    private UserDTO mapToDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                String.valueOf(user.getRole()),
+                user.getImageUrl()
+        );
     }
 }
