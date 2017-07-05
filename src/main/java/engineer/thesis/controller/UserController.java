@@ -206,10 +206,11 @@ public class UserController {
         return new ResponseEntity<>(userService.updateUserEmail(id, email), response.getStatus());
     }
 
-    @RequestMapping(path = RequestMappings.USERS.USER_PERSONAL_DETAILS, method = RequestMethod.GET)
-    public ResponseEntity<?> getPersonalDetails(@PathVariable Long id){
+    @RequestMapping(path = RequestMappings.USERS.USER_OWN_PERSONAL_DETAILS, method = RequestMethod.GET)
+    public ResponseEntity<?> getPersonalDetails(){
         try {
-            ResponseDTO responseDTO = userService.getPersonalDetails(id);
+            SecurityUser user = getCurrentUser();
+            ResponseDTO responseDTO = userService.getPersonalDetails(user.getId());
             return ResponseEntity.ok(responseDTO);
         } catch (NotFoundException | NotBoundException e) {
             e.printStackTrace();
@@ -217,7 +218,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.USERS.USER_PERSONAL_DETAILS, method = RequestMethod.POST)
+    @RequestMapping(path = RequestMappings.USERS.USER_OWN_PERSONAL_DETAILS, method = RequestMethod.POST)
     public ResponseEntity<?> savePersonalDetails(@PathVariable Long id,
                                                  @RequestBody PersonalDetailDTO personalDetail){
         try {
@@ -235,11 +236,11 @@ public class UserController {
     }
 
     private boolean canPerformUserAction(Long id, SecurityUser currentUser) {
-        return id.equals(currentUser.getId()) || currentUser.getUserRole() == UserRole.ADMIN;
+        return id.equals(currentUser.getId()) || currentUser.getUserRole() == UserRole.ROLE_ADMIN;
     }
 
     private boolean canPerformUserAction(String email, SecurityUser currentUser) {
-        return email.equals(currentUser.getEmail()) || currentUser.getUserRole() == UserRole.ADMIN;
+        return email.equals(currentUser.getEmail()) || currentUser.getUserRole() == UserRole.ROLE_ADMIN;
     }
 
 }
