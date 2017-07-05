@@ -210,20 +210,22 @@ public class UserController {
         return new ResponseEntity<>(userService.updateUserEmail(id, email), response.getStatus());
     }
 
-    @RequestMapping(path = RequestMappings.USERS.USER_OWN_PERSONAL_DETAILS, method = RequestMethod.GET)
-    public ResponseEntity<?> getPersonalDetails() {
+    @RequestMapping(value = { RequestMappings.USERS.USR_DET, RequestMappings.USERS.USR_OWN_DET }, method = RequestMethod.GET)
+    public ResponseEntity<?> getPersonalDetails(@PathVariable Optional<Long> id) {
         try {
-            return ResponseEntity.ok(userService.getPersonalDetails(getCurrentUser().getId()));
+            Long userId = id.isPresent() ? id.get() : getCurrentUser().getId();
+            return ResponseEntity.ok(userService.getPersonalDetails(userId));
         } catch (NotFoundException | NotBoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
 
-    @RequestMapping(path = RequestMappings.USERS.USER_OWN_PERSONAL_DETAILS, method = RequestMethod.POST)
-    public ResponseEntity<?> savePersonalDetails(@RequestBody PersonalDetailDTO personalDetail) {
+    @RequestMapping(value = { RequestMappings.USERS.USR_DET, RequestMappings.USERS.USR_OWN_DET }, method = RequestMethod.POST)
+    public ResponseEntity<?> savePersonalDetails(@PathVariable Optional<Long> id, @RequestBody PersonalDetailDTO personalDetail) {
         try {
-            return ResponseEntity.ok(userService.savePersonalDetails(personalDetail, getCurrentUser().getId()));
+            Long userId = id.isPresent() ? id.get() : getCurrentUser().getId();
+            return ResponseEntity.ok(userService.savePersonalDetails(personalDetail, userId));
         } catch (NotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<Object>(NOT_FOUND, HttpStatus.NOT_FOUND);

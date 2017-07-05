@@ -9,7 +9,8 @@ final class RequestMappings {
         static final String UPDATE_PASSWORD_WITH_TOKEN = "/users/password_token/";
         static final String UPDATE_PASSWORD = "/users/password";
         static final String UPDATE_EMAIL = "/users/{id}/email";
-        static final String USER_OWN_PERSONAL_DETAILS = "/users/personaldetails";
+        static final String USR_DET = "/users/personaldetails/{id}";
+        static final String USR_OWN_DET = "/users/personaldetails";
     }
 }
 
