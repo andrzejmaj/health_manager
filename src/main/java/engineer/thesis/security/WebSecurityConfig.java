@@ -1,5 +1,6 @@
 package engineer.thesis.security;
 
+import engineer.thesis.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
@@ -60,6 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
             .and()
+                .exceptionHandling().authenticationEntryPoint( entryPoint )
+            .and()
             .authorizeRequests()
                 // TODO: 01.07.17
                 // change later to some variables
@@ -72,12 +75,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/",
                         ///for test remove/move to protected
                         "/personaldetails/*",
-                        "/users/{id}/pesonaldetails",
+                        "/users/personaldetails",
                         "/patients/**"
                 ).permitAll()
-                .antMatchers(HttpMethod.GET, "/users").authenticated()
-                .antMatchers(HttpMethod.GET, "/patients").authenticated()
-                .anyRequest().permitAll();
+                .antMatchers(HttpMethod.GET, "/users").authenticated();
 
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 

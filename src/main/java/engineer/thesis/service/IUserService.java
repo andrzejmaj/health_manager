@@ -1,7 +1,7 @@
 package engineer.thesis.service;
 
+import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.User;
-import engineer.thesis.model.UserRole;
 import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.model.dto.ResponseDTO;
 import engineer.thesis.model.dto.UserDTO;
@@ -15,9 +15,9 @@ import java.util.Optional;
 @Service
 public interface IUserService {
 
-    ResponseDTO savePersonalDetails(PersonalDetailDTO personalDetailDTO, Long userId) throws NotFoundException, NotBoundException;
+    PersonalDetailDTO savePersonalDetails(PersonalDetailDTO personalDetailDTO, Long userId) throws NotFoundException, NotBoundException;
 
-    ResponseDTO registerNewUser(RegisterRequest registerRequest);
+    String registerNewUser(RegisterRequest registerRequest) throws AlreadyExistsException;
 
     ResponseDTO updateUser(UserDTO userDTO);
 
@@ -29,5 +29,5 @@ public interface IUserService {
 
     Optional<User> findByEmail(String email);
 
-    ResponseDTO getPersonalDetails(Long id) throws NotFoundException, NotBoundException;
+    PersonalDetailDTO getPersonalDetails(Long id) throws NotFoundException, NotBoundException;
 }

@@ -1,7 +1,6 @@
 package engineer.thesis.service;
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
-import com.sun.org.apache.xerces.internal.impl.dv.dtd.NOTATIONDatatypeValidator;
+import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
 import engineer.thesis.model.dto.PersonalDetailDTO;
@@ -41,8 +40,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public ResponseDTO getPersonalDetails(Long id) throws NotFoundException, NotBoundException {
+    public PersonalDetailDTO getPersonalDetails(Long id) throws NotFoundException, NotBoundException {
+
+        System.out.println("GET PERSONAL DETAILS: " + id);
+
         User user = userRepository.findOne(id);
+
+        System.out.println("GET USER: " + user);
 
         if (user == null) {
             throw new NotFoundException("User not found");
@@ -52,12 +56,12 @@ public class UserService implements IUserService {
             throw new NotBoundException("User doesn't have personal details");
         }
 
-        return new ResponseDTO(HttpStatus.OK, "OK", user.getPersonalDetails());
+        return personalDetailsService.mapToDTO(user.getPersonalDetails());
     }
 
 
     @Override
-    public ResponseDTO savePersonalDetails(PersonalDetailDTO personalDetailDTO, Long userId) throws NotFoundException  {
+    public PersonalDetailDTO savePersonalDetails(PersonalDetailDTO personalDetailDTO, Long userId) throws NotFoundException  {
 
         User user = userRepository.findOne(userId);
 
@@ -69,19 +73,16 @@ public class UserService implements IUserService {
 
         userRepository.save(user);
 
-        return new ResponseDTO(HttpStatus.OK, "OK", user.getPersonalDetails());
+        return personalDetailsService.mapToDTO(user.getPersonalDetails());
     }
 
 
 
     @Override
-    public ResponseDTO registerNewUser(RegisterRequest registerRequest) {
-
-        ResponseDTO response = new ResponseDTO();
+    public String registerNewUser(RegisterRequest registerRequest) throws AlreadyExistsException {
 
         if (userExists(registerRequest.getEmail())) {
-            response.setMessage("Email is already taken.");
-            response.setStatus(HttpStatus.CONFLICT);
+            throw new AlreadyExistsException("User with such mail already exists");
         }
 
         User user = new User();
@@ -91,10 +92,7 @@ public class UserService implements IUserService {
 
         userRepository.save(user);
 
-        response.setStatus(HttpStatus.OK);
-        response.setMessage("User successfully registered");
-
-        return response;
+        return "User successfully registered";
     }
 
     @Override

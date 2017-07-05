@@ -2,6 +2,7 @@ package engineer.thesis.controller;
 
 import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.sun.org.apache.regexp.internal.RE;
+import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
 import engineer.thesis.model.dto.PersonalDetailDTO;
@@ -122,8 +123,11 @@ public class UserController {
 
     @RequestMapping(path = RequestMappings.USERS.REGISTER, method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-        ResponseDTO response = userService.registerNewUser(registerRequest);
-        return new ResponseEntity<>(response, response.getStatus());
+        try {
+            return new ResponseEntity<>(userService.registerNewUser(registerRequest), HttpStatus.OK);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
     /**
@@ -207,11 +211,9 @@ public class UserController {
     }
 
     @RequestMapping(path = RequestMappings.USERS.USER_OWN_PERSONAL_DETAILS, method = RequestMethod.GET)
-    public ResponseEntity<?> getPersonalDetails(){
+    public ResponseEntity<?> getPersonalDetails() {
         try {
-            SecurityUser user = getCurrentUser();
-            ResponseDTO responseDTO = userService.getPersonalDetails(user.getId());
-            return ResponseEntity.ok(responseDTO);
+            return ResponseEntity.ok(userService.getPersonalDetails(getCurrentUser().getId()));
         } catch (NotFoundException | NotBoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(NOT_FOUND, HttpStatus.NOT_FOUND);
@@ -219,11 +221,9 @@ public class UserController {
     }
 
     @RequestMapping(path = RequestMappings.USERS.USER_OWN_PERSONAL_DETAILS, method = RequestMethod.POST)
-    public ResponseEntity<?> savePersonalDetails(@PathVariable Long id,
-                                                 @RequestBody PersonalDetailDTO personalDetail){
+    public ResponseEntity<?> savePersonalDetails(@RequestBody PersonalDetailDTO personalDetail) {
         try {
-            ResponseDTO responseDTO = userService.savePersonalDetails(personalDetail, id);
-            return ResponseEntity.ok(responseDTO);
+            return ResponseEntity.ok(userService.savePersonalDetails(personalDetail, getCurrentUser().getId()));
         } catch (NotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<Object>(NOT_FOUND, HttpStatus.NOT_FOUND);
