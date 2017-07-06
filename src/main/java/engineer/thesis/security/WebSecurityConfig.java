@@ -1,6 +1,5 @@
 package engineer.thesis.security;
 
-import engineer.thesis.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
@@ -75,10 +74,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/",
                         ///for test remove/move to protected
                         "/personaldetails/*",
-                        "/users/personaldetails",
-                        "/patients/**"
+                        "/users/personaldetails"
                 ).permitAll()
-                .antMatchers(HttpMethod.GET, "/users").authenticated();
+                .antMatchers(HttpMethod.GET, "/users").authenticated()
+                .antMatchers(HttpMethod.GET, "/patients").authenticated()
+                .anyRequest().permitAll();
+
 
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 

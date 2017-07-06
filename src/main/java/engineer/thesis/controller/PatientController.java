@@ -3,6 +3,7 @@ package engineer.thesis.controller;
 import engineer.thesis.model.Patient;
 import engineer.thesis.model.dto.ErrorDTO;
 import engineer.thesis.model.dto.PatientDTO;
+import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,17 +53,16 @@ public class PatientController {
     }
 
     @RequestMapping(path = "/patients/{email}", method = RequestMethod.PUT)
-    public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO, @PathVariable String email) {
+    public ResponseEntity<?> savePatient(@RequestBody PersonalDetailDTO personalDetailDTO, @PathVariable String email) {
 
         try {
-            patientService.saveNewPatient(patientDTO, email);
+            patientService.saveNewPatient(personalDetailDTO, email);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.ok("fasd");
+        return ResponseEntity.ok("Saved");
     }
 
-    
 
 }

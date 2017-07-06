@@ -50,17 +50,14 @@ public class PatientService implements IPatientService {
 
 
     @Override
-    public PatientDTO saveNewPatient(PatientDTO patientDTO, String email) throws NoSuchElementException{
+    public PersonalDetailDTO saveNewPatient(PersonalDetailDTO personalDetailDTO, String email) throws NoSuchElementException{
         Optional<User> user = userService.findByEmail(email);
 
         Patient patient = new Patient();
-        patient.setInsuranceNumber(patientDTO.getInsuranceNumber());
         patient.setUser(user.orElseThrow(NoSuchElementException::new));
-        patient.setEmergencyContact(personalDetailsService.mapFromDTO(patientDTO.getEmergencyContact()));
-        patientDTO.getPersonalDetails().setId(null);
-        user.get().setPersonalDetails(personalDetailsService.mapFromDTO(patientDTO.getPersonalDetails()));
+        user.get().setPersonalDetails(personalDetailsService.mapFromDTO(personalDetailDTO));
 
-        return mapToDTO(patientRepository.save(patient));
+        return personalDetailDTO;
     }
 
     @Override

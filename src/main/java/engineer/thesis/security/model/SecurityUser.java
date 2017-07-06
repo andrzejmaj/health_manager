@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import engineer.thesis.model.UserRole;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 
 public class SecurityUser implements UserDetails {
@@ -27,7 +30,9 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Collection<SimpleGrantedAuthority> auths = new ArrayList<>();
+        auths.add(new SimpleGrantedAuthority(String.valueOf(userRole)));
+        return  auths;
     }
 
     @JsonIgnore

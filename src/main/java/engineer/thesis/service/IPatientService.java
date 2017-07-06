@@ -1,10 +1,7 @@
 package engineer.thesis.service;
 
 import engineer.thesis.model.Patient;
-import engineer.thesis.model.dto.CurrentStateDTO;
-import engineer.thesis.model.dto.MedicalHistoryDTO;
-import engineer.thesis.model.dto.PatientDTO;
-import engineer.thesis.model.dto.PatientMedicalInformationDTO;
+import engineer.thesis.model.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +19,7 @@ public interface IPatientService extends IBasicService<Patient,PatientDTO>{
 
     List<PatientDTO> findPatientsByLastName(String lastName);
 
-    PatientDTO saveNewPatient(PatientDTO patientDTO, String email) throws NoSuchElementException;
+    PersonalDetailDTO saveNewPatient(PersonalDetailDTO personalDetailDTO, String email) throws NoSuchElementException;
 
     PatientDTO changePatientDetails(PatientDTO patientDTO) throws NoSuchElementException;
 
