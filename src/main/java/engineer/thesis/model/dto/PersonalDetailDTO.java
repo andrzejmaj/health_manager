@@ -14,7 +14,7 @@ public class PersonalDetailDTO {
     private String lastName;
     private String gender;
     private String pesel;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm a z")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date birthdate;
     private String phoneNumber;
     private String country;
