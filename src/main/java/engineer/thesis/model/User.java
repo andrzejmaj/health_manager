@@ -20,9 +20,6 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "url_image")
-    private String imageUrl;
-
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -30,8 +27,5 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "personal_details_id")
-    private PersonalDetails personalDetails;
 
 }

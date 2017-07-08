@@ -5,5 +5,4 @@ import lombok.Value;
 @Value
 public class DoctorDTO {
     Long id;
-    Long userId;
 }

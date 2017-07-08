@@ -15,8 +15,6 @@ import java.util.Optional;
 @Service
 public interface IUserService {
 
-    PersonalDetailDTO savePersonalDetails(PersonalDetailDTO personalDetailDTO, Long userId) throws NotFoundException, NotBoundException;
-
     String registerNewUser(RegisterRequest registerRequest) throws AlreadyExistsException;
 
     UserDTO updateUser(UserDTO userDTO);
@@ -29,5 +27,4 @@ public interface IUserService {
 
     Optional<User> findByEmail(String email);
 
-    PersonalDetailDTO getPersonalDetails(Long id) throws NotFoundException, NotBoundException;
 }

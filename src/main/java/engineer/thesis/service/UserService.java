@@ -38,37 +38,6 @@ public class UserService implements IUserService {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
 
-    @Override
-    public PersonalDetailDTO getPersonalDetails(Long id) throws NotFoundException, NotBoundException {
-        User user = userRepository.findOne(id);
-
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
-
-        if (user.getPersonalDetails() == null) {
-            throw new NotBoundException("User doesn't have personal details");
-        }
-
-        return personalDetailsService.mapToDTO(user.getPersonalDetails());
-    }
-
-
-    @Override
-    public PersonalDetailDTO savePersonalDetails(PersonalDetailDTO personalDetailDTO, Long userId) throws NotFoundException {
-
-        User user = userRepository.findOne(userId);
-
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
-
-        user.setPersonalDetails(personalDetailsService.mapFromDTO(personalDetailDTO));
-
-        userRepository.save(user);
-
-        return personalDetailsService.mapToDTO(user.getPersonalDetails());
-    }
 
 
     @Override
@@ -98,7 +67,6 @@ public class UserService implements IUserService {
 
         user.get().setEmail(userDTO.getEmail());
         user.get().setRole(UserRole.valueOf(userDTO.getRole()));
-        user.get().setImageUrl(userDTO.getImgUrl());
 
         return mapToDTO(user.get());
     }
@@ -203,8 +171,7 @@ public class UserService implements IUserService {
         return new UserDTO(
                 user.getId(),
                 user.getEmail(),
-                String.valueOf(user.getRole()),
-                user.getImageUrl()
+                String.valueOf(user.getRole())
         );
     }
 }

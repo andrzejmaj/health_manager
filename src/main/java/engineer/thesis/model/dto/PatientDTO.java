@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PatientDTO {
-
     private Long id;
-    private PersonalDetailDTO personalDetails;
     private PersonalDetailDTO emergencyContact;
     private String insuranceNumber;
-
 }

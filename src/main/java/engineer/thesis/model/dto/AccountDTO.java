@@ -1,7 +1,15 @@
 package engineer.thesis.model.dto;
 
-/**
- * Created by andrzejmaj123 on 08/07/2017.
- */
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class AccountDTO {
+
+    private Long id;
+    private PersonalDetailDTO personalDetails;
+
 }

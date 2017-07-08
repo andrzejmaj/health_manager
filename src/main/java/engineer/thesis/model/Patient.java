@@ -12,16 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hm_patient", schema = "hmanager")
-public class Patient {
+public class Patient extends Account {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;

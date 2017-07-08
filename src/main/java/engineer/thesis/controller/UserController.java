@@ -58,9 +58,6 @@ public class UserController {
     private static final String NOT_ALLOWED_MESSAGE = "You are not allowed to perform this operation";
 
     //TODO:
-    // 1. Probably only UserService should be autowired here
-    // 2. Make class with responses
-    // 3. Make UserService responsible for responses
     // 4. Add some loggers
 
     /**
@@ -216,27 +213,6 @@ public class UserController {
         }
 
 
-    }
-
-    @RequestMapping(value = {RequestMappings.USERS.USR_DET, RequestMappings.USERS.USR_OWN_DET}, method = RequestMethod.GET)
-    public ResponseEntity<?> getPersonalDetails(@PathVariable Optional<Long> id) {
-        try {
-            Long userId = id.isPresent() ? id.get() : getCurrentUser().getId();
-            return ResponseEntity.ok(userService.getPersonalDetails(userId));
-        } catch (NotFoundException | NotBoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(value = {RequestMappings.USERS.USR_DET, RequestMappings.USERS.USR_OWN_DET}, method = RequestMethod.POST)
-    public ResponseEntity<?> savePersonalDetails(@PathVariable Optional<Long> id, @RequestBody PersonalDetailDTO personalDetail) {
-        try {
-            Long userId = id.isPresent() ? id.get() : getCurrentUser().getId();
-            return ResponseEntity.ok(userService.savePersonalDetails(personalDetail, userId));
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
     }
 
     private SecurityUser getCurrentUser() {

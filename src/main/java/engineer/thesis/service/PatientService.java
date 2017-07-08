@@ -49,6 +49,8 @@ public class PatientService implements IPatientService {
     }
 
 
+
+
     @Override
     public PersonalDetailDTO saveNewPatient(PersonalDetailDTO personalDetailDTO, String email) throws NoSuchElementException{
         Optional<User> user = userService.findByEmail(email);
@@ -70,6 +72,15 @@ public class PatientService implements IPatientService {
         }
         patient.setInsuranceNumber(patient.getInsuranceNumber());
         return mapToDTO(patientRepository.save(patient));
+    }
+
+    @Override
+    public PatientDTO createPatient(PatientDTO patientDTO) {
+
+        try {
+
+        }
+
     }
 
     @Override
