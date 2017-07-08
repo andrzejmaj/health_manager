@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class PatientDTO {
     private Long id;
+    private AccountDTO account;
     private PersonalDetailDTO emergencyContact;
     private String insuranceNumber;
 }

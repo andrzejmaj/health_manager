@@ -1,11 +1,13 @@
 package engineer.thesis.service;
 
+import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.*;
 import engineer.thesis.model.dto.*;
 import engineer.thesis.repository.CurrentConditionRepository;
 import engineer.thesis.repository.CurrentDrugRepository;
 import engineer.thesis.repository.PatientRepository;
 import javassist.NotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +20,12 @@ import java.util.stream.Collectors;
 public class PatientService implements IPatientService {
 
     @Autowired
-    PatientRepository patientRepository;
+    private PatientRepository patientRepository;
 
     @Autowired
-    PersonalDetailsService personalDetailsService;
+    private AccountService accountService;
 
-    @Autowired
-    private IUserService userService;
+    private ModelMapper modelMapper = new ModelMapper();
 
     @Override
     public List<PatientDTO> getAllPatients() {
@@ -34,63 +35,40 @@ public class PatientService implements IPatientService {
     @Override
     public PatientDTO findById(Long id) throws NoSuchElementException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
-        return mapToDTO(patient.orElseThrow(NoSuchElementException::new));
+        return convertPatientToDTO(patient.orElseThrow(NoSuchElementException::new));
     }
 
     @Override
     public PatientDTO findByPesel(String pesel) throws NoSuchElementException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findByUser_PersonalDetails_Pesel(pesel));
-        return mapToDTO(patient.orElseThrow(NoSuchElementException::new));
+        return convertPatientToDTO(patient.orElseThrow(NoSuchElementException::new));
+
     }
 
     @Override
     public List<PatientDTO> findPatientsByLastName(String lastName) {
-        return patientRepository.findByUser_PersonalDetails_LastNameLike(lastName).stream().map(this::mapToDTO).collect(Collectors.toList());
-    }
-
-
-
-
-    @Override
-    public PersonalDetailDTO saveNewPatient(PersonalDetailDTO personalDetailDTO, String email) throws NoSuchElementException{
-        Optional<User> user = userService.findByEmail(email);
-
-        Patient patient = new Patient();
-        patient.setUser(user.orElseThrow(NoSuchElementException::new));
-        user.get().setPersonalDetails(personalDetailsService.mapFromDTO(personalDetailDTO));
-
-        return personalDetailDTO;
+        return patientRepository.findByUser_PersonalDetails_LastNameLike(lastName).stream().map(this::convertPatientToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public PatientDTO changePatientDetails(PatientDTO patientDTO) throws NoSuchElementException {
-        personalDetailsService.save(patientDTO.getPersonalDetails());
-
-        Patient patient = patientRepository.getOne(patientDTO.getId());
-        if (patient == null) {
-            throw new NoSuchElementException("Patient not found");
+    public PatientDTO saveNewPatient(PatientDTO patientDTO, String email) throws AlreadyExistsException {
+        if (accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
+            throw new AlreadyExistsException("Account with such pesel number already exists");
         }
-        patient.setInsuranceNumber(patient.getInsuranceNumber());
-        return mapToDTO(patientRepository.save(patient));
+        return convertPatientToDTO(patientRepository.save(convertPatientToEntity(patientDTO)));
+    }
+
+    private PatientDTO convertPatientToDTO(Patient patient) {
+        return modelMapper.map(patient, PatientDTO.class);
+    }
+
+    private Patient convertPatientToEntity(PatientDTO patientDTO) {
+        return modelMapper.map(patientDTO, Patient.class);
     }
 
     @Override
-    public PatientDTO createPatient(PatientDTO patientDTO) {
-
-        try {
-
-        }
-
-    }
-
-    @Override
-    public PatientDTO mapToDTO(Patient patient) {
-        return new PatientDTO(
-                patient.getId(),
-                personalDetailsService.mapToDTO(patient.getUser().getPersonalDetails()),
-                personalDetailsService.mapToDTO(patient.getEmergencyContact()),
-                patient.getInsuranceNumber()
-                );
+    public PatientDTO mapToDTO(Patient data) {
+        return null;
     }
 
     @Override
@@ -98,47 +76,3 @@ public class PatientService implements IPatientService {
         return null;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-//    @Override
-//    public List<CurrentStateDTO> getPatientCurrentCondition(Long id) throws NoSuchElementException {
-//        Map<Long, CurrentStateDTO> currentState = new HashMap<>();
-//        findById(id);
-//        List<CurrentDrug> currentDrugs = currentDrugRepository.findByPatientId(id);
-//        currentDrugs.forEach(drug -> {
-//            Long conditionId = drug.getCondition().getId();
-//            if (currentState.containsKey(conditionId)) {
-//                currentState.get(conditionId).getTakenDrugs().add(new DrugDTO(drug.getDrug()));
-//            } else {
-//                CurrentStateDTO state = new CurrentStateDTO(drug, new ArrayList<>(Arrays.asList(new DrugDTO(drug.getDrug()))));
-//                currentState.put(conditionId, state);
-//            }
-//        });
-//        return new ArrayList<>(currentState.values());
-//    }
-//
-//    @Override
-//    public PatientMedicalInformationDTO getPatientMedicalInformation(Long id) throws NoSuchElementException {
-//        Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
-//        return new PatientMedicalInformationDTO(patient.orElseThrow(NoSuchElementException::new));
-//    }
-//
-//    @Override
-//    public List<MedicalHistoryDTO> getPatientMedicalHistory(Long id) throws NoSuchElementException {
-//        Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
-//        if (patient.isPresent()) {
-//            return patient.get().getMedicalHistories().stream().map(MedicalHistoryDTO::new).collect(Collectors.toList());
-//        } else {
-//            throw new NoSuchElementException();
-//        }
-//    }

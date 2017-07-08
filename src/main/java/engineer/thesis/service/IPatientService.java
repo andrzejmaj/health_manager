@@ -1,5 +1,6 @@
 package engineer.thesis.service;
 
+import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.Patient;
 import engineer.thesis.model.dto.*;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,8 @@ public interface IPatientService extends IBasicService<Patient,PatientDTO>{
 
     List<PatientDTO> findPatientsByLastName(String lastName);
 
-    PersonalDetailDTO saveNewPatient(PersonalDetailDTO personalDetailDTO, String email) throws NoSuchElementException;
+    PatientDTO saveNewPatient(PatientDTO patientDTO, String email) throws AlreadyExistsException;
 
-    PatientDTO changePatientDetails(PatientDTO patientDTO) throws NoSuchElementException;
-
-    PatientDTO createPatient(PatientDTO patientDTO);
 
 //    List<CurrentStateDTO> getPatientCurrentCondition(Long id);
 //

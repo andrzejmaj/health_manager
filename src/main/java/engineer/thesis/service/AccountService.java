@@ -1,6 +1,5 @@
 package engineer.thesis.service;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.Account;
 import engineer.thesis.model.PersonalDetails;
@@ -18,8 +17,7 @@ public class AccountService implements IAccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    ModelMapper modelMapper = new ModelMapper();
-
+    private ModelMapper modelMapper = new ModelMapper();
 
     @Override
     public PersonalDetailDTO savePersonalDetails(Long accountId, PersonalDetailDTO personalDetailsDTO) {
@@ -51,7 +49,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public AccountDTO saveNewAccount(AccountDTO accountDTO) throws AlreadyExistsException {
-        if (doesAccountExists(accountDTO.getPersonalDetails().getPesel())) {
+        if (doesAccountExist(accountDTO.getPersonalDetails().getPesel())) {
             throw new AlreadyExistsException("Account already exists");
         }
         return convertAccountToDTO(accountRepository.save(convertAccountToEntity(accountDTO)));
@@ -59,7 +57,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public String deleteAccount(Long id) {
-        if (!doesAccountExists(id)) {
+        if (!doesAccountExist(id)) {
             throw new NoSuchElementException("Account not found");
         }
         accountRepository.delete(id);
@@ -75,11 +73,11 @@ public class AccountService implements IAccountService {
         return account.get().getId();
     }
 
-    private Boolean doesAccountExists(Long id) {
+    protected Boolean doesAccountExist(Long id) {
         return Optional.ofNullable(accountRepository.findOne(id)).isPresent();
     }
 
-    private Boolean doesAccountExists(String pesel) {
+    protected Boolean doesAccountExist(String pesel) {
         return Optional.ofNullable(accountRepository.findByPersonalDetail_Pesel(pesel)).isPresent();
     }
 

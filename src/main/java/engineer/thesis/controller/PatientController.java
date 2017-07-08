@@ -27,6 +27,17 @@ public class PatientController {
         return new ResponseEntity<Object>(patients, HttpStatus.OK);
     }
 
+    @RequestMapping(path = "/patients}", method = RequestMethod.POST)
+    public ResponseEntity<?> savePatient(@RequestBody PatientDTO personalDetailDTO) {
+
+        try {
+            return new ResponseEntity<>(patientService.createPatient(personalDetailDTO), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+
+
     @RequestMapping(path = "/patients/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getPatient(@PathVariable(value = "id") Long id) {
         try {
@@ -50,18 +61,6 @@ public class PatientController {
     public ResponseEntity<?> getPatientsByLastName(@RequestParam(value = "lastName", required = false) String lastName) {
         List<PatientDTO> patients = patientService.findPatientsByLastName(lastName);
         return new ResponseEntity<>(patients, HttpStatus.OK);
-    }
-
-    @RequestMapping(path = "/patients/{email}", method = RequestMethod.PUT)
-    public ResponseEntity<?> savePatient(@RequestBody PersonalDetailDTO personalDetailDTO, @PathVariable String email) {
-
-        try {
-            patientService.saveNewPatient(personalDetailDTO, email);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
-        }
-
-        return ResponseEntity.ok("Saved");
     }
 
 

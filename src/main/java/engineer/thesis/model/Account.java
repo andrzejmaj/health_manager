@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hm_account", schema = "hmanager")
-public abstract class Account {
+public class Account {
 
     @Id
     @Column(name = "id", nullable = false)

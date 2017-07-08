@@ -1,8 +1,12 @@
 package engineer.thesis.model;
 
 import lombok.*;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.List;
 
 @Data
@@ -19,12 +23,13 @@ public class Patient extends Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Id
+    @Column(name = "account_id")
+    @Cascade(CascadeType.PERSIST)
+    private Account account;
+
     @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;
-
-    @OneToOne
-    @JoinColumn(name = "emergency_contact_id")
-    private PersonalDetails emergencyContact;
 
     @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
     private MedicalInformation medicalInformation;
