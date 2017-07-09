@@ -31,6 +31,10 @@ public class Patient {
     @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;
 
+    @OneToOne
+    @JoinColumn(name = "emergency_contact_id")
+    private PersonalDetails emergencyContact;
+
     @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
     private MedicalInformation medicalInformation;
 

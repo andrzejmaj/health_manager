@@ -1,9 +1,11 @@
 package engineer.thesis.service;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import engineer.thesis.model.PersonalDetails;
 import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.repository.PatientRepository;
 import engineer.thesis.repository.PersonalDetailsRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ public class PersonalDetailsService implements IPersonalDetailsService {
     @Autowired
     private PersonalDetailsRepository personalDetailsRepository;
 
+    private ModelMapper modelMapper = new ModelMapper();
 
     @Override
     public PersonalDetailDTO save(PersonalDetailDTO personalDetailDTO) throws NoSuchElementException {
@@ -26,43 +29,15 @@ public class PersonalDetailsService implements IPersonalDetailsService {
         }
 
         return mapToDTO(personalDetailsRepository.save(mapFromDTO(personalDetailDTO)));
-
-
     }
 
     @Override
     public PersonalDetailDTO mapToDTO(PersonalDetails personalDetails) {
-        return new PersonalDetailDTO(
-                personalDetails.getId(),
-                personalDetails.getFirstName(),
-                personalDetails.getLastName(),
-                personalDetails.getGender(),
-                personalDetails.getPesel(),
-                personalDetails.getBirthDate(),
-                personalDetails.getPhoneNumber(),
-                personalDetails.getCountry(),
-                personalDetails.getStreet(),
-                personalDetails.getCity(),
-                personalDetails.getBuildingNumber(),
-                personalDetails.getFlatNumber()
-        );
+        return modelMapper.map(personalDetails, PersonalDetailDTO.class);
     }
 
     @Override
     public PersonalDetails mapFromDTO(PersonalDetailDTO personalDetailDTO) {
-        return new PersonalDetails(
-                personalDetailDTO.getId(),
-                personalDetailDTO.getPesel(),
-                personalDetailDTO.getFirstName(),
-                personalDetailDTO.getLastName(),
-                personalDetailDTO.getBirthdate(),
-                personalDetailDTO.getGender(),
-                personalDetailDTO.getPhoneNumber(),
-                personalDetailDTO.getCountry(),
-                personalDetailDTO.getStreet(),
-                personalDetailDTO.getCity(),
-                personalDetailDTO.getBuildingNumber(),
-                personalDetailDTO.getFlatNumber()
-        );
+        return modelMapper.map(personalDetailDTO, PersonalDetails.class);
     }
 }
