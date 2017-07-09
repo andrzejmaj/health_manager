@@ -3,16 +3,11 @@ package engineer.thesis.service;
 import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.*;
 import engineer.thesis.model.dto.*;
-import engineer.thesis.repository.CurrentConditionRepository;
-import engineer.thesis.repository.CurrentDrugRepository;
 import engineer.thesis.repository.PatientRepository;
-import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.NotSupportedException;
-import java.io.NotSerializableException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,7 +46,7 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public PatientDTO saveNewPatient(PatientDTO patientDTO, String email) throws AlreadyExistsException {
+    public PatientDTO savePatient(PatientDTO patientDTO) throws AlreadyExistsException {
         if (accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
             throw new AlreadyExistsException("Account with such pesel number already exists");
         }

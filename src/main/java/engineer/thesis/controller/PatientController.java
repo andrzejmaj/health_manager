@@ -1,5 +1,6 @@
 package engineer.thesis.controller;
 
+import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.Patient;
 import engineer.thesis.model.dto.ErrorDTO;
 import engineer.thesis.model.dto.PatientDTO;
@@ -31,9 +32,9 @@ public class PatientController {
     public ResponseEntity<?> savePatient(@RequestBody PatientDTO personalDetailDTO) {
 
         try {
-            return new ResponseEntity<>(patientService.createPatient(personalDetailDTO), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(patientService.savePatient(personalDetailDTO), HttpStatus.OK);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 

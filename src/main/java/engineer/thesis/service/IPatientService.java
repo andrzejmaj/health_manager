@@ -20,8 +20,7 @@ public interface IPatientService extends IBasicService<Patient,PatientDTO>{
 
     List<PatientDTO> findPatientsByLastName(String lastName);
 
-    PatientDTO saveNewPatient(PatientDTO patientDTO, String email) throws AlreadyExistsException;
-
+    PatientDTO savePatient(PatientDTO personalDetailDTO) throws AlreadyExistsException;
 
 //    List<CurrentStateDTO> getPatientCurrentCondition(Long id);
 //
