@@ -24,7 +24,7 @@ public class PatientService implements IPatientService {
 
     @Override
     public List<PatientDTO> getAllPatients() {
-        return patientRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+        return patientRepository.findAll().stream().map(this::convertPatientToDTO).collect(Collectors.toList());
     }
 
     @Override
