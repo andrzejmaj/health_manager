@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class AccountDTO {
-
     private Long id;
     private PersonalDetailDTO personalDetails;
 

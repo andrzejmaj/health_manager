@@ -25,7 +25,7 @@ public class Patient {
 
     @OneToOne
     @JoinColumn(name = "account_id")
-    @Cascade(CascadeType.PERSIST)
+    @Cascade(CascadeType.ALL)
     private Account account;
 
     @Column(name = "insurance_number", nullable = false)
