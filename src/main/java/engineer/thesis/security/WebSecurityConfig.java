@@ -26,14 +26,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint entryPoint;
 
-    @Autowired//moze impl ?
+    @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -77,7 +76,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/users/personaldetails"
                 ).permitAll()
                 .antMatchers(HttpMethod.GET, "/users").authenticated()
-                .antMatchers(HttpMethod.GET, "/patients").authenticated()
                 .anyRequest().permitAll();
 
 
