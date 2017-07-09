@@ -27,7 +27,7 @@ public class Account {
     @JoinColumn(name = "personal_details_id")
     private PersonalDetails personalDetails;
 
-    @Column(name = "url_image")
+    @Column(name = "image_url")
     private String imageUrl;
 
     @Column(name = "created_date")
