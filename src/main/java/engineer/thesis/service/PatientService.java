@@ -35,14 +35,13 @@ public class PatientService implements IPatientService {
 
     @Override
     public PatientDTO findByPesel(String pesel) throws NoSuchElementException {
-        Optional<Patient> patient = Optional.ofNullable(patientRepository.findByUser_PersonalDetails_Pesel(pesel));
+        Optional<Patient> patient = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel));
         return convertPatientToDTO(patient.orElseThrow(NoSuchElementException::new));
-
     }
 
     @Override
     public List<PatientDTO> findPatientsByLastName(String lastName) {
-        return patientRepository.findByUser_PersonalDetails_LastNameLike(lastName).stream().map(this::convertPatientToDTO).collect(Collectors.toList());
+        return patientRepository.findByAccount_PersonalDetails_LastNameLike(lastName).stream().map(this::convertPatientToDTO).collect(Collectors.toList());
     }
 
     @Override

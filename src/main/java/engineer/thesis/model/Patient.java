@@ -16,15 +16,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hm_patient", schema = "hmanager")
-public class Patient extends Account {
+public class Patient {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Id
-    @Column(name = "account_id")
+    @OneToOne
+    @JoinColumn(name = "account_id")
     @Cascade(CascadeType.PERSIST)
     private Account account;
 

@@ -9,6 +9,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Account findByUser_Id(Long id);
 
-    Account findByPersonalDetail_Pesel(String pesel);
+    Account findByPersonalDetails_Pesel(String pesel);
 
 }

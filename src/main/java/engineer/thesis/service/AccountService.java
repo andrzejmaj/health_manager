@@ -8,10 +8,12 @@ import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.repository.AccountRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Service
 public class AccountService implements IAccountService {
 
     @Autowired
@@ -78,7 +80,7 @@ public class AccountService implements IAccountService {
     }
 
     protected Boolean doesAccountExist(String pesel) {
-        return Optional.ofNullable(accountRepository.findByPersonalDetail_Pesel(pesel)).isPresent();
+        return Optional.ofNullable(accountRepository.findByPersonalDetails_Pesel(pesel)).isPresent();
     }
 
     private AccountDTO convertAccountToDTO(Account account) {

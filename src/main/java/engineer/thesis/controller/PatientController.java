@@ -29,10 +29,10 @@ public class PatientController {
     }
 
     @RequestMapping(path = "/patients}", method = RequestMethod.POST)
-    public ResponseEntity<?> savePatient(@RequestBody PatientDTO personalDetailDTO) {
+    public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO) {
 
         try {
-            return new ResponseEntity<>(patientService.savePatient(personalDetailDTO), HttpStatus.OK);
+            return new ResponseEntity<>(patientService.savePatient(patientDTO), HttpStatus.OK);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
