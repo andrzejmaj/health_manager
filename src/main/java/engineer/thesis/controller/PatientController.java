@@ -68,6 +68,17 @@ public class PatientController {
             return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
         }
     }
+
+    @RequestMapping(path = "/patients/{id}/emergency", method = RequestMethod.POST)
+    public ResponseEntity<?> saveEmergencyContact(@PathVariable(value = "id") Long id,
+                                                  @RequestBody PersonalDetailDTO emergencyContact) {
+        try {
+            return new ResponseEntity<>(patientService.saveEmergencyContact(id, emergencyContact), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     @RequestMapping(path = "/patients/pesel/{pesel}", method = RequestMethod.GET)
     public ResponseEntity<?> getPatientByPesel(@PathVariable("pesel") String pesel) {
         try {

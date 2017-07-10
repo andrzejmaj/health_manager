@@ -26,6 +26,8 @@ public interface IPatientService extends IBasicService<Patient,PatientDTO>{
 
     PersonalDetailDTO findByIdEmergency(Long id);
 
+    PersonalDetailDTO saveEmergencyContact(Long id, PersonalDetailDTO emergencyContact);
+
 //    List<CurrentStateDTO> getPatientCurrentCondition(Long id);
 //
 //    PatientMedicalInformationDTO getPatientMedicalInformation(Long id);

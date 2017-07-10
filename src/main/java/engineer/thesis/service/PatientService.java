@@ -72,9 +72,17 @@ public class PatientService implements IPatientService {
         if (patient.getEmergencyContact() == null) {
             throw new NoSuchElementException("Emergency contact not found");
         }
+        return convertPersonalDetailsToDTO(patient.getEmergencyContact());
+    }
 
-        return personalDetailsService.mapToDTO(patient.getEmergencyContact());
-
+    @Override
+    public PersonalDetailDTO saveEmergencyContact(Long id, PersonalDetailDTO emergencyContact) {
+        Patient patient = patientRepository.findOne(id);
+        if (patient == null) {
+            throw new NoSuchElementException("Patient not found");
+        }
+        patient.setEmergencyContact(convertPersonalDetailsToEntity(emergencyContact));
+        return convertPersonalDetailsToDTO(patientRepository.save(patient).getEmergencyContact());
     }
 
     private PatientDTO convertPatientToDTO(Patient patient) {
@@ -83,8 +91,16 @@ public class PatientService implements IPatientService {
         return patientDTO;
     }
 
+    private PersonalDetailDTO convertPersonalDetailsToDTO(PersonalDetails personalDetails) {
+        return modelMapper.map(personalDetails, PersonalDetailDTO.class);
+    }
+
     private Patient convertPatientToEntity(PatientDTO patientDTO) {
         return modelMapper.map(patientDTO, Patient.class);
+    }
+
+    private PersonalDetails convertPersonalDetailsToEntity(PersonalDetailDTO personalDetailDTO) {
+        return modelMapper.map(personalDetailDTO, PersonalDetails.class);
     }
 
     @Override
