@@ -54,14 +54,14 @@ public class PatientService implements IPatientService {
         }
         return convertPatientToDTO(patientRepository.save(convertPatientToEntity(patientDTO)));
     }
-// TODO: 09.07.17 przerobic zeby obslugiwalo kazde pole z osobna getentitity setpole inaczej jak jest null to sie on zapisze w tabeli :/
-//    @Override
-//    public PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException {
-//        if (!accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
-//            throw new NoSuchElementException("Patient doesn't exist");
-//        }
-//        return convertPatientToDTO(patientRepository.save(convertPatientToEntity(patientDTO)));
-//    }
+
+    @Override
+    public PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException {
+        if (!accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
+            throw new NoSuchElementException("Patient does not exist");
+        }
+        return convertPatientToDTO(patientRepository.save(convertPatientToEntity(patientDTO)));
+    }
 
     @Override
     public PersonalDetailDTO findByIdEmergency(Long id) {

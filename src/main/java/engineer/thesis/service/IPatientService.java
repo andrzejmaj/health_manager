@@ -21,8 +21,8 @@ public interface IPatientService extends IBasicService<Patient,PatientDTO>{
     List<PatientDTO> findPatientsByLastName(String lastName);
 
     PatientDTO savePatient(PatientDTO personalDetailDTO) throws AlreadyExistsException;
-    // TODO: 09.07.17 dodac jak sie robi implementacje
-    //PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException;
+
+    PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException;
 
     PersonalDetailDTO findByIdEmergency(Long id);
 

@@ -39,16 +39,16 @@ public class PatientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
-// TODO: 09.07.17 wymaga innej implementajci w service
-//    @RequestMapping(path = "/patients", method = RequestMethod.PUT)
-//    public ResponseEntity<?> updatePatient(@RequestBody PatientDTO patientDTO) {
-//        System.out.println(patientDTO);
-//        try {
-//            return new ResponseEntity<>(patientService.updatePatient(patientDTO), HttpStatus.OK);
-//        } catch (NoSuchElementException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-//        }
-//    }
+
+    @RequestMapping(path = "/patients", method = RequestMethod.PUT)
+    public ResponseEntity<?> updatePatient(@RequestBody PatientDTO patientDTO) {
+        System.out.println(patientDTO);
+        try {
+            return new ResponseEntity<>(patientService.updatePatient(patientDTO), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
 
     @RequestMapping(path = "/patients/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getPatient(@PathVariable(value = "id") Long id) {
@@ -83,21 +83,5 @@ public class PatientController {
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
-
-    /////////
-    //DO TESTUF
-//    ////////
-//
-//    @Autowired
-//    PersonalDetailsRepository pdr;
-//
-//    @RequestMapping(path = "/test", method = RequestMethod.POST)
-//    public ResponseEntity<?> getPatientsByLastName(@RequestBody PersonalDetailDTO pddto) {
-//        System.out.println(pddto);
-//        ModelMapper m = new ModelMapper();
-//        return new ResponseEntity<>(pdr.save(m.map(pddto, PersonalDetails.class)), HttpStatus.OK);
-//    }
-
-
-
 }
+
