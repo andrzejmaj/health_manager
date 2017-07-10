@@ -4,7 +4,7 @@ import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.*;
 import engineer.thesis.model.dto.*;
 import engineer.thesis.repository.PatientRepository;
-import org.modelmapper.ModelMapper;
+import engineer.thesis.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,32 +19,30 @@ public class PatientService implements IPatientService {
 
     @Autowired
     private AccountService accountService;
-
+    
     @Autowired
-    private PersonalDetailsService personalDetailsService;
-
-    private ModelMapper modelMapper = new ModelMapper();
+    private CustomObjectMapper objectMapper;
 
     @Override
     public List<PatientDTO> getAllPatients() {
-        return patientRepository.findAll().stream().map(this::convertPatientToDTO).collect(Collectors.toList());
+        return patientRepository.findAll().stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public PatientDTO findById(Long id) throws NoSuchElementException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
-        return convertPatientToDTO(patient.orElseThrow(NoSuchElementException::new));
+        return objectMapper.convert(patient.orElseThrow(NoSuchElementException::new), PatientDTO.class);
     }
 
     @Override
     public PatientDTO findByPesel(String pesel) throws NoSuchElementException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel));
-        return convertPatientToDTO(patient.orElseThrow(NoSuchElementException::new));
+        return objectMapper.convert(patient.orElseThrow(NoSuchElementException::new), PatientDTO.class);
     }
 
     @Override
     public List<PatientDTO> findPatientsByLastName(String lastName) {
-        return patientRepository.findByAccount_PersonalDetails_LastNameLike(lastName).stream().map(this::convertPatientToDTO).collect(Collectors.toList());
+        return patientRepository.findByAccount_PersonalDetails_LastNameLike(lastName).stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -52,7 +50,7 @@ public class PatientService implements IPatientService {
         if (accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
             throw new AlreadyExistsException("Account with such pesel number already exists");
         }
-        return convertPatientToDTO(patientRepository.save(convertPatientToEntity(patientDTO)));
+        return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);
     }
 
     @Override
@@ -60,7 +58,7 @@ public class PatientService implements IPatientService {
         if (!accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
             throw new NoSuchElementException("Patient does not exist");
         }
-        return convertPatientToDTO(patientRepository.save(convertPatientToEntity(patientDTO)));
+        return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);
     }
 
     @Override
@@ -72,7 +70,7 @@ public class PatientService implements IPatientService {
         if (patient.getEmergencyContact() == null) {
             throw new NoSuchElementException("Emergency contact not found");
         }
-        return convertPersonalDetailsToDTO(patient.getEmergencyContact());
+        return objectMapper.convert(patient.getEmergencyContact(), PersonalDetailsDTO.class);
     }
 
     @Override
@@ -81,35 +79,7 @@ public class PatientService implements IPatientService {
         if (patient == null) {
             throw new NoSuchElementException("Patient not found");
         }
-        patient.setEmergencyContact(convertPersonalDetailsToEntity(emergencyContact));
-        return convertPersonalDetailsToDTO(patientRepository.save(patient).getEmergencyContact());
-    }
-
-    private PatientDTO convertPatientToDTO(Patient patient) {
-        PatientDTO patientDTO = modelMapper.map(patient, PatientDTO.class);
-        patientDTO.setEmergencyContact(null);
-        return patientDTO;
-    }
-
-    private PersonalDetailsDTO convertPersonalDetailsToDTO(PersonalDetails personalDetails) {
-        return modelMapper.map(personalDetails, PersonalDetailsDTO.class);
-    }
-
-    private Patient convertPatientToEntity(PatientDTO patientDTO) {
-        return modelMapper.map(patientDTO, Patient.class);
-    }
-
-    private PersonalDetails convertPersonalDetailsToEntity(PersonalDetailsDTO personalDetailsDTO) {
-        return modelMapper.map(personalDetailsDTO, PersonalDetails.class);
-    }
-
-    @Override
-    public PatientDTO mapToDTO(Patient patient) {
-        return modelMapper.map(patient, PatientDTO.class);
-    }
-
-    @Override
-    public Patient mapFromDTO(PatientDTO patientDTO) {
-        return null;
+        patient.setEmergencyContact(objectMapper.convert(emergencyContact, PersonalDetails.class));
+        return objectMapper.convert(patientRepository.save(patient).getEmergencyContact(), PersonalDetailsDTO.class);
     }
 }

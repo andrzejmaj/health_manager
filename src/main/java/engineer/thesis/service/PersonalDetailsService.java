@@ -3,6 +3,7 @@ package engineer.thesis.service;
 import engineer.thesis.model.PersonalDetails;
 import engineer.thesis.model.dto.PersonalDetailsDTO;
 import engineer.thesis.repository.PersonalDetailsRepository;
+import engineer.thesis.utils.CustomObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,8 @@ public class PersonalDetailsService implements IPersonalDetailsService {
     @Autowired
     private PersonalDetailsRepository personalDetailsRepository;
 
-    private ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private CustomObjectMapper objectMapper;
 
     @Override
     public PersonalDetailsDTO save(PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementException {
@@ -25,17 +27,7 @@ public class PersonalDetailsService implements IPersonalDetailsService {
         if (personalDetails == null) {
             throw new NoSuchElementException("Details not found XD");
         }
-
-        return mapToDTO(personalDetailsRepository.save(mapFromDTO(personalDetailsDTO)));
+        return objectMapper.convert(personalDetailsRepository.save(objectMapper.convert(personalDetailsDTO, PersonalDetails.class)), PersonalDetailsDTO.class);
     }
 
-    @Override
-    public PersonalDetailsDTO mapToDTO(PersonalDetails personalDetails) {
-        return modelMapper.map(personalDetails, PersonalDetailsDTO.class);
-    }
-
-    @Override
-    public PersonalDetails mapFromDTO(PersonalDetailsDTO personalDetailsDTO) {
-        return modelMapper.map(personalDetailsDTO, PersonalDetails.class);
-    }
 }

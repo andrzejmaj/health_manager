@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 
 @Service
-public interface IPersonalDetailsService extends IBasicService<PersonalDetails,PersonalDetailsDTO>{
+public interface IPersonalDetailsService {
 
     PersonalDetailsDTO save(PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementException;
 

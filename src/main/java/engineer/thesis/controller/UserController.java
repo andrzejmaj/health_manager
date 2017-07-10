@@ -1,19 +1,13 @@
 package engineer.thesis.controller;
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.exception.TokenExpiredException;
-import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
-import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.model.dto.ResetPasswordDTO;
-import engineer.thesis.model.dto.ResponseDTO;
 import engineer.thesis.security.TokenUtils;
 import engineer.thesis.security.model.*;
 import engineer.thesis.service.UserService;
 import engineer.thesis.utils.MailService;
-import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
-import java.rmi.NotBoundException;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 public class UserController {

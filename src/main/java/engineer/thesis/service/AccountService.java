@@ -6,6 +6,7 @@ import engineer.thesis.model.PersonalDetails;
 import engineer.thesis.model.dto.AccountDTO;
 import engineer.thesis.model.dto.PersonalDetailsDTO;
 import engineer.thesis.repository.AccountRepository;
+import engineer.thesis.utils.CustomObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ public class AccountService implements IAccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    private ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private CustomObjectMapper objectMapper;
 
     @Override
     public PersonalDetailsDTO savePersonalDetails(Long accountId, PersonalDetailsDTO personalDetailsDTO) {
@@ -30,11 +32,9 @@ public class AccountService implements IAccountService {
             throw new NoSuchElementException("Account not found");
         }
 
-        personalAccount.get().setPersonalDetails(convertPersonalDetailsToEntity(personalDetailsDTO));
+        personalAccount.get().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
 
-        accountRepository.save(personalAccount.get());
-
-        return personalDetailsDTO;
+        return objectMapper.convert(accountRepository.save(personalAccount.get()).getPersonalDetails(), PersonalDetailsDTO.class);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class AccountService implements IAccountService {
             throw new NoSuchElementException("Account not found");
         }
 
-        return convertPersonalDetailsToDTO(personalAccount.get().getPersonalDetails());
+        return objectMapper.convert(personalAccount.get().getPersonalDetails(), PersonalDetailsDTO.class);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class AccountService implements IAccountService {
         if (doesAccountExist(accountDTO.getPersonalDetails().getPesel())) {
             throw new AlreadyExistsException("Account already exists");
         }
-        return convertAccountToDTO(accountRepository.save(convertAccountToEntity(accountDTO)));
+        return objectMapper.convert(accountRepository.save(objectMapper.convert(accountDTO, Account.class)), AccountDTO.class);
     }
 
     @Override
@@ -83,19 +83,4 @@ public class AccountService implements IAccountService {
         return Optional.ofNullable(accountRepository.findByPersonalDetails_Pesel(pesel)).isPresent();
     }
 
-    private AccountDTO convertAccountToDTO(Account account) {
-        return modelMapper.map(account, AccountDTO.class);
-    }
-
-    private Account convertAccountToEntity(AccountDTO accountDTO) {
-        return modelMapper.map(accountDTO, Account.class);
-    }
-
-    private PersonalDetailsDTO convertPersonalDetailsToDTO(PersonalDetails personalDetails) {
-        return modelMapper.map(personalDetails, PersonalDetailsDTO.class);
-    }
-
-    private PersonalDetails convertPersonalDetailsToEntity(PersonalDetailsDTO personalDetailsDTO) {
-        return modelMapper.map(personalDetailsDTO, PersonalDetails.class);
-    }
 }

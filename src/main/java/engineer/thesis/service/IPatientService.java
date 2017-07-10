@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-public interface IPatientService extends IBasicService<Patient,PatientDTO>{
+public interface IPatientService {
 
 
     List<PatientDTO> getAllPatients();
