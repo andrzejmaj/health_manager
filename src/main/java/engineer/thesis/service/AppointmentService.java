@@ -22,16 +22,6 @@ public class AppointmentService implements IAppointmentService {
 	private TimeSlotRepository timeSlotRepository;
 
 	@Override
-	public AppointmentDTO mapToDTO(Appointment data) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Appointment mapFromDTO(AppointmentDTO dto) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public void save(AppointmentDTO appointmentDTO, long patientId) {
 		Appointment oldAppointment = appointmentRepository.findByTimeSlotId(appointmentDTO.getTimeSlotId());
 		if (oldAppointment != null) {

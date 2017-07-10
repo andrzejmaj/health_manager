@@ -6,7 +6,7 @@ import engineer.thesis.model.Appointment;
 import engineer.thesis.model.dto.AppointmentDTO;
 
 @Service
-public interface IAppointmentService extends IBasicService<Appointment, AppointmentDTO> {
+public interface IAppointmentService {
 
 	void save(AppointmentDTO appointmentDTO, long patientId);
 
