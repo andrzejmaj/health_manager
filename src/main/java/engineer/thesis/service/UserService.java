@@ -1,111 +1,172 @@
 package engineer.thesis.service;
 
-import engineer.thesis.model.PersonalDetails;
+import engineer.thesis.exception.AlreadyExistsException;
+import engineer.thesis.exception.TokenExpiredException;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
+import engineer.thesis.model.dto.ResetPasswordDTO;
 import engineer.thesis.model.dto.UserDTO;
 import engineer.thesis.repository.PasswordResetTokenRepository;
 import engineer.thesis.repository.UserRepository;
 import engineer.thesis.security.model.PasswordResetToken;
 import engineer.thesis.security.model.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService implements IUserService {
 
-    private final UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
-
-    private final PasswordResetTokenRepository passwordTokenRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordResetTokenRepository passwordTokenRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.passwordTokenRepository = passwordTokenRepository;
-    }
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordTokenRepository;
+
+    @Autowired
+    private PersonalDetailsService personalDetailsService;
 
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
 
     @Override
-    public Optional<User> registerNewUser(RegisterRequest registerRequest) {
+    public String registerNewUser(RegisterRequest registerRequest) throws AlreadyExistsException {
 
-        if (emailExists(registerRequest.getEmail())) {
-            return Optional.empty();
+        if (userExists(registerRequest.getEmail())) {
+            throw new AlreadyExistsException("User with such mail already exists");
         }
 
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(UserRole.PATIENT);
-        user.setPersonalDetails(new PersonalDetails());
+        user.setRole(UserRole.ROLE_PATIENT);
 
-        return Optional.of(userRepository.save(user));
+        userRepository.save(user);
+
+        return "User successfully registered";
     }
 
-    private boolean emailExists(String email) {
+    @Override
+    public UserDTO updateUser(UserDTO userDTO) {
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDTO.getEmail()));
+
+        if (!user.isPresent()) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        user.get().setEmail(userDTO.getEmail());
+        user.get().setRole(UserRole.valueOf(userDTO.getRole()));
+
+        return mapToDTO(user.get());
+    }
+
+    @Override
+    public String changeUserPassword(String email, String password) {
+
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+
+        if (!user.isPresent()) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        user.get().setPassword(passwordEncoder.encode(password));
+        userRepository.save(user.get());
+
+        return "Password has been changed successfully";
+    }
+
+    @Override
+    public String changeUserPasswordWithToken(String email, String token, String password) throws TokenExpiredException, NoSuchElementException {
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+
+        if (!user.isPresent()) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        if (isResetPasswordTokenValid(email, token)) {
+            throw new TokenExpiredException("Token is not valid");
+        }
+
+        user.get().setPassword(passwordEncoder.encode(password));
+        userRepository.save(user.get());
+
+        return "Password has been changed successfully";
+    }
+
+    @Override
+    public String updateUserEmail(Long id, String newEmail) {
+        Optional<User> user = Optional.ofNullable(userRepository.findOne(id));
+
+        if (!user.isPresent()) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        user.get().setEmail(newEmail);
+        userRepository.save(user.get());
+
+        return "Email updated successfully";
+    }
+
+    public ResetPasswordDTO resetUserPassword(String email) throws NoSuchElementException {
+
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+        if (!user.isPresent()) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        String token = UUID.randomUUID().toString();
+        //TODO:
+        // add to reset password token table isActive
+        // property and disable it after used
+        createPasswordResetTokenForUser(user.get(), token);
+        ResetPasswordDTO resetPassword = new ResetPasswordDTO();
+        resetPassword.setEmail(user.get().getEmail());
+        resetPassword.setUserId(user.get().getId());
+        resetPassword.setToken(token);
+
+        return resetPassword;
+    }
+
+    private boolean userExists(String email) {
         return userRepository.findByEmail(email) != null;
     }
 
-    @Override
-    public void createPasswordResetTokenForUser(User user, String token) {
-        PasswordResetToken resetToken = new PasswordResetToken(token, user);
-        passwordTokenRepository.save(resetToken);
+    private boolean userExists(Long id) {
+        return userRepository.findOne(id) != null;
     }
 
-    @Override
-    public Boolean isResetPasswordTokenValid(long id, String token) {
+    private Boolean isResetPasswordTokenValid(String email, String token) {
+        System.out.println(email);
         PasswordResetToken passwordToken =
                 passwordTokenRepository.findByToken(token);
-        if ((passwordToken == null) || (passwordToken.getUser()
-                .getId() != id)) {
+        System.out.println(passwordToken.getUser().getEmail());
+        if (!Objects.equals(passwordToken.getUser().getEmail(), email)) {
+            System.out.println("Email does not match");
             return false;
         }
 
         Calendar cal = Calendar.getInstance();
-        if ((passwordToken.getExpiryDate()
+        return (passwordToken.getExpiryDate()
                 .getTime() - cal.getTime()
-                .getTime()) <= 0) {
-            return false;
-        }
-
-        User user = passwordToken.getUser();
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user, null, Arrays.asList(
-                new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        return true;
+                .getTime()) > 0;
     }
 
-    @Override
-    public void changeUserPassword(User user, String password) {
-        user.setPassword(passwordEncoder.encode(password));
-        userRepository.save(user);
+    private void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken resetToken = new PasswordResetToken(token, user);
+        passwordTokenRepository.save(resetToken);
     }
 
-    @Override
-    public Optional<User> updateUser(UserDTO userDTO) {
-        Optional<User> user = Optional.of(userRepository.findByEmail(userDTO.getEmail()));
-        if (user.isPresent()) {
-            user.get().setEmail(userDTO.getEmail());
-            user.get().setRole(UserRole.valueOf(userDTO.getRole()));
-            user.get().setImageUrl(userDTO.getImgUrl());
-            return Optional.of(userRepository.save(user.get()));
-        }
-        return Optional.empty();
+    private UserDTO mapToDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                String.valueOf(user.getRole())
+        );
     }
 }

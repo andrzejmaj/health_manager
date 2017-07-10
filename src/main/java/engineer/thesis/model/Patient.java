@@ -1,16 +1,18 @@
 package engineer.thesis.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.List;
 
 @Data
 @Entity
 @Builder
+@EqualsAndHashCode(exclude = {"medicalInformation","medicalHistories"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hm_patient", schema = "hmanager")
@@ -22,15 +24,12 @@ public class Patient {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "account_id")
+    @Cascade(CascadeType.ALL)
+    private Account account;
 
     @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "personal_details_id", nullable = false)
-    private PersonalDetails personalDetails;
 
     @OneToOne
     @JoinColumn(name = "emergency_contact_id")

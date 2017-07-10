@@ -1,15 +1,16 @@
 package engineer.thesis.service;
 
-import engineer.thesis.model.dto.CurrentStateDTO;
-import engineer.thesis.model.dto.MedicalHistoryDTO;
-import engineer.thesis.model.dto.PatientDTO;
-import engineer.thesis.model.dto.PatientMedicalInformationDTO;
+import engineer.thesis.exception.AlreadyExistsException;
+import engineer.thesis.model.Patient;
+import engineer.thesis.model.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public interface IPatientService {
+
 
     List<PatientDTO> getAllPatients();
 
@@ -19,9 +20,17 @@ public interface IPatientService {
 
     List<PatientDTO> findPatientsByLastName(String lastName);
 
-    List<CurrentStateDTO> getPatientCurrentCondition(Long id);
+    PatientDTO savePatient(PatientDTO personalDetailDTO) throws AlreadyExistsException;
 
-    PatientMedicalInformationDTO getPatientMedicalInformation(Long id);
+    PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException;
 
-    List<MedicalHistoryDTO> getPatientMedicalHistory(Long id);
+    PersonalDetailsDTO findByIdEmergency(Long id);
+
+    PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact);
+
+//    List<CurrentStateDTO> getPatientCurrentCondition(Long id);
+//
+//    PatientMedicalInformationDTO getPatientMedicalInformation(Long id);
+//
+//    List<MedicalHistoryDTO> getPatientMedicalHistory(Long id);
 }

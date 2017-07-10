@@ -1,7 +1,8 @@
 package engineer.thesis.service;
 
+import engineer.thesis.exception.AlreadyExistsException;
+import engineer.thesis.exception.TokenExpiredException;
 import engineer.thesis.model.User;
-import engineer.thesis.model.UserRole;
 import engineer.thesis.model.dto.UserDTO;
 import engineer.thesis.security.model.RegisterRequest;
 import org.springframework.stereotype.Service;
@@ -11,15 +12,16 @@ import java.util.Optional;
 @Service
 public interface IUserService {
 
+    String registerNewUser(RegisterRequest registerRequest) throws AlreadyExistsException;
+
+    UserDTO updateUser(UserDTO userDTO);
+
+    String changeUserPassword(String email, String password);
+
+    String changeUserPasswordWithToken(String email, String token, String password) throws TokenExpiredException;
+
+    String updateUserEmail(Long id, String newEmail);
+
     Optional<User> findByEmail(String email);
 
-    Optional<User> registerNewUser(RegisterRequest registerRequest);
-
-    Optional<User> updateUser(UserDTO userDTO);
-
-    void createPasswordResetTokenForUser(User user, String token);
-
-    Boolean isResetPasswordTokenValid(long id, String token);
-
-    void changeUserPassword(User user, String password);
 }

@@ -1,8 +1,8 @@
 package engineer.thesis.controller;
 
-import engineer.thesis.model.Patient;
-import engineer.thesis.model.dto.ErrorDTO;
+import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.dto.PatientDTO;
+import engineer.thesis.model.dto.PersonalDetailsDTO;
 import engineer.thesis.service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RestController
 public class PatientController {
@@ -19,63 +18,75 @@ public class PatientController {
     @Autowired
     protected IPatientService patientService;
 
-    @RequestMapping(value = "/patients", method = RequestMethod.GET)
+    @RequestMapping(path = "/patients", method = RequestMethod.GET)
     public ResponseEntity<?> getAllPatients() {
         System.out.println("PatientController - getAllPatients");
         List<PatientDTO> patients = patientService.getAllPatients();
         return new ResponseEntity<Object>(patients, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/patients/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPatient(@PathVariable(value = "id") Long id) {
-        System.out.println("PatientController - getPatient");
+    @RequestMapping(path = "/patients", method = RequestMethod.POST)
+    public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO) {
         try {
-            return new ResponseEntity<Object>(patientService.findById(id), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(new ErrorDTO("Patient not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(patientService.savePatient(patientDTO), HttpStatus.OK);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
-    @RequestMapping(value = "/patients/searchByPesel/{pesel}", method = RequestMethod.GET)
+    @RequestMapping(path = "/patients", method = RequestMethod.PUT)
+    public ResponseEntity<?> updatePatient(@RequestBody PatientDTO patientDTO) {
+        System.out.println(patientDTO);
+        try {
+            return new ResponseEntity<>(patientService.updatePatient(patientDTO), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
+    @RequestMapping(path = "/patients/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPatient(@PathVariable(value = "id") Long id) {
+        try {
+
+            return new ResponseEntity<>(patientService.findById(id), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = "/patients/{id}/emergency", method = RequestMethod.GET)
+    public ResponseEntity<?> getPatientEmergency(@PathVariable(value = "id") Long id) {
+        try {
+            return new ResponseEntity<>(patientService.findByIdEmergency(id), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = "/patients/{id}/emergency", method = RequestMethod.POST)
+    public ResponseEntity<?> saveEmergencyContact(@PathVariable(value = "id") Long id,
+                                                  @RequestBody PersonalDetailsDTO emergencyContact) {
+        try {
+            return new ResponseEntity<>(patientService.saveEmergencyContact(id, emergencyContact), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = "/patients/pesel/{pesel}", method = RequestMethod.GET)
     public ResponseEntity<?> getPatientByPesel(@PathVariable("pesel") String pesel) {
         try {
             return new ResponseEntity<Object>(patientService.findByPesel(pesel), HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(new Error("Patient not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Patient not fou nd", HttpStatus.NOT_FOUND);
         }
     }
 
-    @RequestMapping(value = "/patients/searchByLastName", method = RequestMethod.GET)
+    @RequestMapping(path = "/patients/searchByLastName", method = RequestMethod.GET)
     public ResponseEntity<?> getPatientsByLastName(@RequestParam(value = "lastName", required = false) String lastName) {
         List<PatientDTO> patients = patientService.findPatientsByLastName(lastName);
-        return new ResponseEntity<Object>(patients, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/patients/{id}/currentState", method = RequestMethod.GET)
-    public ResponseEntity<?> getPatientCurrentState(@PathVariable(value = "id") Long id) {
-        try {
-            return new ResponseEntity<Object>(patientService.getPatientCurrentCondition(id), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(new ErrorDTO("Patient not found"), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(value = "/patients/{id}/medicalInformation", method = RequestMethod.GET)
-    public ResponseEntity<?> getPatientMedicalInformation(@PathVariable(value = "id") Long id) {
-        try {
-            return new ResponseEntity<Object>(patientService.getPatientMedicalInformation(id), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(new ErrorDTO("Patient not found"), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(value = "/patients/{id}/medicalHistory", method = RequestMethod.GET)
-    public ResponseEntity<?> getPatientMedicalHistory(@PathVariable(value = "id") Long id) {
-        try {
-            return new ResponseEntity<Object>(patientService.getPatientMedicalHistory(id), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(new ErrorDTO("Patient not found"), HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
 }
+
