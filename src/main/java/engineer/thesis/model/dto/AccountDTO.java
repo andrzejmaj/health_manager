@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class AccountDTO {
     private Long id;
-    private PersonalDetailDTO personalDetails;
+    private PersonalDetailsDTO personalDetails;
 
 }

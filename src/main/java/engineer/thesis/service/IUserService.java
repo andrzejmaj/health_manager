@@ -3,13 +3,10 @@ package engineer.thesis.service;
 import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.exception.TokenExpiredException;
 import engineer.thesis.model.User;
-import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.model.dto.UserDTO;
 import engineer.thesis.security.model.RegisterRequest;
-import javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.rmi.NotBoundException;
 import java.util.Optional;
 
 @Service

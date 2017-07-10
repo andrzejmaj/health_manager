@@ -24,9 +24,9 @@ public interface IPatientService extends IBasicService<Patient,PatientDTO>{
 
     PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException;
 
-    PersonalDetailDTO findByIdEmergency(Long id);
+    PersonalDetailsDTO findByIdEmergency(Long id);
 
-    PersonalDetailDTO saveEmergencyContact(Long id, PersonalDetailDTO emergencyContact);
+    PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact);
 
 //    List<CurrentStateDTO> getPatientCurrentCondition(Long id);
 //

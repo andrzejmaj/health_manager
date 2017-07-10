@@ -4,7 +4,7 @@ import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.Account;
 import engineer.thesis.model.PersonalDetails;
 import engineer.thesis.model.dto.AccountDTO;
-import engineer.thesis.model.dto.PersonalDetailDTO;
+import engineer.thesis.model.dto.PersonalDetailsDTO;
 import engineer.thesis.repository.AccountRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class AccountService implements IAccountService {
     private ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public PersonalDetailDTO savePersonalDetails(Long accountId, PersonalDetailDTO personalDetailsDTO) {
+    public PersonalDetailsDTO savePersonalDetails(Long accountId, PersonalDetailsDTO personalDetailsDTO) {
 
         Optional<Account> personalAccount = Optional.ofNullable(accountRepository.findOne(accountId));
 
@@ -38,7 +38,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public PersonalDetailDTO getPersonalDetails(Long accountId) {
+    public PersonalDetailsDTO getPersonalDetails(Long accountId) {
 
         Optional<Account> personalAccount = Optional.ofNullable(accountRepository.findOne(accountId));
 
@@ -91,11 +91,11 @@ public class AccountService implements IAccountService {
         return modelMapper.map(accountDTO, Account.class);
     }
 
-    private PersonalDetailDTO convertPersonalDetailsToDTO(PersonalDetails personalDetails) {
-        return modelMapper.map(personalDetails, PersonalDetailDTO.class);
+    private PersonalDetailsDTO convertPersonalDetailsToDTO(PersonalDetails personalDetails) {
+        return modelMapper.map(personalDetails, PersonalDetailsDTO.class);
     }
 
-    private PersonalDetails convertPersonalDetailsToEntity(PersonalDetailDTO personalDetailDTO) {
-        return modelMapper.map(personalDetailDTO, PersonalDetails.class);
+    private PersonalDetails convertPersonalDetailsToEntity(PersonalDetailsDTO personalDetailsDTO) {
+        return modelMapper.map(personalDetailsDTO, PersonalDetails.class);
     }
 }

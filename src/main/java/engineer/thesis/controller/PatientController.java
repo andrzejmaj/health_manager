@@ -1,14 +1,9 @@
 package engineer.thesis.controller;
 
 import engineer.thesis.exception.AlreadyExistsException;
-import engineer.thesis.model.Patient;
-import engineer.thesis.model.PersonalDetails;
-import engineer.thesis.model.dto.ErrorDTO;
 import engineer.thesis.model.dto.PatientDTO;
-import engineer.thesis.model.dto.PersonalDetailDTO;
-import engineer.thesis.repository.PersonalDetailsRepository;
+import engineer.thesis.model.dto.PersonalDetailsDTO;
 import engineer.thesis.service.IPatientService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RestController
 public class PatientController {
@@ -71,7 +65,7 @@ public class PatientController {
 
     @RequestMapping(path = "/patients/{id}/emergency", method = RequestMethod.POST)
     public ResponseEntity<?> saveEmergencyContact(@PathVariable(value = "id") Long id,
-                                                  @RequestBody PersonalDetailDTO emergencyContact) {
+                                                  @RequestBody PersonalDetailsDTO emergencyContact) {
         try {
             return new ResponseEntity<>(patientService.saveEmergencyContact(id, emergencyContact), HttpStatus.OK);
         } catch (NoSuchElementException e) {

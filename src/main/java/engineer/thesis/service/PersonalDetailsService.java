@@ -1,9 +1,7 @@
 package engineer.thesis.service;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import engineer.thesis.model.PersonalDetails;
-import engineer.thesis.model.dto.PersonalDetailDTO;
-import engineer.thesis.repository.PatientRepository;
+import engineer.thesis.model.dto.PersonalDetailsDTO;
 import engineer.thesis.repository.PersonalDetailsRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +19,23 @@ public class PersonalDetailsService implements IPersonalDetailsService {
     private ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public PersonalDetailDTO save(PersonalDetailDTO personalDetailDTO) throws NoSuchElementException {
+    public PersonalDetailsDTO save(PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementException {
 
-        PersonalDetails personalDetails = personalDetailsRepository.getOne(personalDetailDTO.getId());
+        PersonalDetails personalDetails = personalDetailsRepository.getOne(personalDetailsDTO.getId());
         if (personalDetails == null) {
             throw new NoSuchElementException("Details not found XD");
         }
 
-        return mapToDTO(personalDetailsRepository.save(mapFromDTO(personalDetailDTO)));
+        return mapToDTO(personalDetailsRepository.save(mapFromDTO(personalDetailsDTO)));
     }
 
     @Override
-    public PersonalDetailDTO mapToDTO(PersonalDetails personalDetails) {
-        return modelMapper.map(personalDetails, PersonalDetailDTO.class);
+    public PersonalDetailsDTO mapToDTO(PersonalDetails personalDetails) {
+        return modelMapper.map(personalDetails, PersonalDetailsDTO.class);
     }
 
     @Override
-    public PersonalDetails mapFromDTO(PersonalDetailDTO personalDetailDTO) {
-        return modelMapper.map(personalDetailDTO, PersonalDetails.class);
+    public PersonalDetails mapFromDTO(PersonalDetailsDTO personalDetailsDTO) {
+        return modelMapper.map(personalDetailsDTO, PersonalDetails.class);
     }
 }

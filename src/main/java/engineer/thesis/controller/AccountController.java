@@ -2,7 +2,7 @@ package engineer.thesis.controller;
 
 import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.model.dto.AccountDTO;
-import engineer.thesis.model.dto.PersonalDetailDTO;
+import engineer.thesis.model.dto.PersonalDetailsDTO;
 import engineer.thesis.security.model.SecurityUser;
 import engineer.thesis.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class AccountController {
 
     @RequestMapping(value = {RequestMappings.ACCOUNTS.PERS_DETAILS, RequestMappings.ACCOUNTS.MY_PERS_DETAILLS}, method = RequestMethod.POST)
     public ResponseEntity<?> savePersonalDetails(@PathVariable Optional<Long> id,
-                                                 @RequestBody PersonalDetailDTO personalDetails
+                                                 @RequestBody PersonalDetailsDTO personalDetails
     ) {
         try {
             Long accountId = id.isPresent() ? id.get() : accountService.getAccountIdByUserId(getCurrentUser().getId());

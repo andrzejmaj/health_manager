@@ -12,6 +12,6 @@ public class PatientDTO {
     private Long id;
     private AccountDTO account;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private PersonalDetailDTO emergencyContact;
+    private PersonalDetailsDTO emergencyContact;
     private String insuranceNumber;
 }

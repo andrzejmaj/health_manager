@@ -64,7 +64,7 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public PersonalDetailDTO findByIdEmergency(Long id) {
+    public PersonalDetailsDTO findByIdEmergency(Long id) {
         Patient patient = patientRepository.findOne(id);
         if (patient == null) {
             throw new NoSuchElementException("Patient not found");
@@ -76,7 +76,7 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public PersonalDetailDTO saveEmergencyContact(Long id, PersonalDetailDTO emergencyContact) {
+    public PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact) {
         Patient patient = patientRepository.findOne(id);
         if (patient == null) {
             throw new NoSuchElementException("Patient not found");
@@ -91,16 +91,16 @@ public class PatientService implements IPatientService {
         return patientDTO;
     }
 
-    private PersonalDetailDTO convertPersonalDetailsToDTO(PersonalDetails personalDetails) {
-        return modelMapper.map(personalDetails, PersonalDetailDTO.class);
+    private PersonalDetailsDTO convertPersonalDetailsToDTO(PersonalDetails personalDetails) {
+        return modelMapper.map(personalDetails, PersonalDetailsDTO.class);
     }
 
     private Patient convertPatientToEntity(PatientDTO patientDTO) {
         return modelMapper.map(patientDTO, Patient.class);
     }
 
-    private PersonalDetails convertPersonalDetailsToEntity(PersonalDetailDTO personalDetailDTO) {
-        return modelMapper.map(personalDetailDTO, PersonalDetails.class);
+    private PersonalDetails convertPersonalDetailsToEntity(PersonalDetailsDTO personalDetailsDTO) {
+        return modelMapper.map(personalDetailsDTO, PersonalDetails.class);
     }
 
     @Override

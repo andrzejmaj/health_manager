@@ -4,19 +4,16 @@ import engineer.thesis.exception.AlreadyExistsException;
 import engineer.thesis.exception.TokenExpiredException;
 import engineer.thesis.model.User;
 import engineer.thesis.model.UserRole;
-import engineer.thesis.model.dto.PersonalDetailDTO;
 import engineer.thesis.model.dto.ResetPasswordDTO;
 import engineer.thesis.model.dto.UserDTO;
 import engineer.thesis.repository.PasswordResetTokenRepository;
 import engineer.thesis.repository.UserRepository;
 import engineer.thesis.security.model.PasswordResetToken;
 import engineer.thesis.security.model.RegisterRequest;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.rmi.NotBoundException;
 import java.util.*;
 
 @Service
@@ -37,8 +34,6 @@ public class UserService implements IUserService {
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
-
-
 
     @Override
     public String registerNewUser(RegisterRequest registerRequest) throws AlreadyExistsException {
