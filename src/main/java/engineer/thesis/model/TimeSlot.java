@@ -33,7 +33,7 @@ public class TimeSlot {
 	@ManyToOne(optional = false)
 	private Doctor doctor;
 
-	public TimeSlot(LocalDateTime startDateTime, LocalDateTime endDateTime, Doctor doctor, Patient takenBy) {
+	public TimeSlot(LocalDateTime startDateTime, LocalDateTime endDateTime, Doctor doctor) {
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
 		this.doctor = doctor;
