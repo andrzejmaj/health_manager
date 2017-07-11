@@ -1,23 +1,21 @@
-package engineer.thesis.core.security.service;
+package engineer.thesis.security.service;
 
-import engineer.thesis.core.model.User;
-import engineer.thesis.core.security.model.SecurityUserFactory;
-import engineer.thesis.core.service.IUserService;
+import engineer.thesis.model.User;
+import engineer.thesis.security.model.SecurityUserFactory;
+import engineer.thesis.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+import java.util.Optional;
+
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private final IUserService userService;
-
-    public UserDetailsServiceImpl(IUserService userService) {
-        this.userService = userService;
-    }
+    IUserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

@@ -2,19 +2,18 @@ package engineer.thesis.core.security.model;
 
 import engineer.thesis.core.model.User;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "reset_tokens")
+@Table(name = "hm_reset_token", schema = "hmanager")
+@NoArgsConstructor
 public class PasswordResetToken {
 
     private static final Long EXPIRATION = 1000L;
-
-    public PasswordResetToken() {
-    }
 
     public PasswordResetToken(String token, User user) {
         this.token = token;
@@ -23,7 +22,8 @@ public class PasswordResetToken {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "token")

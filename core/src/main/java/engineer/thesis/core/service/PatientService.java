@@ -1,10 +1,10 @@
-package engineer.thesis.core.service;
+package engineer.thesis.service;
 
-import engineer.thesis.core.model.*;
-import engineer.thesis.core.model.dto.*;
-import engineer.thesis.core.repository.CurrentConditionRepository;
-import engineer.thesis.core.repository.CurrentDrugRepository;
-import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.exception.AlreadyExistsException;
+import engineer.thesis.model.*;
+import engineer.thesis.model.dto.*;
+import engineer.thesis.repository.PatientRepository;
+import engineer.thesis.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,66 +15,71 @@ import java.util.stream.Collectors;
 public class PatientService implements IPatientService {
 
     @Autowired
-    PatientRepository patientRepository;
+    private PatientRepository patientRepository;
 
     @Autowired
-    CurrentConditionRepository currentConditionRepository;
-
+    private AccountService accountService;
+    
     @Autowired
-    CurrentDrugRepository currentDrugRepository;
+    private CustomObjectMapper objectMapper;
 
     @Override
     public List<PatientDTO> getAllPatients() {
-        return patientRepository.findAll().stream().map(PatientDTO::new).collect(Collectors.toList());
+        return patientRepository.findAll().stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public PatientDTO findById(Long id) throws NoSuchElementException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
-        return new PatientDTO(patient.orElseThrow(NoSuchElementException::new));
+        return objectMapper.convert(patient.orElseThrow(NoSuchElementException::new), PatientDTO.class);
     }
 
     @Override
     public PatientDTO findByPesel(String pesel) throws NoSuchElementException {
-        Optional<Patient> patient = Optional.ofNullable(patientRepository.findByPersonalDetails_Pesel(pesel));
-        return new PatientDTO(patient.orElseThrow(NoSuchElementException::new));
+        Optional<Patient> patient = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel));
+        return objectMapper.convert(patient.orElseThrow(NoSuchElementException::new), PatientDTO.class);
     }
 
     @Override
     public List<PatientDTO> findPatientsByLastName(String lastName) {
-        return patientRepository.findByPersonalDetails_LastNameLike(lastName).stream().map(PatientDTO::new).collect(Collectors.toList());
+        return patientRepository.findByAccount_PersonalDetails_LastNameLike(lastName).stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
     }
 
     @Override
-    public List<CurrentStateDTO> getPatientCurrentCondition(Long id) throws NoSuchElementException {
-        Map<Long, CurrentStateDTO> currentState = new HashMap<>();
-        findById(id);
-        List<CurrentDrug> currentDrugs = currentDrugRepository.findByPatientId(id);
-        currentDrugs.forEach(drug -> {
-            Long conditionId = drug.getCondition().getId();
-            if (currentState.containsKey(conditionId)) {
-                currentState.get(conditionId).getTakenDrugs().add(new DrugDTO(drug.getDrug()));
-            } else {
-                CurrentStateDTO state = new CurrentStateDTO(drug, new ArrayList<>(Arrays.asList(new DrugDTO(drug.getDrug()))));
-                currentState.put(conditionId, state);
-            }
-        });
-        return new ArrayList<>(currentState.values());
-    }
-
-    @Override
-    public PatientMedicalInformationDTO getPatientMedicalInformation(Long id) throws NoSuchElementException {
-        Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
-        return new PatientMedicalInformationDTO(patient.orElseThrow(NoSuchElementException::new));
-    }
-
-    @Override
-    public List<MedicalHistoryDTO> getPatientMedicalHistory(Long id) throws NoSuchElementException {
-        Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
-        if (patient.isPresent()) {
-            return patient.get().getMedicalHistories().stream().map(MedicalHistoryDTO::new).collect(Collectors.toList());
-        } else {
-            throw new NoSuchElementException();
+    public PatientDTO savePatient(PatientDTO patientDTO) throws AlreadyExistsException {
+        if (accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
+            throw new AlreadyExistsException("Account with such pesel number already exists");
         }
+        return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);
+    }
+
+    @Override
+    public PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException {
+        if (!accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
+            throw new NoSuchElementException("Patient does not exist");
+        }
+        return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);
+    }
+
+    @Override
+    public PersonalDetailsDTO findByIdEmergency(Long id) {
+        Patient patient = patientRepository.findOne(id);
+        if (patient == null) {
+            throw new NoSuchElementException("Patient not found");
+        }
+        if (patient.getEmergencyContact() == null) {
+            throw new NoSuchElementException("Emergency contact not found");
+        }
+        return objectMapper.convert(patient.getEmergencyContact(), PersonalDetailsDTO.class);
+    }
+
+    @Override
+    public PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact) {
+        Patient patient = patientRepository.findOne(id);
+        if (patient == null) {
+            throw new NoSuchElementException("Patient not found");
+        }
+        patient.setEmergencyContact(objectMapper.convert(emergencyContact, PersonalDetails.class));
+        return objectMapper.convert(patientRepository.save(patient).getEmergencyContact(), PersonalDetailsDTO.class);
     }
 }

@@ -12,7 +12,8 @@ public class SecurityUserFactory {
         return new SecurityUser(
                 user.getId(),
                 user.getEmail(),
-                user.getPassword()
+                user.getPassword(),
+                user.getRole()
         );
     }
 }

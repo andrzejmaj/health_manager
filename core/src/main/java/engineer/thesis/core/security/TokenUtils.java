@@ -20,7 +20,7 @@ public class TokenUtils {
     private final String AUDIENCE_MOBILE = "mobile";
     private final String AUDIENCE_UNKNOWN = "unknown";
 
-    private Long expiration = 1000L;
+    private Long expiration = 10000L;
 
     private Date getCurrentDate() {
         return new Date(System.currentTimeMillis());
@@ -38,7 +38,6 @@ public class TokenUtils {
     public String generateToken(UserDetails userDetails, Device device) {
 
         Map<String, Object> claims = new HashMap<>();
-
 
         claims.put("sub", userDetails.getUsername());
         claims.put("audience", this.generateAudience(device));
@@ -102,6 +101,7 @@ public class TokenUtils {
                     .getBody();
 
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

@@ -26,14 +26,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint entryPoint;
 
-    @Autowired//moze impl ?
+    @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -60,23 +59,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
             .and()
+                .exceptionHandling().authenticationEntryPoint( entryPoint )
+            .and()
             .authorizeRequests()
+                // TODO: 01.07.17
+                // change later to some variables
                 .antMatchers("/admin/**")
                     .hasRole("PATIENT")
                 .antMatchers("/medcom/**")
                     //.hasRole("DOCTOR")
                     .permitAll()
                 .antMatchers(
-                        "/register",
-                        "/login",
-                        "/resetPassword",
-                        "/changePassword",
-                        "/updatePassword",
-                        "/"
+                        "/users/register",
+                        "/users/login",
+                        "/users/resetPassword",
+                        "/",
+                        ///for test remove/move to protected
+                        "/personaldetails/*",
+                        "/users/personaldetails"
                 ).permitAll()
                 .antMatchers(HttpMethod.GET, "/users").authenticated()
-                .antMatchers(HttpMethod.GET, "/patients").permitAll()
                 .anyRequest().permitAll();
+
 
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
