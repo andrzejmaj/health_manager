@@ -24,7 +24,7 @@ public class PatientControllerTest extends AbstractTest {
 
     @MockBean
     private PatientService service;
-
+/*
     @Test
     public void getAllPatients_Test() {
 
@@ -51,4 +51,5 @@ public class PatientControllerTest extends AbstractTest {
             e.printStackTrace();
         }
     }
+*/
 }

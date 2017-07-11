@@ -18,7 +18,7 @@ public class TokenHelperTest {
     private UserDetails userDetails;
 
     private final String USER_EMAIL = "sample@mail.com";
-
+/*
     @Before
     public void init() {
         tokenHelper = new TokenUtils();
@@ -56,4 +56,5 @@ public class TokenHelperTest {
                 .parseClaimsJws(token)
                 .getBody();
     }
+*/
 }
