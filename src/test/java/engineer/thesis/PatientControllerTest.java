@@ -1,14 +1,13 @@
 package engineer.thesis;
 
-import engineer.thesis.model.UserRole;
-import engineer.thesis.model.dto.PatientDTO;
-import engineer.thesis.service.PatientService;
+import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.dto.PatientDTO;
+import engineer.thesis.core.service.PatientService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 

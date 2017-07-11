@@ -1,6 +1,6 @@
 package engineer.thesis;
 
-import engineer.thesis.security.AuthenticationTokenFilter;
+import engineer.thesis.core.security.AuthenticationTokenFilter;
 import io.restassured.RestAssured;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.springframework.beans.factory.annotation.Autowired;

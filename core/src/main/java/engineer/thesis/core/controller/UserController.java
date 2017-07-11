@@ -1,13 +1,13 @@
-package engineer.thesis.controller;
+package engineer.thesis.core.controller;
 
-import engineer.thesis.exception.AlreadyExistsException;
-import engineer.thesis.exception.TokenExpiredException;
-import engineer.thesis.model.UserRole;
-import engineer.thesis.model.dto.ResetPasswordDTO;
-import engineer.thesis.security.TokenUtils;
-import engineer.thesis.security.model.*;
-import engineer.thesis.service.UserService;
-import engineer.thesis.utils.MailService;
+import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.TokenExpiredException;
+import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.dto.ResetPasswordDTO;
+import engineer.thesis.core.security.TokenUtils;
+import engineer.thesis.core.security.model.*;
+import engineer.thesis.core.service.UserService;
+import engineer.thesis.core.utils.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

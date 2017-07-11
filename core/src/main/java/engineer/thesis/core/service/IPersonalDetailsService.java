@@ -1,7 +1,6 @@
-package engineer.thesis.service;
+package engineer.thesis.core.service;
 
-import engineer.thesis.model.PersonalDetails;
-import engineer.thesis.model.dto.PersonalDetailsDTO;
+import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;

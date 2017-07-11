@@ -1,15 +1,15 @@
-package engineer.thesis.service;
+package engineer.thesis.core.service;
 
-import engineer.thesis.exception.AlreadyExistsException;
-import engineer.thesis.exception.TokenExpiredException;
-import engineer.thesis.model.User;
-import engineer.thesis.model.UserRole;
-import engineer.thesis.model.dto.ResetPasswordDTO;
-import engineer.thesis.model.dto.UserDTO;
-import engineer.thesis.repository.PasswordResetTokenRepository;
-import engineer.thesis.repository.UserRepository;
-import engineer.thesis.security.model.PasswordResetToken;
-import engineer.thesis.security.model.RegisterRequest;
+import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.TokenExpiredException;
+import engineer.thesis.core.model.User;
+import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.dto.ResetPasswordDTO;
+import engineer.thesis.core.model.dto.UserDTO;
+import engineer.thesis.core.repository.PasswordResetTokenRepository;
+import engineer.thesis.core.repository.UserRepository;
+import engineer.thesis.core.security.model.PasswordResetToken;
+import engineer.thesis.core.security.model.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

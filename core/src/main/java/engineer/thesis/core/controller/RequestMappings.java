@@ -1,4 +1,4 @@
-package engineer.thesis.controller;
+package engineer.thesis.core.controller;
 
 final class RequestMappings {
 

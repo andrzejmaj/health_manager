@@ -1,6 +1,6 @@
-package engineer.thesis.repository;
+package engineer.thesis.core.repository;
 
-import engineer.thesis.model.Account;
+import engineer.thesis.core.model.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

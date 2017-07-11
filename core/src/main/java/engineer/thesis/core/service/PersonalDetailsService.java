@@ -1,10 +1,9 @@
-package engineer.thesis.service;
+package engineer.thesis.core.service;
 
-import engineer.thesis.model.PersonalDetails;
-import engineer.thesis.model.dto.PersonalDetailsDTO;
-import engineer.thesis.repository.PersonalDetailsRepository;
-import engineer.thesis.utils.CustomObjectMapper;
-import org.modelmapper.ModelMapper;
+import engineer.thesis.core.model.PersonalDetails;
+import engineer.thesis.core.model.dto.PersonalDetailsDTO;
+import engineer.thesis.core.repository.PersonalDetailsRepository;
+import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

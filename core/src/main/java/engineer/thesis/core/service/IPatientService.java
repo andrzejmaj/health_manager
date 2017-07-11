@@ -1,8 +1,7 @@
-package engineer.thesis.service;
+package engineer.thesis.core.service;
 
-import engineer.thesis.exception.AlreadyExistsException;
-import engineer.thesis.model.Patient;
-import engineer.thesis.model.dto.*;
+import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.model.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,10 +1,10 @@
-package engineer.thesis.service;
+package engineer.thesis.core.service;
 
-import engineer.thesis.exception.AlreadyExistsException;
-import engineer.thesis.exception.TokenExpiredException;
-import engineer.thesis.model.User;
-import engineer.thesis.model.dto.UserDTO;
-import engineer.thesis.security.model.RegisterRequest;
+import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.TokenExpiredException;
+import engineer.thesis.core.model.User;
+import engineer.thesis.core.model.dto.UserDTO;
+import engineer.thesis.core.security.model.RegisterRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

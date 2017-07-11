@@ -1,10 +1,10 @@
-package engineer.thesis.controller;
+package engineer.thesis.core.controller;
 
-import engineer.thesis.exception.AlreadyExistsException;
-import engineer.thesis.model.dto.AccountDTO;
-import engineer.thesis.model.dto.PersonalDetailsDTO;
-import engineer.thesis.security.model.SecurityUser;
-import engineer.thesis.service.AccountService;
+import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.model.dto.AccountDTO;
+import engineer.thesis.core.model.dto.PersonalDetailsDTO;
+import engineer.thesis.core.security.model.SecurityUser;
+import engineer.thesis.core.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,15 +1,13 @@
-package engineer.thesis.security.model;
+package engineer.thesis.core.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import engineer.thesis.model.UserRole;
-import lombok.Getter;
+import engineer.thesis.core.model.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 
 public class SecurityUser implements UserDetails {

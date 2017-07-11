@@ -1,4 +1,4 @@
-package engineer.thesis.utils;
+package engineer.thesis.core.utils;
 
 
 import org.modelmapper.ModelMapper;

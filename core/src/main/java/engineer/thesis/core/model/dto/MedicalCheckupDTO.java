@@ -1,4 +1,4 @@
-package engineer.thesis.model.dto;
+package engineer.thesis.core.model.dto;
 
 import lombok.Value;
 import java.util.Date;

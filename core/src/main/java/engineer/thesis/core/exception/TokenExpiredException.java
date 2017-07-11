@@ -1,4 +1,4 @@
-package engineer.thesis.exception;
+package engineer.thesis.core.exception;
 
 
 public class TokenExpiredException extends Throwable {

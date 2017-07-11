@@ -1,4 +1,4 @@
-package engineer.thesis.model.dto;
+package engineer.thesis.core.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

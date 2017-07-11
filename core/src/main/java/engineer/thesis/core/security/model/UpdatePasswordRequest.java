@@ -1,4 +1,4 @@
-package engineer.thesis.security.model;
+package engineer.thesis.core.security.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

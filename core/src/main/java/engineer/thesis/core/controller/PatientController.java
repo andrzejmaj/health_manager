@@ -1,9 +1,9 @@
-package engineer.thesis.controller;
+package engineer.thesis.core.controller;
 
-import engineer.thesis.exception.AlreadyExistsException;
-import engineer.thesis.model.dto.PatientDTO;
-import engineer.thesis.model.dto.PersonalDetailsDTO;
-import engineer.thesis.service.IPatientService;
+import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.model.dto.PatientDTO;
+import engineer.thesis.core.model.dto.PersonalDetailsDTO;
+import engineer.thesis.core.service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

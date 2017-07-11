@@ -1,10 +1,10 @@
-package engineer.thesis.service;
+package engineer.thesis.core.service;
 
-import engineer.thesis.exception.AlreadyExistsException;
-import engineer.thesis.model.*;
-import engineer.thesis.model.dto.*;
-import engineer.thesis.repository.PatientRepository;
-import engineer.thesis.utils.CustomObjectMapper;
+import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.model.*;
+import engineer.thesis.core.model.dto.*;
+import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
