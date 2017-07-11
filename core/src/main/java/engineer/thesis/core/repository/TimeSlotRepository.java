@@ -1,4 +1,4 @@
-package engineer.thesis.repository;
+package engineer.thesis.core.repository;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import engineer.thesis.model.Doctor;
-import engineer.thesis.model.TimeSlot;
+import engineer.thesis.core.model.Doctor;
+import engineer.thesis.core.model.TimeSlot;
 
 public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 

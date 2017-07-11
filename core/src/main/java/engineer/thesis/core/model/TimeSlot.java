@@ -1,4 +1,4 @@
-package engineer.thesis.model;
+package engineer.thesis.core.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

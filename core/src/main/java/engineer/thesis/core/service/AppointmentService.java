@@ -1,15 +1,15 @@
-package engineer.thesis.service;
+package engineer.thesis.core.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import engineer.thesis.model.Appointment;
-import engineer.thesis.model.Patient;
-import engineer.thesis.model.TimeSlot;
-import engineer.thesis.model.dto.AppointmentDTO;
-import engineer.thesis.repository.AppointmentRepository;
-import engineer.thesis.repository.PatientRepository;
-import engineer.thesis.repository.TimeSlotRepository;
+import engineer.thesis.core.model.Appointment;
+import engineer.thesis.core.model.Patient;
+import engineer.thesis.core.model.TimeSlot;
+import engineer.thesis.core.model.dto.AppointmentDTO;
+import engineer.thesis.core.repository.AppointmentRepository;
+import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.repository.TimeSlotRepository;
 
 @Service
 public class AppointmentService implements IAppointmentService {

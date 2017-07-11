@@ -1,4 +1,4 @@
-package engineer.thesis.repository;
+package engineer.thesis.core.repository;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import engineer.thesis.model.Appointment;
-import engineer.thesis.model.Patient;
+import engineer.thesis.core.model.Appointment;
+import engineer.thesis.core.model.Patient;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 

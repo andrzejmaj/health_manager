@@ -1,4 +1,4 @@
-package engineer.thesis.controller;
+package engineer.thesis.core.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import engineer.thesis.model.Specialization;
-import engineer.thesis.repository.DoctorRepository;
-import engineer.thesis.repository.SpecializationRepository;
+import engineer.thesis.core.model.Specialization;
+import engineer.thesis.core.repository.DoctorRepository;
+import engineer.thesis.core.repository.SpecializationRepository;
 
 @RestController
 public class SpecializationController {

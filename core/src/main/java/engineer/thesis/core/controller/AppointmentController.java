@@ -1,4 +1,4 @@
-package engineer.thesis.controller;
+package engineer.thesis.core.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import engineer.thesis.model.dto.AppointmentDTO;
-import engineer.thesis.repository.AppointmentRepository;
-import engineer.thesis.repository.PatientRepository;
-import engineer.thesis.service.IAppointmentService;
+import engineer.thesis.core.model.dto.AppointmentDTO;
+import engineer.thesis.core.repository.AppointmentRepository;
+import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.service.IAppointmentService;
 
 @RestController
 public class AppointmentController {

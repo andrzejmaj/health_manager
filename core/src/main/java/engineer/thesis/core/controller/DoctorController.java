@@ -1,4 +1,4 @@
-package engineer.thesis.controller;
+package engineer.thesis.core.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import engineer.thesis.model.Doctor;
-import engineer.thesis.model.TimeSlot;
-import engineer.thesis.repository.DoctorRepository;
-import engineer.thesis.repository.TimeSlotRepository;
+import engineer.thesis.core.model.Doctor;
+import engineer.thesis.core.model.TimeSlot;
+import engineer.thesis.core.repository.DoctorRepository;
+import engineer.thesis.core.repository.TimeSlotRepository;
 
 @RestController
 public class DoctorController {

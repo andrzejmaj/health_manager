@@ -1,9 +1,8 @@
-package engineer.thesis.service;
+package engineer.thesis.core.service;
 
 import org.springframework.stereotype.Service;
 
-import engineer.thesis.model.Appointment;
-import engineer.thesis.model.dto.AppointmentDTO;
+import engineer.thesis.core.model.dto.AppointmentDTO;
 
 @Service
 public interface IAppointmentService {
