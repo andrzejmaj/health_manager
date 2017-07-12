@@ -1,13 +1,12 @@
 package engineer.thesis;
 
 
-import engineer.thesis.model.User;
-import engineer.thesis.model.UserRole;
-import engineer.thesis.repository.UserRepository;
-import engineer.thesis.security.AnonAuthentication;
-import engineer.thesis.security.model.SecurityUser;
-import engineer.thesis.security.model.SecurityUserFactory;
-import org.codehaus.jackson.map.ObjectMapper;
+import engineer.thesis.core.model.User;
+import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.repository.UserRepository;
+import engineer.thesis.core.security.AnonAuthentication;
+import engineer.thesis.core.security.model.SecurityUser;
+import engineer.thesis.core.security.model.SecurityUserFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;

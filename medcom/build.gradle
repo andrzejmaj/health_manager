@@ -1,0 +1,46 @@
+group 'Engineer.Thesis'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories { mavenCentral() }
+}
+
+ext { springBootVersion = '1.5.2.RELEASE' }
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://www.dcm4che.org/maven2"
+    }
+}
+
+dependencies {
+    compile project(':core')
+
+    compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-web')
+
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    compile group: 'com.google.guava', name: 'guava', version: '21.0'
+
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.1'
+
+    compileOnly('org.projectlombok:lombok')
+
+    compile group: 'org.dcm4che', name: 'dcm4che-core', version: '3.3.8'
+    compile group: 'org.dcm4che', name: 'dcm4che-net', version: '3.3.8'
+    compile group: 'org.dcm4che.tool', name: 'dcm4che-tool-common', version: '3.3.8'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}

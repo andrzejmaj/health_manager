@@ -1,11 +1,10 @@
 package engineer.thesis;
 
-import engineer.thesis.model.User;
-import engineer.thesis.security.TokenUtils;
-import engineer.thesis.security.model.SecurityUserFactory;
+import engineer.thesis.core.model.User;
+import engineer.thesis.core.security.TokenUtils;
+import engineer.thesis.core.security.model.SecurityUserFactory;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import org.h2.util.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mobile.device.Device;
@@ -19,7 +18,7 @@ public class TokenHelperTest {
     private UserDetails userDetails;
 
     private final String USER_EMAIL = "sample@mail.com";
-
+/*
     @Before
     public void init() {
         tokenHelper = new TokenUtils();
@@ -57,4 +56,5 @@ public class TokenHelperTest {
                 .parseClaimsJws(token)
                 .getBody();
     }
+*/
 }
