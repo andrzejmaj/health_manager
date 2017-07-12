@@ -1,6 +1,5 @@
 package engineer.thesis.model;
 
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -12,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +19,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(of = "account")
 @NoArgsConstructor
 public class Doctor {
 
@@ -28,30 +29,14 @@ public class Doctor {
 	
 	@OneToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private Account account;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<Specialization> specializations;
 
-	public Doctor(User user, Set<Specialization> specializations) {
-		this.user = user;
+	public Doctor(Account account, Set<Specialization> specializations) {
+		this.account = account;
 		this.specializations = specializations;
 	}
-	
-	@Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Doctor) {
-            Doctor d = (Doctor) obj;
-
-            return Objects.equals(d.user, this.user);
-        }
-
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(user);
-    }
 }
 
