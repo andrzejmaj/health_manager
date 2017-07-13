@@ -2,6 +2,10 @@ package engineer.thesis.core.controller;
 
 final class RequestMappings {
 
+    static final class PATIENTS {
+        static final String MEDICAL = "/patients/{id}/medicalinfo";
+    }
+
     static final class USERS {
         static final String LOGIN = "/users/login";
         static final String REGISTER = "/users/register";

@@ -3,9 +3,11 @@ package engineer.thesis.core.service;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.model.*;
 import engineer.thesis.core.model.dto.*;
+import engineer.thesis.core.repository.MedicalInfoRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,6 +24,9 @@ public class PatientService implements IPatientService {
     
     @Autowired
     private CustomObjectMapper objectMapper;
+
+    @Autowired
+    private MedicalInfoRepository medicalInfoRepository;
 
     @Override
     public List<PatientDTO> getAllPatients() {
@@ -55,7 +60,7 @@ public class PatientService implements IPatientService {
 
     @Override
     public PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException {
-        if (!accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
+        if (patientRepository.getOne(patientDTO.getId())==null) {
             throw new NoSuchElementException("Patient does not exist");
         }
         return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);
@@ -81,5 +86,43 @@ public class PatientService implements IPatientService {
         }
         patient.setEmergencyContact(objectMapper.convert(emergencyContact, PersonalDetails.class));
         return objectMapper.convert(patientRepository.save(patient).getEmergencyContact(), PersonalDetailsDTO.class);
+    }
+
+    @Override
+    public MedicalInfoDTO findIdMedicalInfo(Long id) throws NoSuchElementException{
+        Patient patient = patientRepository.findOne(id);
+        if (patient == null) {
+            throw new NoSuchElementException("Patient not found");
+        }
+        return objectMapper.convert(patient.getMedicalInformation(), MedicalInfoDTO.class);
+    }
+
+    @Override
+    public MedicalInfoDTO saveMedicalInfo(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementException, AlreadyExistsException {
+        Patient patient = patientRepository.getOne(id);
+        if (patient == null) {
+            throw new NoSuchElementException("Patient not found");
+        }
+        if (patient.getMedicalInformation() != null) {
+            throw new AlreadyExistsException("Patient already has medical info");
+        }
+        medicalInfoDTO.setPatientId(id);
+        medicalInfoDTO.setId(null);
+        return objectMapper.convert(medicalInfoRepository.save(objectMapper.convert(medicalInfoDTO, MedicalInformation.class)), MedicalInfoDTO.class);
+
+    }
+
+    @Override
+    public MedicalInfoDTO updateMedicalInfo(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementException {
+        Patient patient = patientRepository.getOne(id);
+        if (patient == null) {
+            throw new NoSuchElementException("Patient not found");
+        }
+        if (patient.getMedicalInformation() == null) {
+            throw new NoSuchElementException("Patient doesn't have medical information");
+        }
+        medicalInfoDTO.setId(patient.getMedicalInformation().getId());
+        medicalInfoDTO.setPatientId(patient.getId());
+        return objectMapper.convert(medicalInfoRepository.save(objectMapper.convert(medicalInfoDTO, MedicalInformation.class)), MedicalInfoDTO.class);
     }
 }
