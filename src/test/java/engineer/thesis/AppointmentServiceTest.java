@@ -113,17 +113,17 @@ public class AppointmentServiceTest {
 	@Test
 	public void createNewAppointment_Test() {
 		AppointmentDTO appointmentDTO = new AppointmentDTO(0L, 2L, false, 1, "");
-		appointmentService.save(appointmentDTO, 1L);
+		appointmentService.saveDoctor(appointmentDTO, 1L);
 		verify(appointmentRepository, never()).delete(any(Appointment.class));
-		verify(appointmentRepository, times(1)).save(any(Appointment.class));
+		verify(appointmentRepository, times(1)).saveDoctor(any(Appointment.class));
 	}
 
 	@Test
 	public void changeAppointment_Test() {
 		AppointmentDTO appointmentDTO = new AppointmentDTO(0L, 1L, false, 1, "");
-		appointmentService.save(appointmentDTO, 1L);
+		appointmentService.saveDoctor(appointmentDTO, 1L);
 		verify(appointmentRepository, times(1)).delete(any(Appointment.class));
-		verify(appointmentRepository, times(1)).save(any(Appointment.class));
+		verify(appointmentRepository, times(1)).saveDoctor(any(Appointment.class));
 	}
 */
 }

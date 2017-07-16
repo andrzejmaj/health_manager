@@ -93,7 +93,7 @@ public class PatientServiceTest {
         Mockito.when(patientRepository.findOne(ID)).thenReturn(patient);
         Mockito.when(patientRepository.findByUser_PersonalDetails_Pesel(PESEL)).thenReturn(patient);
         Mockito.when(patientRepository.findByUser_PersonalDetails_LastNameLike(LAST_NAME)).thenReturn(Collections.singletonList(patient));
-        Mockito.when(patientRepository.save(Matchers.any(Patient.class))).thenReturn(patient);
+        Mockito.when(patientRepository.saveDoctor(Matchers.any(Patient.class))).thenReturn(patient);
         Mockito.when(userService.findByEmail("mail@mail.pl")).thenReturn(Optional.of(user));
     }
 

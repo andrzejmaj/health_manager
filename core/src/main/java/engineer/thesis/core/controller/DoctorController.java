@@ -3,6 +3,7 @@ package engineer.thesis.core.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import engineer.thesis.core.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ public class DoctorController {
 	private DoctorRepository doctorRepository;
 	@Autowired
 	private TimeSlotRepository timeSlotRepository;
+
+	@Autowired
+	private DoctorService doctorService;
 
 	@RequestMapping(method = RequestMethod.GET, path = "/doctors")
 	public ResponseEntity<?> getDoctors() {
