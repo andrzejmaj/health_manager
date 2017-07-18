@@ -1,8 +1,16 @@
 package engineer.thesis.core.model.dto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+import java.util.Set;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class DoctorDTO {
     Long id;
+    private AccountDTO account;
+    private Set<SpecializationDTO> specialisations;
 }
