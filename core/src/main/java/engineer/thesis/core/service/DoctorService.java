@@ -14,10 +14,6 @@ import org.springframework.stereotype.Service;
 public class DoctorService implements IDoctorService {
     private final static Logger logger = Logger.getLogger(DoctorService.class);
 
-    static {
-        logger.info("LOGGER INIT FOR DOCTORSERVICE");
-    }
-
     @Autowired
     private DoctorRepository doctorRepository;
 
@@ -32,11 +28,10 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public DoctorDTO saveDoctor(DoctorDTO doctorDTO) throws AlreadyExistsException {
-//        if (accountService.doesAccountExist(doctorDTO.getAccount().getPersonalDetails().getPesel())) {
-//            throw new AlreadyExistsException("Account with such pesel number already exists");
-//        }
-        //todo czy to nie będzie save doctor + save user xD
-        logger.info(doctorDTO.toString());
+        if (accountService.doesAccountExist(doctorDTO.getAccount().getPersonalDetails().getPesel())) {
+            throw new AlreadyExistsException("Account with such pesel number already exists");
+        }
+        logger.info("Saving doctor: " + doctorDTO.toString());
         return objectMapper.convert(doctorRepository.save(objectMapper.convert(doctorDTO, Doctor.class)), DoctorDTO.class);
     }
 }

@@ -41,7 +41,6 @@ public class DoctorController {
     @RequestMapping(path = "/doctors", method = RequestMethod.POST)
     public ResponseEntity<?> savePatient(@RequestBody DoctorDTO doctorDTO) {
         try {
-            logger.info("PRUBUUJEM ZAPISAĆ PACJENTA XDFDDDD");
             return new ResponseEntity<>(doctorService.saveDoctor(doctorDTO), HttpStatus.OK);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);

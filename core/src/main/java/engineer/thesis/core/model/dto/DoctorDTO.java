@@ -11,5 +11,4 @@ public class DoctorDTO {
     Long id;
     private AccountDTO account;
     private String specialisation;
-//    private Set<SpecializationDTO> specialisations;
 }
