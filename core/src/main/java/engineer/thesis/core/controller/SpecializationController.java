@@ -1,8 +1,8 @@
 package engineer.thesis.core.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import engineer.thesis.core.model.Specialization;
+import engineer.thesis.core.repository.DoctorRepository;
+import engineer.thesis.core.repository.SpecializationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import engineer.thesis.core.model.Specialization;
-import engineer.thesis.core.repository.DoctorRepository;
-import engineer.thesis.core.repository.SpecializationRepository;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class SpecializationController {
@@ -43,12 +42,12 @@ public class SpecializationController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/specializations/{specId}/doctors")
-	public ResponseEntity<?> getDoctorsBySpecializaion(@PathVariable(name = "specId") long specId) {
-		Specialization spec = specializationRepository.findOne(specId);
+    public ResponseEntity<?> getDoctorsBySpecializaion(@PathVariable(name = "specId") long specId) { //todo to już nie zadziała
+        Specialization spec = specializationRepository.findOne(specId);
 		if (spec == null) {
 			return new ResponseEntity<>("No specialization with id: " + specId, HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<>(doctorRepository.findBySpecializations(spec), HttpStatus.OK);
-	}
+        return new ResponseEntity<>(doctorRepository.findBySpecialisation(spec.getDescription()), HttpStatus.OK);
+    }
 }
