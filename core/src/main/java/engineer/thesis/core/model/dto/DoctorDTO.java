@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class DoctorDTO {
     Long id;
     private AccountDTO account;
-    private String specialisation;
+    private SpecializationDTO specialization;
 }

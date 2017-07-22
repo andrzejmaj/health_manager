@@ -26,12 +26,15 @@ public class Doctor {
     private Account account;
 
 
-    private String specialisation;
+    @ManyToOne
+    @JoinColumn(name = "specialization_id")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Specialization specialization;
 
 
-    public Doctor(Account account, String specialisation) {
+    public Doctor(Account account, Specialization specialization) {
         this.account = account;
-        this.specialisation = specialisation;
+        this.specialization = specialization;
     }
 }
 
