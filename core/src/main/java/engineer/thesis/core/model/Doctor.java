@@ -28,7 +28,6 @@ public class Doctor {
 
     @ManyToOne
     @JoinColumn(name = "specialization_id")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Specialization specialization;
 
 

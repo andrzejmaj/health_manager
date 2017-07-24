@@ -20,8 +20,8 @@ public class Specialization {
     @Column(unique = true, nullable = false)
     private String description;
 
-    public Specialization(String name) {
-        this.description = name;
+    public Specialization(String description) {
+        this.description = description;
     }
 
     @Override
