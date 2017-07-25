@@ -2,12 +2,16 @@ package engineer.thesis.core.model.dto;
 
 import lombok.Value;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Value
 public class TimeSlotDTO {
     Long id;
     Long doctorId;
-    LocalDateTime startDateTime;
-    LocalDateTime endDateTime;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    Date startDateTime;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    Date endDateTime;
 }

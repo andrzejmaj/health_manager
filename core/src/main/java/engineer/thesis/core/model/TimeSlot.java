@@ -1,6 +1,6 @@
 package engineer.thesis.core.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,15 +26,15 @@ public class TimeSlot {
 	private long id;
 	
 	@Column(nullable = false)
-	private LocalDateTime startDateTime;
+	private Date startDateTime;
 	
 	@Column(nullable = false)
-	private LocalDateTime endDateTime;
+	private Date endDateTime;
 	
 	@ManyToOne(optional = false)
 	private Doctor doctor;
 
-	public TimeSlot(LocalDateTime startDateTime, LocalDateTime endDateTime, Doctor doctor) {
+	public TimeSlot(Date startDateTime, Date endDateTime, Doctor doctor) {
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
 		this.doctor = doctor;
