@@ -1,24 +1,28 @@
 package engineer.thesis.core.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.model.Doctor;
+import engineer.thesis.core.model.TimeSlot;
+import engineer.thesis.core.model.dto.DoctorDTO;
+import engineer.thesis.core.repository.DoctorRepository;
+import engineer.thesis.core.repository.TimeSlotRepository;
+import engineer.thesis.core.service.IDoctorService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import engineer.thesis.core.model.Doctor;
-import engineer.thesis.core.model.TimeSlot;
-import engineer.thesis.core.repository.DoctorRepository;
-import engineer.thesis.core.repository.TimeSlotRepository;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class DoctorController {
+
+    private final static Logger logger = Logger.getLogger(DoctorController.class);
+
+    @Autowired
+    protected IDoctorService doctorService;
 
 	@Autowired
 	private DoctorRepository doctorRepository;
@@ -33,6 +37,15 @@ public class DoctorController {
 
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
+
+    @RequestMapping(path = "/doctors", method = RequestMethod.POST)
+    public ResponseEntity<?> saveDoctor(@RequestBody DoctorDTO doctorDTO) {
+        try {
+            return new ResponseEntity<>(doctorService.saveDoctor(doctorDTO), HttpStatus.OK);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
 
 	@RequestMapping(method = RequestMethod.GET, path = "/doctors/{id}")
 	public ResponseEntity<?> getDoctor(@PathVariable(name = "id") long id) {
