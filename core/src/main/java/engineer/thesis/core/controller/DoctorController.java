@@ -4,9 +4,12 @@ import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.model.Doctor;
 import engineer.thesis.core.model.TimeSlot;
 import engineer.thesis.core.model.dto.DoctorDTO;
+import engineer.thesis.core.model.dto.TimeSlotDTO;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;
 import engineer.thesis.core.service.IDoctorService;
+import engineer.thesis.core.service.ITimeSlotService;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,8 @@ public class DoctorController {
 
     @Autowired
     protected IDoctorService doctorService;
+	@Autowired
+	private ITimeSlotService timeSlotService;
 
 	@Autowired
 	private DoctorRepository doctorRepository;
@@ -55,6 +60,20 @@ public class DoctorController {
 		}
 
 		return new ResponseEntity<>(doc, HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, path = "/doctors/{docId}/slots")
+	public ResponseEntity<?> saveTimeSlot(@PathVariable(name = "docId") long docId,
+			@RequestBody TimeSlotDTO timeSlotDTO) {
+		if (!doctorRepository.exists(docId)) {
+			return new ResponseEntity<>("No doctor with id: " + docId, HttpStatus.NOT_FOUND);
+		}
+
+		try {
+			return new ResponseEntity<>(timeSlotService.saveTimeSlot(timeSlotDTO, docId), HttpStatus.OK);
+		} catch (IllegalArgumentException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/doctors/{docId}/slots")
