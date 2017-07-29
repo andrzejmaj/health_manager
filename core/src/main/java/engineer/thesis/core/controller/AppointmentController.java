@@ -24,7 +24,11 @@ public class AppointmentController {
     @RequestMapping(method = RequestMethod.GET, path = "/appointments/byTimeSlot/{timeSlotId}")
     public ResponseEntity<?> getAppointmentByTimeSlot(@PathVariable(name = "timeSlotId") long timeSlotId) {
         Appointment appointment = appointmentRepository.findByTimeSlotId(timeSlotId);
-        return new ResponseEntity<>(appointment, appointment != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+        if (appointment != null) {
+            return new ResponseEntity<>(appointment, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No appointment with timeSlotId " + timeSlotId, HttpStatus.NOT_FOUND);
+        }
     }
 
 	@RequestMapping(method = RequestMethod.GET, path = "/patients/{patientId}/appointments")
