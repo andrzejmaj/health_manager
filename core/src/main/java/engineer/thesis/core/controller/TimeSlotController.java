@@ -1,6 +1,5 @@
 package engineer.thesis.core.controller;
 
-import engineer.thesis.core.repository.TimeSlotRepository;
 import engineer.thesis.core.service.ITimeSlotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +16,6 @@ public class TimeSlotController {
 
     @Autowired
     private ITimeSlotService timeSlotService;
-
-    @Autowired
-    private TimeSlotRepository timeSlotRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/timeSlots/{doctorId}/{start}/{end}")
     public ResponseEntity<?> getDoctor(

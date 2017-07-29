@@ -1,5 +1,6 @@
 package engineer.thesis.core.controller;
 
+import engineer.thesis.core.model.Appointment;
 import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;
@@ -18,6 +19,13 @@ public class AppointmentController {
 	private PatientRepository patientRepository;
 	@Autowired
 	private IAppointmentService appointmentService;
+
+
+    @RequestMapping(method = RequestMethod.GET, path = "/appointments/byTimeSlot/{timeSlotId}")
+    public ResponseEntity<?> getAppointmentByTimeSlot(@PathVariable(name = "timeSlotId") long timeSlotId) {
+        Appointment appointment = appointmentRepository.findByTimeSlotId(timeSlotId);
+        return new ResponseEntity<>(appointment, appointment != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
 
 	@RequestMapping(method = RequestMethod.GET, path = "/patients/{patientId}/appointments")
 	public ResponseEntity<?> getAppointments(@PathVariable(name = "patientId") long patientId) {
