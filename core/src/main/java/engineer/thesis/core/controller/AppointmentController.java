@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AppointmentController {
 
-	@Autowired
-	private AppointmentRepository appointmentRepository;
-	@Autowired
-	private PatientRepository patientRepository;
-	@Autowired
-	private IAppointmentService appointmentService;
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+    @Autowired
+    private PatientRepository patientRepository;
+    @Autowired
+    private IAppointmentService appointmentService;
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/appointments/byTimeSlot/{timeSlotId}")
@@ -31,42 +31,42 @@ public class AppointmentController {
         }
     }
 
-	@RequestMapping(method = RequestMethod.GET, path = "/patients/{patientId}/appointments")
-	public ResponseEntity<?> getAppointments(@PathVariable(name = "patientId") long patientId) {
-		if (!patientRepository.exists(patientId)) {
-			return new ResponseEntity<>("Patient with id " + patientId + "not found", HttpStatus.NOT_FOUND);
-		}
+    @RequestMapping(method = RequestMethod.GET, path = "/patients/{patientId}/appointments")
+    public ResponseEntity<?> getAppointments(@PathVariable(name = "patientId") long patientId) {
+        if (!patientRepository.exists(patientId)) {
+            return new ResponseEntity<>("Patient with id " + patientId + "not found", HttpStatus.NOT_FOUND);
+        }
 
-		return new ResponseEntity<>(appointmentRepository.findByPatientId(patientId), HttpStatus.OK);
-	}
+        return new ResponseEntity<>(appointmentRepository.findByPatientId(patientId), HttpStatus.OK);
+    }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/patients/{patientId}/appointments")
     public ResponseEntity<?> createAppointment(@PathVariable(name = "patientId") long patientId,
                                                @RequestBody AppointmentDTO appointmentDTO) {
         if (!patientRepository.exists(patientId)) {
             return new ResponseEntity<>("Patient with id " + patientId + "not found", HttpStatus.NOT_FOUND);
-		}
+        }
 
-		if (appointmentService.exists(appointmentDTO)) {
-			return new ResponseEntity<>("This appointment already exists", HttpStatus.BAD_REQUEST);
-		}
+        if (appointmentService.exists(appointmentDTO)) {
+            return new ResponseEntity<>("This appointment already exists", HttpStatus.BAD_REQUEST);
+        }
 
-		appointmentService.save(appointmentDTO, patientId);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+        appointmentService.save(appointmentDTO, patientId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-	@RequestMapping(method = RequestMethod.POST, path = "/patients/{patientId}/appointments")
-	public ResponseEntity<?> updateAppointment(@PathVariable(name = "patientId") long patientId,
-			AppointmentDTO appointmentDTO) {
-		if (!patientRepository.exists(patientId)) {
-			return new ResponseEntity<>("Patient with id " + patientId + "not found", HttpStatus.NOT_FOUND);
-		}
+    @RequestMapping(method = RequestMethod.POST, path = "/patients/{patientId}/appointments")
+    public ResponseEntity<?> updateAppointment(@PathVariable(name = "patientId") long patientId,
+                                               AppointmentDTO appointmentDTO) {
+        if (!patientRepository.exists(patientId)) {
+            return new ResponseEntity<>("Patient with id " + patientId + "not found", HttpStatus.NOT_FOUND);
+        }
 
-		if (!appointmentService.exists(appointmentDTO)) {
-			return new ResponseEntity<>("This appointment does not exist", HttpStatus.BAD_REQUEST);
-		}
+        if (!appointmentService.exists(appointmentDTO)) {
+            return new ResponseEntity<>("This appointment does not exist", HttpStatus.BAD_REQUEST);
+        }
 
-		appointmentService.save(appointmentDTO, patientId);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+        appointmentService.save(appointmentDTO, patientId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
