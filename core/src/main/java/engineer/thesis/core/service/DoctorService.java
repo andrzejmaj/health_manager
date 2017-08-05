@@ -37,7 +37,7 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public DoctorDTO saveDoctor(DoctorDTO doctorDTO) throws AlreadyExistsException {
-        Doctor doctor = doctorRepository.getOne(doctorDTO.getId());
+        Doctor doctor = doctorRepository.findOne(doctorDTO.getId());
         if (doctor != null) {
             throw new AlreadyExistsException("Doctor already exists");
         }
@@ -46,7 +46,7 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public DoctorDTO updateDoctor(DoctorDTO doctorDTO) throws NoSuchElementException {
-        Doctor doctor = doctorRepository.getOne(doctorDTO.getId());
+        Doctor doctor = doctorRepository.findOne(doctorDTO.getId());
         if (doctor == null) {
             throw new NoSuchElementException("Doctor does not exists");
         }

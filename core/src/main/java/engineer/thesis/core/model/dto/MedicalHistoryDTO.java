@@ -1,31 +1,24 @@
 package engineer.thesis.core.model.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import engineer.thesis.core.model.MedicalHistory;
-import lombok.Value;
 
 import java.util.Date;
 
-@Value
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class MedicalHistoryDTO {
 
-    private final Long id;
-    private final String name;
-    private final String symptoms;
-    private final Long patientId;
-    private final Long diseaseId;
-    private final String diseaseName;
-    private final Date detectionDate;
-    private final Date cureDate;
+    private Long id;
+    private String name;
+    private String symptoms;
+    private Long patientId;
+    private Long diseaseId;
+    private String diseaseName;
+    private Date detectionDate;
+    private Date cureDate;
 
-    public MedicalHistoryDTO(MedicalHistory medicalHistory) {
-        this.id = medicalHistory.getId();
-        this.name = medicalHistory.getName();
-        this.symptoms = medicalHistory.getSymptoms();
-        this.patientId = medicalHistory.getPatient().getId();
-        this.diseaseId = medicalHistory.getDisease().getId();
-        this.diseaseName = medicalHistory.getDisease().getName();
-        this.detectionDate = medicalHistory.getDetectionDate();
-        this.cureDate = medicalHistory.getCureDate();
-    }
 }

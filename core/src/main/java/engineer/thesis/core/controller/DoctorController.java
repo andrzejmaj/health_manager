@@ -2,7 +2,9 @@ package engineer.thesis.core.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import engineer.thesis.core.model.dto.DoctorDTO;
 import engineer.thesis.core.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,21 +33,16 @@ public class DoctorController {
 
 	@RequestMapping(method = RequestMethod.GET, path = "/doctors")
 	public ResponseEntity<?> getDoctors() {
-		List<Doctor> list = new ArrayList<>();
-
-		doctorRepository.findAll().forEach(list::add);
-
-		return new ResponseEntity<>(list, HttpStatus.OK);
+		return new ResponseEntity<>(doctorService.getAllDoctors(), HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/doctors/{id}")
 	public ResponseEntity<?> getDoctor(@PathVariable(name = "id") long id) {
-		Doctor doc = doctorRepository.findOne(id);
-		if (doc == null) {
-			return new ResponseEntity<>("No doctor with id: " + id, HttpStatus.NOT_FOUND);
-		}
-
-		return new ResponseEntity<>(doc, HttpStatus.OK);
+        try {
+             return new ResponseEntity<>(doctorService.findByID(id), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Doctor not found", HttpStatus.NOT_FOUND);
+        }
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/doctors/{docId}/slots")

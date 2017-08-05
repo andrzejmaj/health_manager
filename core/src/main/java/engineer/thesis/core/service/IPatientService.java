@@ -25,7 +25,9 @@ public interface IPatientService {
 
     PersonalDetailsDTO findByIdEmergency(Long id);
 
-    PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact);
+    PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact) throws AlreadyExistsException;
+
+    PersonalDetailsDTO updateEmergencyContact(Long id, PersonalDetailsDTO emergencyContact);
 
     MedicalInfoDTO findIdMedicalInfo(Long id) throws NoSuchElementException;
 
@@ -33,7 +35,7 @@ public interface IPatientService {
 
     MedicalInfoDTO updateMedicalInfo(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementException;
 
-//    List<CurrentStateDTO> getPatientCurrentCondition(Long id);
+//    List<CurrentConditionDTO> getPatientCurrentCondition(Long id);
 //
 //    PatientMedicalInformationDTO getPatientMedicalInformation(Long id);
 //

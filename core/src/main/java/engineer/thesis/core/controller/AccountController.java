@@ -27,7 +27,6 @@ public class AccountController {
 
     @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS, method = RequestMethod.POST)
     public ResponseEntity<?> saveNewAccount(@RequestBody AccountDTO accountDTO) {
-
         try {
             return new ResponseEntity<>(accountService.saveNewAccount(accountDTO), HttpStatus.OK);
         } catch (AlreadyExistsException e) {

@@ -22,7 +22,7 @@ public class PersonalDetailsService implements IPersonalDetailsService {
     @Override
     public PersonalDetailsDTO save(PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementException {
 
-        PersonalDetails personalDetails = personalDetailsRepository.getOne(personalDetailsDTO.getId());
+        PersonalDetails personalDetails = personalDetailsRepository.findOne(personalDetailsDTO.getId());
         if (personalDetails == null) {
             throw new NoSuchElementException("Details not found XD");
         }

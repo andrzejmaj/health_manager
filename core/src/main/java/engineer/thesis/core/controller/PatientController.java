@@ -71,6 +71,8 @@ public class PatientController {
             return new ResponseEntity<>(patientService.saveEmergencyContact(id, emergencyContact), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
@@ -79,7 +81,7 @@ public class PatientController {
         try {
             return new ResponseEntity<Object>(patientService.findByPesel(pesel), HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("Patient not fou nd", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -94,7 +96,7 @@ public class PatientController {
         try {
             return new ResponseEntity<>(patientService.findIdMedicalInfo(id), HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
