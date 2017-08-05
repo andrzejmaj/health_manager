@@ -14,7 +14,8 @@ public interface IDoctorService {
 
     List<DoctorDTO> getAllDoctors();
 
-    DoctorDTO saveDoctor(DoctorDTO doctorDTO) throws AlreadyExistsException;
-
     DoctorDTO updateDoctor(DoctorDTO doctorDTO) throws NoSuchElementException;
+
+    DoctorDTO saveDoctor(DoctorDTO personalDetailDTO) throws AlreadyExistsException;
+
 }

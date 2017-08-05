@@ -1,7 +1,6 @@
 package engineer.thesis.core.model;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +17,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(of = {"startDateTime", "endDateTime", "doctor"})
 @NoArgsConstructor
 public class TimeSlot {
 
@@ -25,36 +26,18 @@ public class TimeSlot {
 	private long id;
 	
 	@Column(nullable = false)
-	private LocalDateTime startDateTime;
+	private Date startDateTime;
 	
 	@Column(nullable = false)
-	private LocalDateTime endDateTime;
+	private Date endDateTime;
 	
 	@ManyToOne(optional = false)
 	private Doctor doctor;
 
-	public TimeSlot(LocalDateTime startDateTime, LocalDateTime endDateTime, Doctor doctor) {
+	public TimeSlot(Date startDateTime, Date endDateTime, Doctor doctor) {
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
 		this.doctor = doctor;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof TimeSlot) {
-			TimeSlot t = (TimeSlot) obj;
-			
-			return Objects.equals(startDateTime, t.startDateTime) &&
-					Objects.equals(endDateTime, t.endDateTime) &&
-					Objects.equals(doctor, t.doctor);
-		}
-		
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(startDateTime, endDateTime, doctor);
 	}
 }
 

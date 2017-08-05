@@ -4,8 +4,6 @@ import engineer.thesis.core.model.Appointment;
 import engineer.thesis.core.model.Doctor;
 import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.PersonalDetails;
-import engineer.thesis.core.model.Specialization;
-import engineer.thesis.core.model.TimeSlot;
 import engineer.thesis.core.model.User;
 import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
@@ -56,7 +54,7 @@ public class AppointmentServiceTest {
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 /*
-	@Before
+    @Before
 	public void setUp() {
 		Long ID = 1L;
 		String NAME = "John";
@@ -80,7 +78,7 @@ public class AppointmentServiceTest {
 		when(patientRepository.findAll()).thenReturn(Collections.singletonList(patient));
 		when(patientRepository.findOne(ID)).thenReturn(patient);
 
-		Doctor doctor = new Doctor(new User(), Collections.singleton(new Specialization("oncologist")));
+		Doctor doctor = new Doctor(new User(), "oncologist");
 		TimeSlot timeSlot1 = new TimeSlot(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC),
 				LocalDateTime.ofEpochSecond(1L, 0, ZoneOffset.UTC), doctor);
 		timeSlot1.setId(1L);
