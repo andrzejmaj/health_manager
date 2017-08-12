@@ -21,7 +21,7 @@ public class Form {
 
     @OneToOne
     @JoinColumn(name = "owner_id")
-    private User user;
+    private User owner;
 
     @Column(name = "name", nullable = false)
     private String name;

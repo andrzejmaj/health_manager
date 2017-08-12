@@ -30,7 +30,7 @@ public class MedicalCheckup {
 
     @OneToOne
     @JoinColumn(name = "created_by_id")
-    private User user;
+    private User creator;
 
     @Column(name = "created_date")
     private Date createdDate;
