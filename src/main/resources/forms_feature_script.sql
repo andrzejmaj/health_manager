@@ -1,6 +1,6 @@
 CREATE TABLE hmanager.hm_form_field_type (
 	"id" BIGSERIAL NOT NULL PRIMARY KEY,
-	"name" TEXT NOT NULL
+	"type" TEXT NOT NULL
 )
 
 CREATE TABLE hmanager.hm_form (
@@ -34,7 +34,9 @@ CREATE TABLE hmanager.hm_medical_checkups (
 	"id" BIGSERIAL NOT NULL PRIMARY KEY,
 	"form_id" BIGSERIAL REFERENCES hmanager.hm_form,
 	"patient_id" BIGSERIAL REFERENCES hmanager.hm_patient,
-	"created_by_id" BIGSERIAL REFERENCES hmanager.hm_user
+	"created_by_id" BIGSERIAL REFERENCES hmanager.hm_user,
+	"created_date" DATE,
+	"last_modified_date" DATE
 )
 
 CREATE TABLE hmanager.hm_medical_checkups_values (
