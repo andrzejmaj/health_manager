@@ -19,7 +19,7 @@ public class FormAvailableValue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "hm_form_field_id")
     private FormField formField;
 

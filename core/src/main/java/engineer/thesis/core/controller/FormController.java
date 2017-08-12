@@ -1,5 +1,6 @@
 package engineer.thesis.core.controller;
 
+import engineer.thesis.core.model.dto.FormDTO;
 import engineer.thesis.core.service.IFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,10 +45,16 @@ public class FormController {
         return new ResponseEntity<Object>(formService.getFormsByName(name), HttpStatus.OK);
     }
 
-    @RequestMapping(path = RequestMappings.FORMS.FORMS_NAME, method = RequestMethod.GET)
+    @RequestMapping(path = RequestMappings.FORMS.FORMS_OWNER_ID, method = RequestMethod.GET)
     public ResponseEntity<?> getFormsByOwnerId(@PathVariable Long ownerId) {
         System.out.println("FormController - getFormsByOwnerId");
         return new ResponseEntity<Object>(formService.getFormsByOwnerId(ownerId), HttpStatus.OK);
+    }
+
+    @RequestMapping(path = RequestMappings.FORMS.FORMS, method = RequestMethod.POST)
+    public ResponseEntity<?> saveForm(@RequestBody FormDTO form) {
+        System.out.println("FormController - saveForm");
+        return new ResponseEntity<Object>(formService.saveForm(form), HttpStatus.OK);
     }
 
 }

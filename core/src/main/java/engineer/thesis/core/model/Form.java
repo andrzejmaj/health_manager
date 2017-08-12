@@ -3,6 +3,8 @@ package engineer.thesis.core.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,6 +29,7 @@ public class Form {
     private String name;
 
     @OneToMany(mappedBy = "form", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<FormField> formFields;
 
 }

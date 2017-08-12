@@ -56,7 +56,9 @@ public class FormService implements IFormService {
 
     @Override
     public FormDTO saveForm(FormDTO formDTO) {
-        return objectMapper.convert(formRepository.save(objectMapper.convert(formDTO, Form.class)), FormDTO.class);
+        Form form = objectMapper.convert(formDTO, Form.class);
+        form.getFormFields().stream().forEach(child -> child.setForm(form));
+        return objectMapper.convert(formRepository.save(form), FormDTO.class);
     }
 
     protected Boolean doesFormExist(Long id) {

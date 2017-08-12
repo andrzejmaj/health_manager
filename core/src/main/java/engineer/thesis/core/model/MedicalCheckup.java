@@ -3,6 +3,8 @@ package engineer.thesis.core.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -39,6 +41,7 @@ public class MedicalCheckup {
     private Date lastModifiedDate;
 
     @OneToMany(mappedBy = "medicalCheckup", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<MedicalCheckupValue> medicalCheckupValues;
 
 }

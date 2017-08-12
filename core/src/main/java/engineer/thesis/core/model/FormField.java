@@ -4,7 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.List;
 
 @Data
@@ -25,6 +29,7 @@ public class FormField {
 
     @ManyToOne
     @JoinColumn(name = "form_id")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Form form;
 
     @Column(name = "name")
@@ -52,6 +57,7 @@ public class FormField {
     private String errorText;
 
     @OneToMany(mappedBy = "formField", fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<FormAvailableValue> fieldAvailableValues;
 
 }
