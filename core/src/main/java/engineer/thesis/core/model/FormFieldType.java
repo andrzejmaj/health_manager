@@ -19,6 +19,7 @@ public class FormFieldType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private FieldType type;
 
