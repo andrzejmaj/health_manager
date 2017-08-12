@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 import java.util.Date;
 
 @NoArgsConstructor
@@ -16,8 +15,7 @@ public class MedicalHistoryDTO {
     private String name;
     private String symptoms;
     private Long patientId;
-    private Long diseaseId;
-    private String diseaseName;
+    private DiseaseDTO disease;
     private Date detectionDate;
     private Date cureDate;
 

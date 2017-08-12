@@ -1,8 +1,12 @@
 package engineer.thesis.core.model;
 
 import lombok.Data;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Data
@@ -27,6 +31,7 @@ public class MedicalHistory {
 
     @ManyToOne
     @JoinColumn(name = "disease_id")
+    @Cascade(CascadeType.PERSIST)
     private Disease disease;
 
     @Column(name = "detection_date")

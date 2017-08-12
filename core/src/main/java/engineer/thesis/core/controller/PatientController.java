@@ -1,10 +1,9 @@
 package engineer.thesis.core.controller;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
-import engineer.thesis.core.model.dto.MedicalInfoDTO;
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
-import engineer.thesis.core.service.IPatientService;
+import engineer.thesis.core.service.Interface.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,34 +90,6 @@ public class PatientController {
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
-    @RequestMapping(path = RequestMappings.PATIENTS.MEDICAL, method = RequestMethod.GET)
-    public ResponseEntity<?> getPatientMedicalInfo(@PathVariable(value = "id") Long id) {
-        try {
-            return new ResponseEntity<>(patientService.findIdMedicalInfo(id), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(path = RequestMappings.PATIENTS.MEDICAL, method = RequestMethod.POST)
-    public ResponseEntity<?> saveMedicalInfo(@PathVariable(value = "id") Long id, @RequestBody MedicalInfoDTO medicalInfoDTO) {
-        try {
-            return new ResponseEntity<>(patientService.saveMedicalInfo(id, medicalInfoDTO), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
-        } catch (AlreadyExistsException e) {
-            return new ResponseEntity<>("Medical info already exists", HttpStatus.CONFLICT);
-        }
-    }
-
-    @RequestMapping(path = RequestMappings.PATIENTS.MEDICAL, method = RequestMethod.PUT)
-    public ResponseEntity<?> updateMedicalInfo(@PathVariable(value = "id") Long id, @RequestBody MedicalInfoDTO medicalInfoDTO) {
-        try {
-            return new ResponseEntity<>(patientService.updateMedicalInfo(id, medicalInfoDTO), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
-        }
-    }
 
 
 }

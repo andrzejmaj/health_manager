@@ -12,16 +12,10 @@ import java.util.List;
 @Data
 public class CurrentConditionDTO {
 
+    private Long Id;
     private Long patientId;
-    private String condition;
+    private String conditionName;
     private String symptoms;
     private List<DrugDTO> takenDrugs;
-
-    public CurrentConditionDTO(CurrentDrug drug, List<DrugDTO> takenDrugs) {
-        this.patientId = drug.getPatient().getId();
-        this.condition = drug.getCondition().getCondition();
-        this.symptoms = drug.getCondition().getSymptoms();
-        this.takenDrugs = takenDrugs;
-    }
 
 }

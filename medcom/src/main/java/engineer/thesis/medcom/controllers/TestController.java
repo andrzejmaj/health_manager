@@ -1,7 +1,7 @@
 package engineer.thesis.medcom.controllers;
 
 import engineer.thesis.core.model.dto.PatientDTO;
-import engineer.thesis.core.service.IPatientService;
+import engineer.thesis.core.service.Interface.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
