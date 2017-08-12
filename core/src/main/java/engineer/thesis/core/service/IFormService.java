@@ -12,6 +12,8 @@ public interface IFormService {
 
     FormDTO getFormById(Long id);
 
+    List<FormDTO> getAllForms();
+
     List<FormDTO> getFormsByName(String name);
 
     List<FormDTO> getFormsByOwnerId(Long id);
