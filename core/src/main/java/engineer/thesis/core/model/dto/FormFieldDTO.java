@@ -14,7 +14,7 @@ import java.util.List;
 public class FormFieldDTO {
 
     private Long id;
-    private FormFieldType fieldType;
+    private FormFieldTypeDTO fieldType;
     private String name;
     private Boolean isRequired;
     private Boolean isEditable;
@@ -23,6 +23,6 @@ public class FormFieldDTO {
     private String contextualText;
     private String warningText;
     private String errorText;
-    private List<FormAvailableValue> fieldAvailableValues;
+    private List<FormAvailableValueDTO> fieldAvailableValues;
 
 }

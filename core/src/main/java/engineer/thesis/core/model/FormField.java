@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -55,6 +57,7 @@ public class FormField {
     private String errorText;
 
     @OneToMany(mappedBy = "formField", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @Cascade(CascadeType.ALL)
     private List<FormAvailableValue> fieldAvailableValues;
 
