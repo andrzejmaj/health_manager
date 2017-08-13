@@ -57,7 +57,11 @@ public class FormService implements IFormService {
     @Override
     public FormDTO saveForm(FormDTO formDTO) {
         Form form = objectMapper.convert(formDTO, Form.class);
-        form.getFormFields().stream().forEach(child -> child.setForm(form));
+        form.getFormFields().forEach(field -> {
+                    field.getFieldAvailableValues().forEach(option -> option.setFormField(field));
+                    field.setForm(form);
+                }
+        );
         return objectMapper.convert(formRepository.save(form), FormDTO.class);
     }
 
