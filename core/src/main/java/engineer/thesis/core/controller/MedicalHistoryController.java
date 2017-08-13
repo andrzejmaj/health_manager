@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.Path;
 import java.util.Date;
 
 @RestController
@@ -32,7 +33,7 @@ public class MedicalHistoryController {
     @RequestMapping(path = RequestMappings.HISTORY.PATIENT_HISTORY, method = RequestMethod.POST)
     public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody MedicalHistoryDTO medicalHistoryDTO) {
         try {
-            return new ResponseEntity<>(medicalHistoryService.save(patientId, medicalHistoryDTO), HttpStatus.OK);
+            return new ResponseEntity<>(medicalHistoryService.saveOrUpdate(patientId, medicalHistoryDTO, true), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (DataIntegrityException e) {
@@ -43,7 +44,7 @@ public class MedicalHistoryController {
     @RequestMapping(path = RequestMappings.HISTORY.PATIENT_HISTORY, method = RequestMethod.PUT)
     public ResponseEntity<?> update(@PathVariable Long patientId, @RequestBody MedicalHistoryDTO medicalHistoryDTO) {
         try {
-            return new ResponseEntity<>(medicalHistoryService.update(patientId, medicalHistoryDTO), HttpStatus.OK);
+            return new ResponseEntity<>(medicalHistoryService.saveOrUpdate(patientId, medicalHistoryDTO,  false), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (DataIntegrityException e) {
@@ -52,9 +53,9 @@ public class MedicalHistoryController {
     }
 
     @RequestMapping(path = RequestMappings.HISTORY.PATIENT_HISTORY_ID, method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long patientId, @PathVariable Long id){
         try {
-            medicalHistoryService.delete(id);
+            medicalHistoryService.delete(patientId, id);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

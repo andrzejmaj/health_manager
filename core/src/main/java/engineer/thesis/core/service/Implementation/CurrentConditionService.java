@@ -65,10 +65,10 @@ public class CurrentConditionService implements ICurrentConditionService {
     }
 
     @Override
-    public void delete(Long patientId) throws NoSuchElementExistsException {
-        if (!currentConditionRepository.exists(patientId)) {
-            throw new NoSuchElementExistsException("Current conditionName with given id doesn't exists");
+    public void delete(Long patientId, Long conditionId) throws NoSuchElementExistsException {
+        if (!currentConditionRepository.exists(conditionId)) {
+            throw new NoSuchElementExistsException("Current condition with given id doesn't exists");
         }
-        currentConditionRepository.delete(patientId);
+        currentConditionRepository.delete(conditionId);
     }
 }

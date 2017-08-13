@@ -52,9 +52,64 @@ public class MedicalHistoryService implements IMedicalHistoryService {
         }
     }
 
-    @Override
-    public MedicalHistoryDTO save(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException {
+//    @Override
+//    public MedicalHistoryDTO save(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException {
+//
+//        if (!patientId.equals(medicalHistoryDTO.getPatientId())) {
+//            throw new DataIntegrityException("Ids in the body and path does not match");
+//        }
+//
+//        if (!patientRepository.exists(medicalHistoryDTO.getPatientId())) {
+//            throw new NoSuchElementExistsException("Patient doesn't not exists");
+//        }
+//
+//        if (medicalHistoryDTO.getDisease() == null) {
+//            throw new DataIntegrityException("No disease given");
+//        }
+//
+//        Disease disease = diseaseRepository.findByName(medicalHistoryDTO.getDisease().getName());
+//
+//        MedicalHistory medicalHistory = objectMapper.convert(medicalHistoryDTO, MedicalHistory.class);
+//
+//        if (disease != null && disease.getId().equals(medicalHistoryDTO.getDisease().getId())){
+//            medicalHistory.setDisease(disease);
+//            return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), MedicalHistoryDTO.class);
+//        } else if (disease == null && medicalHistoryDTO.getDisease().getId() == null && medicalHistoryDTO.getDisease().getName() != null) {
+//            return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), MedicalHistoryDTO.class);
+//        } else {
+//            throw new DataIntegrityException("Invalid disease");
+//        }
+//    }
+//
+//    @Override
+//    public MedicalHistoryDTO update(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws DataIntegrityException, NoSuchElementExistsException {
+//
+//
+//        if (!patientId.equals(medicalHistoryDTO.getPatientId())) {
+//            throw new DataIntegrityException("Ids in path and body doesn't match");
+//        }
+//
+//        if (!patientRepository.exists(patientId)) {
+//            throw new NoSuchElementExistsException("Patient doesn't exists");
+//        }
+//
+//        if (!medicalHistoryRepository.exists(medicalHistoryDTO.getId())) {
+//            throw new NoSuchElementExistsException("History record doesn't exist");
+//        }
+//        return objectMapper.convert(medicalHistoryRepository.save(objectMapper.convert(medicalHistoryDTO, MedicalHistory.class)),MedicalHistoryDTO.class);
+//    }
 
+    @Override
+    public void delete(Long patientId, Long id) throws NoSuchElementExistsException {
+
+        if (medicalHistoryRepository.exists(id)) {
+            throw new NoSuchElementExistsException("History note not doesn't exists");
+        }
+        medicalHistoryRepository.delete(id);
+    }
+
+    @Override
+    public MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO, boolean save) throws NoSuchElementExistsException, DataIntegrityException {
         if (!patientId.equals(medicalHistoryDTO.getPatientId())) {
             throw new DataIntegrityException("Ids in the body and path does not match");
         }
@@ -63,45 +118,28 @@ public class MedicalHistoryService implements IMedicalHistoryService {
             throw new NoSuchElementExistsException("Patient doesn't not exists");
         }
 
-        Disease disease = diseaseRepository.findByName(medicalHistoryDTO.getDisease().getName());
-        if (disease == null) {
-            if (medicalHistoryDTO.getId() != null) {
-                throw new DataIntegrityException("Invalid disease");
-            }
+        if (medicalHistoryDTO.getDisease() == null) {
+            throw new DataIntegrityException("No disease given");
         }
 
-        if (disease != null && !disease.getId().equals(medicalHistoryDTO.getDisease().getId())) {
+        if (medicalHistoryDTO.getDisease().getName() == null) {
+            throw new DataIntegrityException("Invalid disease, name is always required");
+        }
+
+        Disease disease = diseaseRepository.findByName(medicalHistoryDTO.getDisease().getName());
+
+        MedicalHistory medicalHistory = objectMapper.convert(medicalHistoryDTO, MedicalHistory.class);
+        if (save) {
+            medicalHistory.setId(null);
+        }
+
+        if (disease != null && disease.getId().equals(medicalHistoryDTO.getDisease().getId())){
+            medicalHistory.setDisease(disease);
+            return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), MedicalHistoryDTO.class);
+        } else if (disease == null && medicalHistoryDTO.getDisease().getId() == null) {
+            return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), MedicalHistoryDTO.class);
+        } else {
             throw new DataIntegrityException("Invalid disease");
         }
-
-        medicalHistoryDTO.setId(null);
-        return objectMapper.convert(medicalHistoryRepository.save(objectMapper.convert(medicalHistoryDTO, MedicalHistory.class)),MedicalHistoryDTO.class);
-    }
-
-    @Override
-    public MedicalHistoryDTO update(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws DataIntegrityException, NoSuchElementExistsException {
-
-
-        if (!patientId.equals(medicalHistoryDTO.getPatientId())) {
-            throw new DataIntegrityException("Ids in path and body doesn't match");
-        }
-
-        if (!patientRepository.exists(patientId)) {
-            throw new NoSuchElementExistsException("Patient doesn't exists");
-        }
-
-        if (!medicalHistoryRepository.exists(medicalHistoryDTO.getId())) {
-            throw new NoSuchElementExistsException("History record doesn't exist");
-        }
-
-        return objectMapper.convert(medicalHistoryRepository.save(objectMapper.convert(medicalHistoryDTO, MedicalHistory.class)),MedicalHistoryDTO.class);
-    }
-
-    @Override
-    public void delete(Long id) throws NoSuchElementExistsException {
-        if (medicalHistoryRepository.exists(id)) {
-            throw new NoSuchElementExistsException("History note not doesn't exists");
-        }
-        medicalHistoryRepository.delete(id);
     }
 }

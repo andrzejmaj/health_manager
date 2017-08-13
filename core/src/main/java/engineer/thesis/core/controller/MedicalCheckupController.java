@@ -25,7 +25,7 @@ public class MedicalCheckupController {
     }
 
     @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUP, method = RequestMethod.POST)
-    public ResponseEntity<?> saveMedicalCheckupForPatient(@PathVariable Long patientId, @RequestBody MedicalCheckupDTO medicalCheckupDTO) {
+    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody MedicalCheckupDTO medicalCheckupDTO) {
         try {
             return new ResponseEntity<>(medicalCheckupService.saveMedicalCheckup(patientId, medicalCheckupDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {

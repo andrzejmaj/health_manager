@@ -47,9 +47,9 @@ public class CurrentConditionController {
     }
 
     @RequestMapping(path = RequestMappings.PATIENTS.CURRENT_CONDITION_ID, method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable Long patientId){
+    public ResponseEntity<?> delete(@PathVariable Long patientId, @PathVariable Long id){
         try {
-            currentConditionService.delete(patientId);
+            currentConditionService.delete(patientId, id);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);

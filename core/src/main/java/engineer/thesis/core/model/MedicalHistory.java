@@ -1,6 +1,7 @@
 package engineer.thesis.core.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
 
@@ -10,6 +11,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "hm_medical_history", schema = "hmanager")
 public class MedicalHistory {
@@ -31,7 +33,7 @@ public class MedicalHistory {
 
     @ManyToOne
     @JoinColumn(name = "disease_id")
-    @Cascade(CascadeType.PERSIST)
+    @Cascade(CascadeType.ALL)
     private Disease disease;
 
     @Column(name = "detection_date")

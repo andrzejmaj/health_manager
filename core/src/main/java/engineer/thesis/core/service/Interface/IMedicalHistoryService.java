@@ -11,11 +11,13 @@ import java.util.List;
 @Service
 public interface IMedicalHistoryService {
 
-    MedicalHistoryDTO save(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws DataIntegrityException, NoSuchElementExistsException;
-
-    MedicalHistoryDTO update(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws DataIntegrityException, NoSuchElementExistsException;
+//    MedicalHistoryDTO save(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws DataIntegrityException, NoSuchElementExistsException;
+//
+//    MedicalHistoryDTO update(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws DataIntegrityException, NoSuchElementExistsException;
 
     List<MedicalHistoryDTO> getAllByPatientIdFromPeriod(Long id, Date start, Date end) throws NoSuchElementExistsException;
 
-    void delete(Long id) throws NoSuchElementExistsException;
+    void delete(Long patientId, Long id) throws NoSuchElementExistsException;
+
+    MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO, boolean save) throws NoSuchElementExistsException, DataIntegrityException;
 }
