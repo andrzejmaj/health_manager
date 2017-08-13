@@ -20,7 +20,7 @@ public class FormAvailableValue {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "hm_form_field_id")
+    @JoinColumn(name = "form_field_id")
     private FormField formField;
 
     @Column(name = "name")

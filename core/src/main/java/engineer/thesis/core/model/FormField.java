@@ -29,7 +29,6 @@ public class FormField {
 
     @ManyToOne
     @JoinColumn(name = "form_id")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Form form;
 
     @Column(name = "name")

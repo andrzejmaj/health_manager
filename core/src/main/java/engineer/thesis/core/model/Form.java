@@ -3,6 +3,7 @@ package engineer.thesis.core.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -30,6 +31,7 @@ public class Form {
 
     @OneToMany(mappedBy = "form", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<FormField> formFields;
 
 }
