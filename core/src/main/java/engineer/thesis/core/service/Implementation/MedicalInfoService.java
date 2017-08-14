@@ -22,7 +22,7 @@ public class MedicalInfoService implements IMedicalInfoService {
     private PatientRepository patientRepository;
 
     @Autowired
-    private CustomObjectMapper objectMapper;
+    CustomObjectMapper objectMapper;
 
     @Override
     public MedicalInfoDTO findByPatientId(Long patientId) throws NoSuchElementExistsException {

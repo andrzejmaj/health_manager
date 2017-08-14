@@ -18,14 +18,13 @@ public class PatientController {
     @Autowired
     protected IPatientService patientService;
 
-    @RequestMapping(path = "/patients", method = RequestMethod.GET)
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.GET)
     public ResponseEntity<?> getAllPatients() {
-        System.out.println("PatientController - getAllPatients");
         List<PatientDTO> patients = patientService.getAllPatients();
         return new ResponseEntity<Object>(patients, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/patients", method = RequestMethod.POST)
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_ID, method = RequestMethod.POST)
     public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO) {
         try {
             return new ResponseEntity<>(patientService.savePatient(patientDTO), HttpStatus.OK);
@@ -34,7 +33,7 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(path = "/patients", method = RequestMethod.PUT)
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_ID, method = RequestMethod.PUT)
     public ResponseEntity<?> updatePatient(@RequestBody PatientDTO patientDTO) {
         System.out.println(patientDTO);
         try {
@@ -44,7 +43,7 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(path = "/patients/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_ID, method = RequestMethod.GET)
     public ResponseEntity<?> getPatient(@PathVariable(value = "id") Long id) {
         try {
 
@@ -54,7 +53,7 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(path = "/patients/{id}/emergency", method = RequestMethod.GET)
+    @RequestMapping(path = RequestMappings.PATIENTS.EMERGENCY, method = RequestMethod.GET)
     public ResponseEntity<?> getPatientEmergency(@PathVariable(value = "id") Long id) {
         try {
             return new ResponseEntity<>(patientService.findByIdEmergency(id), HttpStatus.OK);
@@ -63,7 +62,7 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(path = "/patients/{id}/emergency", method = RequestMethod.POST)
+    @RequestMapping(path = RequestMappings.PATIENTS.EMERGENCY, method = RequestMethod.POST)
     public ResponseEntity<?> saveEmergencyContact(@PathVariable(value = "id") Long id,
                                                   @RequestBody PersonalDetailsDTO emergencyContact) {
         try {
@@ -75,8 +74,8 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(path = "/patients/pesel/{pesel}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPatientByPesel(@PathVariable("pesel") String pesel) {
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.GET, params = "pesel")
+    public ResponseEntity<?> getPatientByPesel(@RequestParam String pesel) {
         try {
             return new ResponseEntity<Object>(patientService.findByPesel(pesel), HttpStatus.OK);
         } catch (NoSuchElementException e) {
@@ -84,8 +83,8 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(path = "/patients/searchByLastName", method = RequestMethod.GET)
-    public ResponseEntity<?> getPatientsByLastName(@RequestParam(value = "lastName", required = false) String lastName) {
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.GET, params = "lastName")
+    public ResponseEntity<?> getPatientsByLastName(@RequestParam String lastName) {
         List<PatientDTO> patients = patientService.findPatientsByLastName(lastName);
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }

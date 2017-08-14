@@ -47,7 +47,7 @@ public class PatientService implements IPatientService {
 
     @Override
     public List<PatientDTO> findPatientsByLastName(String lastName) {
-        return patientRepository.findByAccount_PersonalDetails_LastNameLike(lastName).stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
+        return patientRepository.findByAccount_PersonalDetails_LastNameIgnoreCase(lastName).stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
     }
 
     @Override

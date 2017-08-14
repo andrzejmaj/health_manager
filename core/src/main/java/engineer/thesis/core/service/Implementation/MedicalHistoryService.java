@@ -52,53 +52,6 @@ public class MedicalHistoryService implements IMedicalHistoryService {
         }
     }
 
-//    @Override
-//    public MedicalHistoryDTO save(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException {
-//
-//        if (!patientId.equals(medicalHistoryDTO.getPatientId())) {
-//            throw new DataIntegrityException("Ids in the body and path does not match");
-//        }
-//
-//        if (!patientRepository.exists(medicalHistoryDTO.getPatientId())) {
-//            throw new NoSuchElementExistsException("Patient doesn't not exists");
-//        }
-//
-//        if (medicalHistoryDTO.getDisease() == null) {
-//            throw new DataIntegrityException("No disease given");
-//        }
-//
-//        Disease disease = diseaseRepository.findByName(medicalHistoryDTO.getDisease().getName());
-//
-//        MedicalHistory medicalHistory = objectMapper.convert(medicalHistoryDTO, MedicalHistory.class);
-//
-//        if (disease != null && disease.getId().equals(medicalHistoryDTO.getDisease().getId())){
-//            medicalHistory.setDisease(disease);
-//            return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), MedicalHistoryDTO.class);
-//        } else if (disease == null && medicalHistoryDTO.getDisease().getId() == null && medicalHistoryDTO.getDisease().getName() != null) {
-//            return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), MedicalHistoryDTO.class);
-//        } else {
-//            throw new DataIntegrityException("Invalid disease");
-//        }
-//    }
-//
-//    @Override
-//    public MedicalHistoryDTO update(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws DataIntegrityException, NoSuchElementExistsException {
-//
-//
-//        if (!patientId.equals(medicalHistoryDTO.getPatientId())) {
-//            throw new DataIntegrityException("Ids in path and body doesn't match");
-//        }
-//
-//        if (!patientRepository.exists(patientId)) {
-//            throw new NoSuchElementExistsException("Patient doesn't exists");
-//        }
-//
-//        if (!medicalHistoryRepository.exists(medicalHistoryDTO.getId())) {
-//            throw new NoSuchElementExistsException("History record doesn't exist");
-//        }
-//        return objectMapper.convert(medicalHistoryRepository.save(objectMapper.convert(medicalHistoryDTO, MedicalHistory.class)),MedicalHistoryDTO.class);
-//    }
-
     @Override
     public void delete(Long patientId, Long id) throws NoSuchElementExistsException {
 
@@ -131,6 +84,8 @@ public class MedicalHistoryService implements IMedicalHistoryService {
         MedicalHistory medicalHistory = objectMapper.convert(medicalHistoryDTO, MedicalHistory.class);
         if (save) {
             medicalHistory.setId(null);
+        } else if (!medicalHistoryRepository.exists(medicalHistory.getId())) {
+            throw new NoSuchElementExistsException("Medical record doesn't exists");
         }
 
         if (disease != null && disease.getId().equals(medicalHistoryDTO.getDisease().getId())){

@@ -17,6 +17,7 @@ import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -98,7 +99,13 @@ public class UserController {
             }
         };
 
-        return new ResponseEntity<>(new AuthenticationResponse(tokenUtil.generateToken(securityUser, myDevice)),
+       UserRole userRole = null;
+
+        for (GrantedAuthority auth : securityUser.getAuthorities()) {
+            userRole = UserRole.valueOf((auth).getAuthority());
+        }
+
+        return new ResponseEntity<>(new AuthenticationResponse(tokenUtil.generateToken(securityUser, myDevice), userRole),
                 HttpStatus.OK);
     }
 

@@ -3,8 +3,9 @@ package engineer.thesis.core.controller;
 final class RequestMappings {
 
     static final class PATIENTS {
-        static final String CURRENT_CONDITION = "patients/{patientId}/currentCondition";
-        static final String CURRENT_CONDITION_ID = "patients/{patientId}/currentCondition/{id}";
+        static final String PATIENTS = "/patients";
+        static final String PATIENTS_ID = "/patients/{id}";
+        static final String EMERGENCY = "/patients/{id}/emergency";
     }
 
     static final class USERS {
@@ -26,6 +27,12 @@ final class RequestMappings {
     static final class HISTORY {
         static final String PATIENT_HISTORY = "/patients/{patientId}/history";
         static final String PATIENT_HISTORY_ID = "/patients/{patientId}/history/{id}";
+    }
+
+    static final class CURRENT_CONDITION {
+        static final String CURRENT_CONDITION = "patients/{patientId}/currentCondition";
+        static final String CURRENT_CONDITION_ID = "patients/{patientId}/currentCondition/{id}";
+
     }
 
     static final class CHECKUP {

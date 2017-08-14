@@ -47,10 +47,10 @@ public class MedicalInfoController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL_ID, method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL, method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable Long patientId) {
         try {
-            medicalInfoService.delete(id);
+            medicalInfoService.delete(patientId);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

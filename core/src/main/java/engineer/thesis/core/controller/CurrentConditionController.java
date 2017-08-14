@@ -15,7 +15,7 @@ public class CurrentConditionController {
     @Autowired
     private ICurrentConditionService currentConditionService;
 
-    @RequestMapping(path = RequestMappings.PATIENTS.CURRENT_CONDITION, method = RequestMethod.GET)
+    @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION, method = RequestMethod.GET)
     public ResponseEntity<?> get(@PathVariable Long patientId) {
         try {
             return new ResponseEntity<>(currentConditionService.getPatientCondition(patientId), HttpStatus.OK);
@@ -24,7 +24,7 @@ public class CurrentConditionController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.PATIENTS.CURRENT_CONDITION, method = RequestMethod.POST)
+    @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION, method = RequestMethod.POST)
     public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody CurrentConditionDTO currentConditionDTO) {
         try {
             return new ResponseEntity<>(currentConditionService.savePatientCondition(patientId, currentConditionDTO), HttpStatus.OK);
@@ -35,7 +35,7 @@ public class CurrentConditionController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.PATIENTS.CURRENT_CONDITION, method = RequestMethod.PUT)
+    @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION, method = RequestMethod.PUT)
     public ResponseEntity<?> update(@PathVariable Long patientId, @RequestBody CurrentConditionDTO currentConditionDTO) {
         try {
             return new ResponseEntity<>(currentConditionService.updatePatientCondition(patientId, currentConditionDTO), HttpStatus.OK);
@@ -46,7 +46,7 @@ public class CurrentConditionController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.PATIENTS.CURRENT_CONDITION_ID, method = RequestMethod.DELETE)
+    @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION_ID, method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long patientId, @PathVariable Long id){
         try {
             currentConditionService.delete(patientId, id);
