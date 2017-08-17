@@ -30,7 +30,7 @@ public class Form {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "form", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "form", fetch = FetchType.EAGER, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @Cascade(CascadeType.ALL)
     private List<FormField> formFields;
