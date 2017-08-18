@@ -36,7 +36,7 @@ public class MedicalCheckupController {
     }
 
     @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUP, method = RequestMethod.PUT)
-    public ResponseEntity<?> updateMedicalCheckupForPatient(@PathVariable Long patientId, @RequestBody MedicalCheckupDTO medicalCheckupDTO) {
+    public ResponseEntity<?> update(@PathVariable Long patientId, @RequestBody MedicalCheckupDTO medicalCheckupDTO) {
         try {
             return new ResponseEntity<>(medicalCheckupService.updateMedicalCheckup(patientId, medicalCheckupDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
@@ -46,10 +46,10 @@ public class MedicalCheckupController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.CHECKUP.CHECKUP_ID, method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUP_ID, method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable Long patientId, @PathVariable Long id) {
         try {
-            medicalCheckupService.delete(id);
+            medicalCheckupService.delete(patientId, id);
             return new  ResponseEntity<>(true, HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

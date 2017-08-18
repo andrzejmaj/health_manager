@@ -16,5 +16,5 @@ public interface IMedicalCheckupService {
 
     MedicalCheckupDTO updateMedicalCheckup(Long patientId, MedicalCheckupDTO medicalCheckupDTO) throws NoSuchElementExistsException, DataIntegrityException;
 
-    void delete(Long id) throws NoSuchElementExistsException;
+    void delete(Long patientId, Long id) throws NoSuchElementExistsException;
 }

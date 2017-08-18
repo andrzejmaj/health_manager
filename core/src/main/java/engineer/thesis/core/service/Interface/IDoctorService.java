@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 
 @Service
 public interface IDoctorService {
+
     DoctorDTO findByID(Long id) throws NoSuchElementException;
 
     List<DoctorDTO> getAllDoctors();

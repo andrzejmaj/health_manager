@@ -3,8 +3,12 @@ package engineer.thesis.core.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Data
@@ -21,10 +25,12 @@ public class Account {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @Cascade(CascadeType.ALL)
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "personal_details_id")
+    @Cascade(CascadeType.ALL)
     private PersonalDetails personalDetails;
 
     @Column(name = "image_url")

@@ -1,9 +1,6 @@
 package engineer.thesis.core.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,6 +8,7 @@ import java.util.Date;
 @Data
 @Entity
 @Builder
+@EqualsAndHashCode(exclude = "account")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hm_personal_detail", schema = "hmanager")
@@ -53,5 +51,8 @@ public class PersonalDetails {
 
     @Column(name = "flat_number")
     private Integer flatNumber;
+
+    @OneToOne(mappedBy = "personalDetails", fetch = FetchType.LAZY)
+    private Account account;
 
 }

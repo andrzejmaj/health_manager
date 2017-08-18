@@ -13,6 +13,4 @@ public class AuthenticationResponse implements Serializable {
 
     private final String token;
 
-    private final UserRole role;
-
 }

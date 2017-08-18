@@ -66,7 +66,8 @@ public class MedicalCheckupService implements IMedicalCheckupService {
     }
 
     @Override
-    public void delete(Long id) throws NoSuchElementExistsException {
+    public void delete(Long patientId, Long id) throws NoSuchElementExistsException {
+
         if (!medicalCheckupRepository.exists(id)) {
             throw new NoSuchElementExistsException("Checkup doesn't exists");
         }

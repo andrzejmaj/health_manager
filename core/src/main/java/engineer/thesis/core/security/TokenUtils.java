@@ -2,6 +2,7 @@ package engineer.thesis.core.security;
 
 import engineer.thesis.core.security.model.SecurityUser;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.mobile.device.Device;
@@ -61,6 +62,8 @@ public class TokenUtils {
             final Claims claims = this.getClaims(token);
             System.out.println(claims);
             return (String) claims.get("sub");
+        } catch (ExpiredJwtException e) {
+            throw e;
         } catch (Exception e) {
             return null;
         }
@@ -99,11 +102,12 @@ public class TokenUtils {
                     .setSigningKey("secret_super_secret")
                     .parseClaimsJws(token)
                     .getBody();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ExpiredJwtException e) {
+            throw e;
+        } catch (Exception e){
             return null;
         }
+
     }
 
     private String generateAudience(Device device) {

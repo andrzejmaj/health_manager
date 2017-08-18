@@ -24,13 +24,13 @@ public class SecurityUser implements UserDetails {
         this.email = email;
         this.password = password;
         this.userRole = role;
+        Collection<SimpleGrantedAuthority> auths = new ArrayList<>();
+        auths.add(new SimpleGrantedAuthority(String.valueOf(userRole)));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<SimpleGrantedAuthority> auths = new ArrayList<>();
-        auths.add(new SimpleGrantedAuthority(String.valueOf(userRole)));
-        return  auths;
+        return  authorities;
     }
 
     @JsonIgnore

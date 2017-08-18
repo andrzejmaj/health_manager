@@ -1,13 +1,18 @@
 package engineer.thesis.core.security;
 
+import engineer.thesis.core.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Configuration
@@ -29,6 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+
+
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
@@ -39,51 +47,46 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    //used only for token initialization
+    @Autowired
+    private TokenUtils tokenUtils;
+
+    @Autowired
+    private UserRepository userRepository;
+
     public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-        return new AuthenticationTokenFilter();
+        return new AuthenticationTokenFilter(tokenUtils, userRepository);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(
+                "/users/login",
+                "/users/register"
+                );
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-            .csrf()
+                .csrf()
                 .disable()
-            .exceptionHandling()
+                .exceptionHandling()
                 .authenticationEntryPoint(entryPoint)
-
-            .and()
-
-            .sessionManagement()
+                .and()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling().authenticationEntryPoint(entryPoint);
 
-            .and()
-                .exceptionHandling().authenticationEntryPoint( entryPoint )
-            .and()
-            .authorizeRequests()
-                // TODO: 01.07.17
-                // change later to some variables
-                .antMatchers("/admin/**")
-                    .hasRole("PATIENT")
-                .antMatchers("/medcom/**")
-                    //.hasRole("DOCTOR")
-                    .permitAll()
-                .antMatchers(
-                        "/users/register",
-                        "/users/login",
-                        "/users/resetPassword",
-                        "/",
-                        ///for test remove/move to protected
-                        "/personaldetails/*",
-                        "/users/personaldetails"
-                ).permitAll()
-                .antMatchers(HttpMethod.GET, "/users").authenticated()
-                .anyRequest().permitAll();
-
-
+//        http.authorizeRequests().antMatchers("/patients/*/history").hasRole("ADMIN");
+//        http.authorizeRequests().antMatchers("/patients/*/checkups").hasRole("PATIENT");
+//        http.authorizeRequests().antMatchers("/patients/*/currentCondition").authenticated();
+        http.authorizeRequests().antMatchers("/**").permitAll();
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
         http.headers().cacheControl();
     }
+
 }

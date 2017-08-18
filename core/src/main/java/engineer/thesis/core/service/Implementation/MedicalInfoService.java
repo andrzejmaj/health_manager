@@ -1,5 +1,6 @@
 package engineer.thesis.core.service.Implementation;
 
+import engineer.thesis.core.exception.AccessDeniedException;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.MedicalInformation;
@@ -7,13 +8,14 @@ import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.dto.MedicalInfoDTO;
 import engineer.thesis.core.repository.MedicalInfoRepository;
 import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.service.Interface.BaseService;
 import engineer.thesis.core.service.Interface.IMedicalInfoService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MedicalInfoService implements IMedicalInfoService {
+public class MedicalInfoService extends BaseService implements IMedicalInfoService {
 
     @Autowired
     private MedicalInfoRepository medicalInfoRepository;
@@ -22,10 +24,11 @@ public class MedicalInfoService implements IMedicalInfoService {
     private PatientRepository patientRepository;
 
     @Autowired
-    CustomObjectMapper objectMapper;
+    private CustomObjectMapper objectMapper;
 
     @Override
-    public MedicalInfoDTO findByPatientId(Long patientId) throws NoSuchElementExistsException {
+    public MedicalInfoDTO findByPatientId(Long patientId) throws NoSuchElementExistsException, AccessDeniedException {
+        checkCurrentUser(patientId);
         Patient patient = patientRepository.findOne(patientId);
         if (patient == null) {
             throw new NoSuchElementExistsException("Patient not found");

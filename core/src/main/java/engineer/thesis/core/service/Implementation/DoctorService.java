@@ -3,19 +3,21 @@ package engineer.thesis.core.service.Implementation;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.model.Doctor;
 import engineer.thesis.core.model.dto.DoctorDTO;
+import engineer.thesis.core.model.dto.SpecializationDTO;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.service.Interface.IDoctorService;
 import engineer.thesis.core.utils.CustomObjectMapper;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import engineer.thesis.core.model.dto.SpecializationDTO;
-import org.apache.log4j.Logger;
 
 @Service
 public class DoctorService implements IDoctorService {
+
     private final static Logger logger = Logger.getLogger(DoctorService.class);
 
     @Autowired
@@ -53,7 +55,7 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public List<DoctorDTO> getAllDoctors() {
-        return doctorRepository.findAll().stream().map(d -> objectMapper.convert(d,DoctorDTO.class)).collect(Collectors.toList());
+        return doctorRepository.findAll().stream().map(d -> objectMapper.convert(d, DoctorDTO.class)).collect(Collectors.toList());
     }
 
     @Override
