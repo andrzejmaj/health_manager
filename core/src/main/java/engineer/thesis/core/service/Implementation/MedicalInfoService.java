@@ -40,32 +40,25 @@ public class MedicalInfoService extends BaseService implements IMedicalInfoServi
     }
 
     @Override
-    public MedicalInfoDTO save(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException, AlreadyExistsException {
+    public MedicalInfoDTO saveOrUpdate(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException, AlreadyExistsException, AccessDeniedException {
+
         Patient patient = patientRepository.findOne(id);
         if (patient == null) {
             throw new NoSuchElementExistsException("Patient not found");
         }
-        if (patient.getMedicalInformation() != null) {
-            throw new AlreadyExistsException("Patient already has medical info");
-        }
-        medicalInfoDTO.setId(null);
-        patient.setMedicalInformation(objectMapper.convert(medicalInfoDTO, MedicalInformation.class));
-        return objectMapper.convert(patientRepository.save(patient).getMedicalInformation(), MedicalInfoDTO.class );
+        checkCurrentUser(patient.getAccount().getUser().getId());
 
-    }
-
-    @Override
-    public MedicalInfoDTO update(Long patientId, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException {
-        Patient patient = patientRepository.findOne(patientId);
-        if (patient == null) {
-            throw new NoSuchElementExistsException("Patient not found");
-        }
         if (patient.getMedicalInformation() == null) {
-            throw new NoSuchElementExistsException("Patient doesn't have existing medical information");
+            medicalInfoDTO.setId(null);
+        } else {
+            medicalInfoDTO.setId(patient.getMedicalInformation().getId());
         }
-        medicalInfoDTO.setId(patient.getMedicalInformation().getId());
-        return objectMapper.convert(medicalInfoRepository.save(objectMapper.convert(medicalInfoDTO, MedicalInformation.class)), MedicalInfoDTO.class);
+
+        patient.setMedicalInformation(objectMapper.convert(medicalInfoDTO, MedicalInformation.class));
+        return objectMapper.convert(patientRepository.save(patient).getMedicalInformation(), MedicalInfoDTO.class);
+
     }
+
 
     @Override
     public void delete(Long id) throws NoSuchElementExistsException {

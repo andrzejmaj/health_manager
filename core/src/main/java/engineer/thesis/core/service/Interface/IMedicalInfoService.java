@@ -11,9 +11,7 @@ public interface IMedicalInfoService {
 
     MedicalInfoDTO findByPatientId(Long patientId) throws NoSuchElementExistsException, AccessDeniedException;
 
-    MedicalInfoDTO save(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException, AlreadyExistsException;
-
-    MedicalInfoDTO update(Long patientId, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException;
+    MedicalInfoDTO saveOrUpdate(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException, AlreadyExistsException, AccessDeniedException;
 
     void delete(Long id) throws NoSuchElementExistsException;
 }

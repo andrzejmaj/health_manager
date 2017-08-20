@@ -20,8 +20,6 @@ final class RequestMappings {
     static final class ACCOUNTS {
         static final String ACCOUNTS = "/accounts";
         static final String ACCOUNTS_ID = "/accounts/{id}";
-        static final String PERS_DETAILS = "/accounts/{id}/personalDetails";
-        static final String MY_PERS_DETAILLS = "/accounts/personalDetails";
     }
 
     static final class HISTORY {
@@ -46,7 +44,7 @@ final class RequestMappings {
     }
 
     static final class PERS_DETAILS {
-        static final String MY_PERS_DETAILS = "/users/personalDetails";
+        static final String MY_PERS_DETAILS = "/accounts/personalDetails";
         static final String PATIENT_PERS_DETAILS = "patients/{patientId}/personalDetails";
         static final String DOCTOR_PERS_DETAILS = "doctors/{doctorId}/personalDetails";
     }

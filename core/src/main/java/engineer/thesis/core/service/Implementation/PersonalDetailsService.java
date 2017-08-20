@@ -1,7 +1,5 @@
 package engineer.thesis.core.service.Implementation;
 
-import engineer.thesis.core.exception.AccessDeniedException;
-import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.Account;
 import engineer.thesis.core.model.Doctor;
@@ -49,36 +47,30 @@ public class PersonalDetailsService extends BaseService implements IPersonalDeta
     }
 
     @Override
-    public PersonalDetailsDTO saveOrUpdateMine(PersonalDetailsDTO personalDetailsDTO, boolean save) throws NoSuchElementExistsException, AlreadyExistsException {
+    public PersonalDetailsDTO saveOrUpdateMine(PersonalDetailsDTO personalDetailsDTO) {
         SecurityUser user = getCurrentUser();
+
+        Account account = accountRepository.findByUser_Id(user.getId());
+
         PersonalDetails personalDetails = objectMapper.convert(personalDetailsDTO, PersonalDetails.class);
 
-        if (save) {
-            personalDetailsDTO.setId(null);
-            Account account = accountRepository.findByUser_Id(user.getId());
-            if (account.getPersonalDetails() != null) {
-                throw new AlreadyExistsException("Account already has personal details attached");
-            }
-            account.setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
-            return objectMapper.convert(accountRepository.save(account).getPersonalDetails(), PersonalDetailsDTO.class);
+        if (account.getPersonalDetails() == null) {
+            personalDetails.setId(null);
         } else {
-            PersonalDetails existingPersonalDetails = personalDetailsRepository.findByAccount_UserId(user.getId());
-            if (existingPersonalDetails == null) {
-                throw new NoSuchElementExistsException("Personal details doesn't exists");
-            }
-            personalDetails.setId(existingPersonalDetails.getId());
-            return objectMapper.convert(personalDetailsRepository.save(personalDetails), PersonalDetailsDTO.class);
+            personalDetails.setId(account.getPersonalDetails().getId());
         }
+
+        account.setPersonalDetails(personalDetails);
+        return objectMapper.convert(accountRepository.save(account).getPersonalDetails(), PersonalDetailsDTO.class);
     }
 
     @Override
-    public PersonalDetailsDTO get(Long patientId) throws NoSuchElementExistsException, AccessDeniedException {
-        SecurityUser user = getCurrentUser();
+    public PersonalDetailsDTO getPatient(Long patientId) throws NoSuchElementExistsException {
         Patient patient = patientRepository.findOne(patientId);
         if (patient == null) {
             throw new NoSuchElementExistsException("Patient doesn't exists");
         }
-        checkCurrentUser(patient.getAccount().getUser().getId());
+//        checkCurrentUser(patient.getAccount().getUser().getId());
         if (patient.getAccount().getPersonalDetails() == null) {
             throw new NoSuchElementExistsException("Personal details doesn't exist");
         }
@@ -86,73 +78,55 @@ public class PersonalDetailsService extends BaseService implements IPersonalDeta
     }
 
     @Override
-    public PersonalDetailsDTO saveOrUpdate(Long patientId, PersonalDetailsDTO personalDetailsDTO, boolean save) throws NoSuchElementExistsException, AlreadyExistsException, AccessDeniedException {
-        SecurityUser user = getCurrentUser();
+    public PersonalDetailsDTO saveOrUpdatePatient(Long patientId, PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementExistsException {
         Patient patient = patientRepository.findOne(patientId);
         if (patient == null) {
             throw new NoSuchElementExistsException("Patient doesn't exist");
         }
-        checkCurrentUser(patient.getAccount().getUser().getId());
-        if (save) {
+        // TODO: 20.08.17 add this check in filter'
+//        checkCurrentUser(patient.getAccount().getUser().getId());
+
+
+        if (patient.getAccount().getPersonalDetails() == null) {
             personalDetailsDTO.setId(null);
-            if (patient.getAccount().getPersonalDetails() != null) {
-                throw new AlreadyExistsException("Patients already has personal details");
-            }
-            patient.getAccount().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
-            return objectMapper.convert(accountRepository.save(objectMapper.convert(patient.getAccount(), Account.class)).getPersonalDetails(), PersonalDetailsDTO.class);
         } else {
-            if (patient.getAccount().getPersonalDetails() == null) {
-                throw new NoSuchElementExistsException("Patients doesn't have personal details");
-            }
             personalDetailsDTO.setId(patient.getAccount().getPersonalDetails().getId());
-            return objectMapper.convert(personalDetailsRepository.save(objectMapper.convert(personalDetailsDTO, PersonalDetails.class)), PersonalDetailsDTO.class);
         }
 
+        patient.getAccount().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
+
+        return objectMapper.convert(accountRepository.save(objectMapper.convert(patient.getAccount(), Account.class)).getPersonalDetails(), PersonalDetailsDTO.class);
 
     }
-// TODO: 18.08.17
-//    Create base class for patient service?
-//    private Patient getPatient(Long id) throws NoSuchElementExistsException {
-//        Patient patient = patientRepository.findOne(id);
-//        if (patient == null) {
-//            throw new NoSuchElementExistsException("Patient doesn't exists");
-//        }
-//        return patient;
-//    }
 
     @Override
-    public PersonalDetailsDTO getDoctor(Long doctorId) throws NoSuchElementExistsException, AccessDeniedException {
-        SecurityUser user = getCurrentUser();
+    public PersonalDetailsDTO getDoctor(Long doctorId) throws NoSuchElementExistsException {
         Doctor doctor = doctorRepository.findOne(doctorId);
         if (doctor == null) {
             throw new NoSuchElementExistsException("Doctor doesn't exist");
         }
-        checkCurrentUser(doctor.getAccount().getUser().getId());
+//        checkCurrentUser(doctor.getAccount().getUser().getId());
         return objectMapper.convert(doctor.getAccount().getPersonalDetails(), PersonalDetailsDTO.class);
     }
 
     @Override
-    public PersonalDetailsDTO saveOrUpdateDoctor(Long doctorId, PersonalDetailsDTO personalDetailsDTO, boolean save) throws NoSuchElementExistsException, AlreadyExistsException, AccessDeniedException {
-        SecurityUser user = getCurrentUser();
+    public PersonalDetailsDTO saveOrUpdateDoctor(Long doctorId, PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementExistsException {
         Doctor doctor = doctorRepository.findOne(doctorId);
         if (doctor == null) {
             throw new NoSuchElementExistsException("Doctor doesn't exists");
         }
-        checkCurrentUser(doctor.getAccount().getUser().getId());
+        // TODO: 20.08.17 add this check in filter too'
+//        checkCurrentUser(doctor.getAccount().getUser().getId());
 
-        if (save) {
-            if (doctor.getAccount().getPersonalDetails() != null) {
-                throw new AlreadyExistsException("Personal details already exists");
-            }
+        if (doctor.getAccount().getPersonalDetails() == null) {
             personalDetailsDTO.setId(null);
-            doctor.getAccount().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
-            return objectMapper.convert(accountRepository.save(doctor.getAccount()).getPersonalDetails(), PersonalDetailsDTO.class);
         } else {
-            if (doctor.getAccount().getPersonalDetails() == null) {
-                throw new AlreadyExistsException("Personal details doesn't exist");
-            }
             personalDetailsDTO.setId(doctor.getAccount().getPersonalDetails().getId());
-            return objectMapper.convert(personalDetailsRepository.save(objectMapper.convert(personalDetailsDTO, PersonalDetails.class)), PersonalDetailsDTO.class);
         }
+
+        doctor.getAccount().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
+
+        return objectMapper.convert(accountRepository.save(doctor.getAccount()).getPersonalDetails(), PersonalDetailsDTO.class);
+
     }
 }

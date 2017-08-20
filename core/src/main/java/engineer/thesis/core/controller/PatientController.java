@@ -24,7 +24,7 @@ public class PatientController {
         return new ResponseEntity<Object>(patients, HttpStatus.OK);
     }
 
-    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_ID, method = RequestMethod.POST)
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.POST)
     public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO) {
         try {
             return new ResponseEntity<>(patientService.savePatient(patientDTO), HttpStatus.OK);
@@ -88,7 +88,6 @@ public class PatientController {
         List<PatientDTO> patients = patientService.findPatientsByLastName(lastName);
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
-
 
 
 }

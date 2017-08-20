@@ -12,9 +12,7 @@ public interface ICurrentConditionService {
 
     List<CurrentConditionDTO> getPatientCondition(Long patientId) throws NoSuchElementExistsException;
 
-    CurrentConditionDTO savePatientCondition(Long patientId, CurrentConditionDTO currentConditionDTO) throws NoSuchElementExistsException, DataIntegrityException;
-
-    CurrentConditionDTO updatePatientCondition(Long patientId, CurrentConditionDTO currentConditionDTO) throws NoSuchElementExistsException, DataIntegrityException;
+    CurrentConditionDTO saveOrUpdate(Long patientId, CurrentConditionDTO currentConditionDTO) throws NoSuchElementExistsException, DataIntegrityException;
 
     void delete(Long patientId, Long conditionId) throws NoSuchElementExistsException;
 }

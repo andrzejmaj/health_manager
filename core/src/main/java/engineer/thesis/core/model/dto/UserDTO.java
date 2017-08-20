@@ -9,9 +9,4 @@ public class UserDTO {
     private final String email;
     private final String role;
 
-    public UserDTO(Long id, String email, String role) {
-        this.id = id;
-        this.email = email;
-        this.role = role;
-    }
 }

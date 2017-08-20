@@ -14,14 +14,13 @@ public interface IPersonalDetailsService {
 
     PersonalDetailsDTO getMine() throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO saveOrUpdateMine(PersonalDetailsDTO personalDetailsDTO, boolean save) throws NoSuchElementExistsException, AlreadyExistsException;
+    PersonalDetailsDTO saveOrUpdateMine(PersonalDetailsDTO personalDetailsDTO);
 
-    PersonalDetailsDTO get(Long patientId) throws NoSuchElementExistsException, AccessDeniedException;
+    PersonalDetailsDTO getPatient(Long patientId) throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO saveOrUpdate(Long patientId, PersonalDetailsDTO personalDetailsDTO, boolean save) throws NoSuchElementExistsException, AlreadyExistsException, AccessDeniedException;
+    PersonalDetailsDTO saveOrUpdatePatient(Long patientId, PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO getDoctor(Long doctorId) throws NoSuchElementExistsException, AccessDeniedException;
+    PersonalDetailsDTO getDoctor(Long doctorId) throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO saveOrUpdateDoctor(Long doctorId, PersonalDetailsDTO personalDetails, boolean save) throws NoSuchElementExistsException, AlreadyExistsException, AccessDeniedException
-            ;
+    PersonalDetailsDTO saveOrUpdateDoctor(Long doctorId, PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementExistsException;
 }

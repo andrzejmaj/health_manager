@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-
 @RestController
 public class MedicalInfoController {
 
@@ -31,22 +30,15 @@ public class MedicalInfoController {
     }
 
     @RequestMapping(path = RequestMappings.MEDICAL_INFO.PATIENT_MEDICAL, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody MedicalInfoDTO medicalInfoDTO) {
+    public ResponseEntity<?> saveOrUpdate(@PathVariable Long patientId, @RequestBody MedicalInfoDTO medicalInfoDTO) {
         try {
-            return new ResponseEntity<>(medicalInfoService.save(patientId, medicalInfoDTO), HttpStatus.OK);
+            return new ResponseEntity<>(medicalInfoService.saveOrUpdate(patientId, medicalInfoDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
-    }
-
-    @RequestMapping(path = RequestMappings.MEDICAL_INFO.PATIENT_MEDICAL, method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@PathVariable Long patientId, @RequestBody MedicalInfoDTO medicalInfoDTO) {
-        try {
-            return new ResponseEntity<>(medicalInfoService.update(patientId, medicalInfoDTO), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (AccessDeniedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 
@@ -59,7 +51,6 @@ public class MedicalInfoController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
 
 
 }

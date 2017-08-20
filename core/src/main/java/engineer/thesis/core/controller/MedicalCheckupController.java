@@ -50,7 +50,7 @@ public class MedicalCheckupController {
     public ResponseEntity<?> delete(@PathVariable Long patientId, @PathVariable Long id) {
         try {
             medicalCheckupService.delete(patientId, id);
-            return new  ResponseEntity<>(true, HttpStatus.OK);
+            return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
