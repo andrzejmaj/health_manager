@@ -16,10 +16,11 @@ public class SecurityUser implements UserDetails {
     private String email;
     private String password;
     private UserRole userRole;
+    private Boolean isActive;
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public SecurityUser(Long id, String email, String password, UserRole role) {
+    public SecurityUser(Long id, String email, String password, UserRole role, Boolean isActive) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -62,7 +63,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 
     public Long getId() {

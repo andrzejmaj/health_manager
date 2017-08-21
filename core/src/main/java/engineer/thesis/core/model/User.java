@@ -29,6 +29,5 @@ public class User {
 
     @Column(name = "isActive", nullable = false)
     private Boolean isActive;
-
-
+    
 }
