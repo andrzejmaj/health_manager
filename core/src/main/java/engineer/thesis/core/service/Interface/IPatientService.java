@@ -1,6 +1,7 @@
 package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.model.dto.*;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.util.NoSuchElementException;
 @Service
 public interface IPatientService {
 
+    PatientDTO registerNewPatient(PatientDTO patientDTO) throws DataIntegrityException;
 
     List<PatientDTO> getAllPatients();
 

@@ -1,13 +1,17 @@
 package engineer.thesis.core.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
 
-    private final Long id;
-    private final String email;
-    private final String role;
-    private final Boolean isActive;
+    private Long id;
+    private String email;
+    private String role;
+    private Boolean isActive;
 
 }
