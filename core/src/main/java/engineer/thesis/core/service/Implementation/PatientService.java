@@ -31,10 +31,6 @@ public class PatientService extends BaseService implements IPatientService {
     public PatientDTO registerNewPatient(PatientDTO patientDTO) throws DataIntegrityException {
         accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel());
 
-        patientDTO.getAccount().getPersonalDetails().setId(null);
-        patientDTO.getAccount().setId(null);
-        patientDTO.setId(null);
-
         if (getCurrentUser() == null) {
             patientDTO.getAccount().getUser().setId(null);
         } else {
