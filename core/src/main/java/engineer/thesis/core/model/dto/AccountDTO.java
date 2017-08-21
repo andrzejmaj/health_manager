@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class AccountDTO {
     private Long id;
     private PersonalDetailsDTO personalDetails;
-
+    private UserDTO user;
 }

@@ -1,10 +1,12 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.model.*;
 import engineer.thesis.core.model.dto.*;
 import engineer.thesis.core.repository.MedicalInfoRepository;
 import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.service.Interface.BaseService;
 import engineer.thesis.core.service.Interface.IPatientService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class PatientService implements IPatientService {
+public class PatientService extends BaseService implements IPatientService {
 
     @Autowired
     private PatientRepository patientRepository;
@@ -25,8 +27,24 @@ public class PatientService implements IPatientService {
     @Autowired
     private CustomObjectMapper objectMapper;
 
-    @Autowired
-    private MedicalInfoRepository medicalInfoRepository;
+    @Override
+    public PatientDTO registerNewPatient(PatientDTO patientDTO) throws DataIntegrityException {
+        accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel());
+
+        patientDTO.getAccount().getPersonalDetails().setId(null);
+        patientDTO.getAccount().setId(null);
+        patientDTO.setId(null);
+
+        if (getCurrentUser() == null) {
+            patientDTO.getAccount().getUser().setId(null);
+        } else {
+            if (Objects.equals(patientDTO.getAccount().getUser().getId(), getCurrentUser().getId())) {
+                throw new DataIntegrityException("User id violation");
+            }
+        }
+
+        return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);
+    }
 
     @Override
     public List<PatientDTO> getAllPatients() {
