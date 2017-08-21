@@ -102,14 +102,14 @@ public class UserController {
     }
 
     /**
-     * Register new users in system
+     * Register new in active user in system
      *
-     * @param registerRequest - data of new user
+     * @param registerRequest - new user's credentials
      * @return - message if user was registered successfully
      */
 
     @RequestMapping(path = RequestMappings.USERS.REGISTER, method = RequestMethod.POST)
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerUserWithRole(@RequestBody RegisterRequest registerRequest) {
         try {
             return new ResponseEntity<>(userService.registerNewUser(registerRequest), HttpStatus.OK);
         } catch (AlreadyExistsException e) {
