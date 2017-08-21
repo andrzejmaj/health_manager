@@ -1,6 +1,7 @@
 package engineer.thesis.core.controller;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.service.Interface.IPatientService;
@@ -22,25 +23,6 @@ public class PatientController {
     public ResponseEntity<?> getAllPatients() {
         List<PatientDTO> patients = patientService.getAllPatients();
         return new ResponseEntity<Object>(patients, HttpStatus.OK);
-    }
-
-    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.POST)
-    public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO) {
-        try {
-            return new ResponseEntity<>(patientService.savePatient(patientDTO), HttpStatus.OK);
-        } catch (AlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
-    }
-
-    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_ID, method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePatient(@RequestBody PatientDTO patientDTO) {
-        System.out.println(patientDTO);
-        try {
-            return new ResponseEntity<>(patientService.updatePatient(patientDTO), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
     }
 
     @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_ID, method = RequestMethod.GET)
@@ -89,6 +71,15 @@ public class PatientController {
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
+
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.POST)
+    public ResponseEntity<?> registerNewPatient(@RequestBody PatientDTO patientDTO) {
+        try {
+            return new ResponseEntity<>(patientService.registerNewPatient(patientDTO), HttpStatus.OK);
+        } catch (DataIntegrityException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
+    }
 
 }
 
