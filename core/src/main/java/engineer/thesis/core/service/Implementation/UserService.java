@@ -53,37 +53,14 @@ public class UserService implements IUserService {
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+
         if (registerRequest.getRole() != null) {
             user.setRole(registerRequest.getRole());
-        } else{
+        } else {
             user.setRole(UserRole.ROLE_PATIENT);
         }
-
-        Account account = new Account();
-        account.setUser(user);
-        account.setCreatedDate(new Date());
-
-        switch (user.getRole()){
-            case ROLE_PATIENT:{
-                Patient patient = new Patient();
-                patient.setAccount(account);
-                patientRepository.save(patient);
-                break;
-            }
-            case ROLE_DOCTOR:{
-                Doctor doctor = new Doctor(account, null);
-                doctorRepository.save(doctor);
-                break;
-            }
-            default:{
-                accountRepository.save(account);
-                break;
-            }
-        }
-
-
+        user.setIsActive(false);
         userRepository.save(user);
-
         return "User successfully registered";
     }
 
