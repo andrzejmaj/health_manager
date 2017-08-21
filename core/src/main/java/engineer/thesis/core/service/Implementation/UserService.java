@@ -65,20 +65,6 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO updateUser(UserDTO userDTO) {
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDTO.getEmail()));
-
-        if (!user.isPresent()) {
-            throw new NoSuchElementException("User not found");
-        }
-
-        user.get().setEmail(userDTO.getEmail());
-        user.get().setRole(UserRole.valueOf(userDTO.getRole()));
-
-        return mapToDTO(user.get());
-    }
-
-    @Override
     public String changeUserPassword(String email, String password) {
 
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
@@ -170,11 +156,4 @@ public class UserService implements IUserService {
         passwordTokenRepository.save(resetToken);
     }
 
-    private UserDTO mapToDTO(User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getEmail(),
-                String.valueOf(user.getRole())
-        );
-    }
 }

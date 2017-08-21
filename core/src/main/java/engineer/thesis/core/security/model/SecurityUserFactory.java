@@ -13,7 +13,8 @@ public class SecurityUserFactory {
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getRole()
+                user.getRole(),
+                user.getIsActive()
         );
     }
 }

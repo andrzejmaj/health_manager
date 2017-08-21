@@ -74,7 +74,7 @@ public class UserController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails securityUser = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+        SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
 
         //TODO:
         // change this later
@@ -96,8 +96,29 @@ public class UserController {
             }
         };
 
+        String token = tokenUtil.generateToken(securityUser, myDevice);
 
-        return new ResponseEntity<>(new AuthenticationResponse(tokenUtil.generateToken(securityUser, myDevice)),
+        if (!securityUser.isEnabled()) {
+
+            String pageToRedirect = "";
+
+            if (securityUser.getUserRole() == UserRole.ROLE_PATIENT) {
+                pageToRedirect = "/registerPatient";
+            }
+
+            else if (securityUser.getUserRole() == UserRole.ROLE_DOCTOR) {
+                pageToRedirect = "/registerDoctor";
+            }
+
+            else if (securityUser.getUserRole() == UserRole.ROLE_RECEPTION) {
+                pageToRedirect = "/registerReception";
+            }
+
+            return new ResponseEntity<>(new RegisterRedirection(pageToRedirect, token), HttpStatus.OK);
+
+        }
+
+        return new ResponseEntity<>(new AuthenticationResponse(token),
                 HttpStatus.OK);
     }
 
