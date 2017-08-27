@@ -1,14 +1,11 @@
 package engineer.thesis.core.security;
 
 import engineer.thesis.core.repository.UserRepository;
+import engineer.thesis.core.security.GoogleOAuth.GoogleOAuthFilter;
+import engineer.thesis.core.security.service.GoogleTokenServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
-import org.springframework.orm.jpa.JpaVendorAdapter;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,12 +17,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Configuration
 @EnableWebSecurity
-@EnableOAuth2Sso
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -34,7 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
 
 
     @Autowired
@@ -63,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(
                 "/users/login",
                 "/users/register"
-                );
+        );
     }
 
     @Override
@@ -83,10 +77,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.authorizeRequests().antMatchers("/patients/*/history").hasRole("ADMIN");
 //        http.authorizeRequests().antMatchers("/patients/*/checkups").hasRole("PATIENT");
 //        http.authorizeRequests().antMatchers("/patients/*/currentCondition").authenticated();
-        http.authorizeRequests().antMatchers("/**").permitAll();
-        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        http.authorizeRequests().anyRequest().authenticated();
+        http.addFilterBefore(oAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
         http.headers().cacheControl();
     }
 
+    @Autowired
+    private GoogleTokenServices googleTokenServices;
+
+    @Bean
+    public GoogleOAuthFilter oAuthFilter() {
+        return new GoogleOAuthFilter(googleTokenServices, userRepository);
+    }
 }

@@ -5,7 +5,6 @@ import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.SecurityUserFactory;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +29,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+
         String tokenHeader = "Authorization";
         String tokenPrefix = "Bearer ";
         String token = request.getHeader(tokenHeader);
@@ -39,9 +39,9 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         if (token != null) {
             token = token.replace(tokenPrefix, "");
             String email;
-            try{
+            try {
                 email = tokenUtils.getUsername(token);
-            } catch (ExpiredJwtException e){
+            } catch (ExpiredJwtException e) {
                 throw e;
             }
 
