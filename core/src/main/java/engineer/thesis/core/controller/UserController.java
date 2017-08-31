@@ -105,7 +105,7 @@ public class UserController {
             userRole = UserRole.valueOf((auth).getAuthority());
         }
 
-        return new ResponseEntity<>(new AuthenticationResponse(tokenUtil.generateToken(securityUser, myDevice), userRole),
+        return new ResponseEntity<>(new AuthenticationResponse(tokenUtil.generateToken((SecurityUser) securityUser, myDevice), userRole),
                 HttpStatus.OK);
     }
 
