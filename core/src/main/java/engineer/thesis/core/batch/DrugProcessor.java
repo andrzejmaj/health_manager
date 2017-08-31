@@ -8,6 +8,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +22,14 @@ public class DrugProcessor implements ItemProcessor<ExternalDrugDTO, Drug> {
 
     private List<Drug> existingDrugs;
 
-    public DrugProcessor() {
+    @PostConstruct
+    public void getDrugList() {
         existingDrugs = drugRepository.findAll();
     }
 
     @Override
     public Drug process(ExternalDrugDTO item) throws Exception {
+        System.out.println("processing: " + item.getRodzajPreparatu());
         Drug drug = new Drug();
         if (item.getRodzajPreparatu() == DrugType.weterynaryjny ) {
             return null;

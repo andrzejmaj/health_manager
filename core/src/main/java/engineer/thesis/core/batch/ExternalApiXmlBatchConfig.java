@@ -11,11 +11,16 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.xml.StaxEventItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.security.util.InMemoryResource;
 import org.springframework.web.client.RestTemplate;
+
+import javax.sql.DataSource;
+
 
 @Configuration
 @EnableBatchProcessing
@@ -29,13 +34,11 @@ public class ExternalApiXmlBatchConfig {
 
 
     @Autowired
-    private DrugProcessor drugProcessor;
+    public DataSource dataSource;
 
-    @Autowired
-    private DrugWriter drugWriter;
-
+    // tag::readerwriterprocessor[]
     @Bean
-    public ItemReader<ExternalDrugDTO> xmlFileItemReader() {
+    public ItemReader<ExternalDrugDTO> ExternalDrugXmlReader() {
         RestTemplate externalTemplate = new RestTemplate();
         String external = "http://pub.rejestrymedyczne.csioz.gov.pl/pobieranie_WS/Pobieranie.ashx?filetype=XMLFile&regtype=RPL_FILES";
         String xmlAsString = externalTemplate.getForObject(external, String.class);
@@ -48,9 +51,20 @@ public class ExternalApiXmlBatchConfig {
         drugMarshaller.setClassesToBeBound(ExternalDrugDTO.class);
         xmlFileReader.setUnmarshaller(drugMarshaller);
 
+
         return xmlFileReader;
     }
 
+    @Autowired
+    private DrugProcessor drugProcessor;
+
+    @Autowired
+    private DrugWriter drugWriter;
+    // end::readerwriterprocessor[]
+
+
+
+    // tag::jobstep[]
     @Bean
     public Job importDrugsFromExternalDatabase(JobCompletionNotificationListener listener) {
         return jobBuilderFactory.get("importUserJob")
@@ -65,11 +79,12 @@ public class ExternalApiXmlBatchConfig {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<ExternalDrugDTO, Drug> chunk(10)
-                .reader(xmlFileItemReader())
+                .<ExternalDrugDTO, Drug> chunk(32)
+                .reader(ExternalDrugXmlReader())
                 .processor(drugProcessor)
                 .writer(drugWriter)
                 .build();
     }
+    // end::jobstep[]
 
 }

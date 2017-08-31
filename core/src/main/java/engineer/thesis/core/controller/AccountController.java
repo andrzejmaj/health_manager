@@ -6,6 +6,7 @@ import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.security.model.SecurityUser;
 import engineer.thesis.core.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -69,6 +70,15 @@ public class AccountController {
     private SecurityUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (SecurityUser) authentication.getPrincipal();
+    }
+
+    @Autowired
+    ApplicationContext c;
+
+    @RequestMapping(path = "/beans")
+    public String s(){
+        return c.getBeanDefinitionNames().toString();
+
     }
 
 }
