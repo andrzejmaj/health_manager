@@ -14,10 +14,6 @@ public class MedicalInformation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
-
     @Column(name = "allergies")
     private String allergies;
 

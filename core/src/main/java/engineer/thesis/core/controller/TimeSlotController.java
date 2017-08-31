@@ -1,6 +1,6 @@
 package engineer.thesis.core.controller;
 
-import engineer.thesis.core.service.ITimeSlotService;
+import engineer.thesis.core.service.Interface.ITimeSlotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

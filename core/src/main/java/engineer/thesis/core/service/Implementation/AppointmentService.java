@@ -1,4 +1,4 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.model.Appointment;
 import engineer.thesis.core.model.Patient;
@@ -7,6 +7,7 @@ import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;
+import engineer.thesis.core.service.Interface.IAppointmentService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

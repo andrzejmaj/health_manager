@@ -11,7 +11,5 @@ import lombok.NoArgsConstructor;
 public class PatientDTO {
     private Long id;
     private AccountDTO account;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private PersonalDetailsDTO emergencyContact;
     private String insuranceNumber;
 }

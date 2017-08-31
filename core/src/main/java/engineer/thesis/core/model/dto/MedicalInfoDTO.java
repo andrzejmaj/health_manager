@@ -11,11 +11,9 @@ import lombok.NoArgsConstructor;
 public class MedicalInfoDTO {
 
     private Long id;
-    private Long patientId;
     private String allergies;
     private Integer weight;
     private Integer height;
     private String otherNotes;
-
 
 }

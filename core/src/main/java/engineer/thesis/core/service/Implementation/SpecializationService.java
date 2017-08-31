@@ -1,8 +1,9 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.model.Specialization;
 import engineer.thesis.core.model.dto.SpecializationDTO;
 import engineer.thesis.core.repository.SpecializationRepository;
+import engineer.thesis.core.service.Interface.ISpecializationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

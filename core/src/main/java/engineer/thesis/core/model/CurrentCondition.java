@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Table(name = "hm_current_condition", schema = "hmanager")
-public class PatientCondition {
+public class CurrentCondition {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -21,7 +21,7 @@ public class PatientCondition {
     private Patient patient;
 
     @Column(name = "condition_name")
-    private String condition;
+    private String conditionName;
 
     @Column(name = "symptoms")
     private String symptoms;
