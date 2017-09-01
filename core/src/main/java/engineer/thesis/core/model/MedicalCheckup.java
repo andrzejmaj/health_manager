@@ -12,8 +12,9 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "hm_medical_checkup", schema = "hmanager")
-@TypeDef(name = "JsonbPostgreType", typeClass = JsonbPostgreType.class)
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "hm_medical_checkups", schema = "hmanager")
 public class MedicalCheckup {
 
     @Id
