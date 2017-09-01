@@ -4,12 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
+import java.util.List;
+
 @AllArgsConstructor
-public class UserDTO {
+@NoArgsConstructor
+@Data
+public class FormDTO {
 
     private Long id;
-    private String email;
-    private String role;
+    private String name;
+    private List<FormFieldDTO> formFields;
+    private UserDTO owner;
+
 }
