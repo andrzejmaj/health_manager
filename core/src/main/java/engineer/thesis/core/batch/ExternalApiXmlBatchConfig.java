@@ -35,7 +35,6 @@ public class ExternalApiXmlBatchConfig {
     @Autowired
     private DrugWriter drugWriter;
 
-    // tag::readerwriterprocessor[]
     @Bean
     public ItemReader<ExternalDrugDTO> ExternalDrugXmlReader() {
         RestTemplate externalTemplate = new RestTemplate();
@@ -71,7 +70,7 @@ public class ExternalApiXmlBatchConfig {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<ExternalDrugDTO, Drug> chunk(32)
+                .<ExternalDrugDTO, Drug>chunk(100)
                 .reader(ExternalDrugXmlReader())
                 .processor(drugProcessor)
                 .writer(drugWriter)
