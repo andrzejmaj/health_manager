@@ -69,7 +69,7 @@ public class AccountService implements IAccountService {
     @Override
     public Long getAccountIdByUserId(Long id) {
         Optional<Account> account = Optional.ofNullable(accountRepository.findByUser_Id(id));
-        if (account.isPresent()) {
+        if (!account.isPresent()) {
             throw new NoSuchElementException("Account not found");
         }
         return account.get().getId();
