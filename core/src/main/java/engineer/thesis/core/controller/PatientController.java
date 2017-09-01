@@ -24,7 +24,7 @@ public class PatientController {
         return new ResponseEntity<Object>(patients, HttpStatus.OK);
     }
 
-    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_ID, method = RequestMethod.POST)
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.POST)
     public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO) {
         try {
             return new ResponseEntity<>(patientService.savePatient(patientDTO), HttpStatus.OK);
@@ -33,7 +33,7 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_ID, method = RequestMethod.PUT)
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.PUT)
     public ResponseEntity<?> updatePatient(@RequestBody PatientDTO patientDTO) {
         System.out.println(patientDTO);
         try {
