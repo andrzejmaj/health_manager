@@ -1,4 +1,4 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
@@ -10,6 +10,7 @@ import engineer.thesis.core.repository.PasswordResetTokenRepository;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.PasswordResetToken;
 import engineer.thesis.core.security.model.RegisterRequest;
+import engineer.thesis.core.service.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

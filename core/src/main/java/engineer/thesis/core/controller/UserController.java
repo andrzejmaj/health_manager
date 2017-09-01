@@ -6,7 +6,7 @@ import engineer.thesis.core.model.UserRole;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
 import engineer.thesis.core.security.TokenUtils;
 import engineer.thesis.core.security.model.*;
-import engineer.thesis.core.service.UserService;
+import engineer.thesis.core.service.Implementation.UserService;
 import engineer.thesis.core.utils.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Interface;
 
 import org.springframework.stereotype.Service;
 

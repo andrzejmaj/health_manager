@@ -1,4 +1,4 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.model.Account;
@@ -6,6 +6,7 @@ import engineer.thesis.core.model.PersonalDetails;
 import engineer.thesis.core.model.dto.AccountDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.AccountRepository;
+import engineer.thesis.core.service.Interface.IAccountService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

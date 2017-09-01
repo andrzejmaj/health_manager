@@ -1,4 +1,4 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.controller.TimeSlotController;
 import engineer.thesis.core.model.Doctor;
@@ -6,6 +6,7 @@ import engineer.thesis.core.model.TimeSlot;
 import engineer.thesis.core.model.dto.TimeSlotDTO;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;
+import engineer.thesis.core.service.Interface.ITimeSlotService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

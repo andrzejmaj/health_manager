@@ -1,4 +1,4 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.model.dto.AccountDTO;

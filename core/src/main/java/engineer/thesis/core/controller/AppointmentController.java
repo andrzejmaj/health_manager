@@ -4,7 +4,7 @@ import engineer.thesis.core.model.Appointment;
 import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;
-import engineer.thesis.core.service.IAppointmentService;
+import engineer.thesis.core.service.Interface.IAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

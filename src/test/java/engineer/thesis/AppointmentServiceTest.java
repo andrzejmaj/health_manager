@@ -1,18 +1,10 @@
 package engineer.thesis;
 
-import engineer.thesis.core.model.Appointment;
-import engineer.thesis.core.model.Doctor;
-import engineer.thesis.core.model.Patient;
-import engineer.thesis.core.model.PersonalDetails;
-import engineer.thesis.core.model.User;
-import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;
-import engineer.thesis.core.service.AppointmentService;
-import org.junit.Before;
+import engineer.thesis.core.service.Implementation.AppointmentService;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Collections;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 public class AppointmentServiceTest {
@@ -111,17 +98,17 @@ public class AppointmentServiceTest {
 	@Test
 	public void createNewAppointment_Test() {
 		AppointmentDTO appointmentDTO = new AppointmentDTO(0L, 2L, false, 1, "");
-		appointmentService.save(appointmentDTO, 1L);
+		appointmentService.saveDoctor(appointmentDTO, 1L);
 		verify(appointmentRepository, never()).delete(any(Appointment.class));
-		verify(appointmentRepository, times(1)).save(any(Appointment.class));
+		verify(appointmentRepository, times(1)).saveDoctor(any(Appointment.class));
 	}
 
 	@Test
 	public void changeAppointment_Test() {
 		AppointmentDTO appointmentDTO = new AppointmentDTO(0L, 1L, false, 1, "");
-		appointmentService.save(appointmentDTO, 1L);
+		appointmentService.saveDoctor(appointmentDTO, 1L);
 		verify(appointmentRepository, times(1)).delete(any(Appointment.class));
-		verify(appointmentRepository, times(1)).save(any(Appointment.class));
+		verify(appointmentRepository, times(1)).saveDoctor(any(Appointment.class));
 	}
 */
 }

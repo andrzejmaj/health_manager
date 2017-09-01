@@ -35,9 +35,12 @@ public class Patient {
     @JoinColumn(name = "emergency_contact_id")
     private PersonalDetails emergencyContact;
 
-    @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
+    @OneToOne
+    @JoinColumn(name = "medical_information_id")
+    @Cascade(CascadeType.ALL)
     private MedicalInformation medicalInformation;
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    @Cascade(CascadeType.ALL)
     private List<MedicalHistory> medicalHistories;
 }
