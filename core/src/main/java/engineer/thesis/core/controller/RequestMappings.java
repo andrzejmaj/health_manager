@@ -24,6 +24,7 @@ final class RequestMappings {
 
     static final class DRUGS {
         static final String DRUGS = "/drugs";
+        static final String DRUGS_ID = "/drugs/{id}";
     }
 }
 

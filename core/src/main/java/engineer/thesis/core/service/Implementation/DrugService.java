@@ -1,5 +1,7 @@
 package engineer.thesis.core.service.Implementation;
 
+import engineer.thesis.core.exception.NoSuchElementExistsException;
+import engineer.thesis.core.model.Drug;
 import engineer.thesis.core.model.dto.DrugDTO;
 import engineer.thesis.core.repository.DrugRepository;
 import engineer.thesis.core.service.Interface.IDrugService;
@@ -27,5 +29,14 @@ public class DrugService implements IDrugService {
     @Override
     public List<DrugDTO> findAllByName(String name) {
         return drugRepository.findByNameContainingIgnoreCase(name).stream().map(d -> objectMapper.convert(d, DrugDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public DrugDTO findById(Long id) throws NoSuchElementExistsException {
+        Drug drug = drugRepository.findOne(id);
+        if (drug == null) {
+            throw new NoSuchElementExistsException("Drug doesn't exist");
+        }
+        return objectMapper.convert(drug, DrugDTO.class);
     }
 }
