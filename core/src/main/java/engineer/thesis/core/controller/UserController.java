@@ -4,6 +4,7 @@ import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.UserRole;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
+import engineer.thesis.core.model.dto.UserDTO;
 import engineer.thesis.core.security.TokenUtils;
 import engineer.thesis.core.security.model.*;
 import engineer.thesis.core.service.Implementation.UserService;
@@ -202,7 +203,18 @@ public class UserController {
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
 
+    @RequestMapping(path = "/users", method = RequestMethod.POST)
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO, HttpServletRequest request) {
+        if (!canPerformUserAction(userDTO.getId(), getCurrentUser())) {
+            return new ResponseEntity<>(NOT_ALLOWED_MESSAGE, HttpStatus.FORBIDDEN);
+        }
+        try {
+            return new ResponseEntity<>(userService.updateUser(userDTO, request.getSession().getServletContext().getRealPath("/")), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
     }
 

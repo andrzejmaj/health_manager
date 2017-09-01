@@ -11,10 +11,16 @@ import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.PasswordResetToken;
 import engineer.thesis.core.security.model.RegisterRequest;
 import engineer.thesis.core.service.Interface.IUserService;
+import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -31,6 +37,11 @@ public class UserService implements IUserService {
 
     @Autowired
     private PersonalDetailsService personalDetailsService;
+
+    @Autowired
+    private CustomObjectMapper objectMapper;
+
+    private Path path;
 
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
@@ -54,17 +65,35 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO updateUser(UserDTO userDTO) {
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDTO.getEmail()));
+    public UserDTO updateUser(UserDTO userDTO, String rootDirectory) {
 
-        if (!user.isPresent()) {
+        if (!userExists(userDTO.getEmail())) {
             throw new NoSuchElementException("User not found");
         }
 
-        user.get().setEmail(userDTO.getEmail());
-        user.get().setRole(UserRole.valueOf(userDTO.getRole()));
+        User user = userRepository.save(objectMapper.convert(userDTO, User.class));
 
-        return mapToDTO(user.get());
+        // get the provided image from the form
+        MultipartFile userImage = user.getUserImage();
+
+        // change any provided image type to png
+         path = Paths.get(rootDirectory + "/resources/images/" +
+         user.getId() + ".png");
+
+        // check whether image exists or not
+        if (userImage != null && !userImage.isEmpty()) {
+            try {
+                // convert the image type to png
+                userImage.transferTo(new File(path.toString()));
+            } catch (IllegalStateException | IOException e) {
+                // oops! something did not work as expected
+                e.printStackTrace();
+                throw new RuntimeException("Saving User image was not successful", e);
+            }
+        }
+
+        return objectMapper.convert(user, UserDTO.class);
+
     }
 
     @Override
@@ -163,11 +192,4 @@ public class UserService implements IUserService {
         passwordTokenRepository.save(resetToken);
     }
 
-    private UserDTO mapToDTO(User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getEmail(),
-                String.valueOf(user.getRole())
-        );
-    }
 }
