@@ -5,8 +5,15 @@ import engineer.thesis.core.model.dto.AccountDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.security.model.SecurityUser;
 import engineer.thesis.core.service.AccountService;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +32,11 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private JobLauncher jobLauncher;
+    @Autowired
+    @Qualifier("importDrugs")
+    private Job job;
 
     @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS, method = RequestMethod.POST)
     public ResponseEntity<?> saveNewAccount(@RequestBody AccountDTO accountDTO) {
@@ -72,13 +84,9 @@ public class AccountController {
         return (SecurityUser) authentication.getPrincipal();
     }
 
-    @Autowired
-    ApplicationContext c;
-
-    @RequestMapping(path = "/beans")
-    public String s(){
-        return c.getBeanDefinitionNames().toString();
-
+    @RequestMapping(path = "/job")
+    public void s() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+        jobLauncher.run(job, new JobParameters());
     }
 
 }

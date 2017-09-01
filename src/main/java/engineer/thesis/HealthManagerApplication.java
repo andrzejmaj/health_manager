@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @PropertySource("medcom.properties")
-@ComponentScan("engineer.thesis.core.batch")
+@ComponentScan("engineer.thesis.core")
 public class HealthManagerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(HealthManagerApplication.class, args);

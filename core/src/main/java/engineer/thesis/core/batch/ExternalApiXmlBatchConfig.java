@@ -11,12 +11,10 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.xml.StaxEventItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.security.util.InMemoryResource;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
@@ -27,24 +25,28 @@ import javax.sql.DataSource;
 public class ExternalApiXmlBatchConfig {
 
     @Autowired
+    public DataSource dataSource;
+    @Autowired
     private JobBuilderFactory jobBuilderFactory;
-
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
-
-
     @Autowired
-    public DataSource dataSource;
+    private DrugProcessor drugProcessor;
+    @Autowired
+    private DrugWriter drugWriter;
 
     // tag::readerwriterprocessor[]
     @Bean
     public ItemReader<ExternalDrugDTO> ExternalDrugXmlReader() {
         RestTemplate externalTemplate = new RestTemplate();
         String external = "http://pub.rejestrymedyczne.csioz.gov.pl/pobieranie_WS/Pobieranie.ashx?filetype=XMLFile&regtype=RPL_FILES";
-        String xmlAsString = externalTemplate.getForObject(external, String.class);
+        String xmlAsString = "";//externalTemplate.getForObject(external, String.class);
 
         StaxEventItemReader<ExternalDrugDTO> xmlFileReader = new StaxEventItemReader<>();
-        xmlFileReader.setResource(new InMemoryResource(xmlAsString));
+
+//        xmlFileReader.setResource(new InMemoryResource(xmlAsString));
+        xmlFileReader.setResource(new ClassPathResource("test4.xml"));
+
         xmlFileReader.setFragmentRootElementName("produktLeczniczy");
 
         Jaxb2Marshaller drugMarshaller = new Jaxb2Marshaller();
@@ -55,17 +57,7 @@ public class ExternalApiXmlBatchConfig {
         return xmlFileReader;
     }
 
-    @Autowired
-    private DrugProcessor drugProcessor;
-
-    @Autowired
-    private DrugWriter drugWriter;
-    // end::readerwriterprocessor[]
-
-
-
-    // tag::jobstep[]
-    @Bean
+    @Bean(name = "importDrugs")
     public Job importDrugsFromExternalDatabase(JobCompletionNotificationListener listener) {
         return jobBuilderFactory.get("importUserJob")
                 .incrementer(new RunIdIncrementer())
@@ -85,6 +77,5 @@ public class ExternalApiXmlBatchConfig {
                 .writer(drugWriter)
                 .build();
     }
-    // end::jobstep[]
 
 }
