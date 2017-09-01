@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Setter
 @EqualsAndHashCode(of = "account")
 @NoArgsConstructor
+@Table(name = "hm_doctor", schema = "hmanager")
 public class Doctor {
 
     @Id
