@@ -21,5 +21,9 @@ final class RequestMappings {
         static final String PERS_DETAILS = "/accounts/{id}/personaldetails";
         static final String MY_PERS_DETAILLS = "/accounts/personaldetails";
     }
+
+    static final class DRUGS {
+        static final String DRUGS = "/drugs";
+    }
 }
 

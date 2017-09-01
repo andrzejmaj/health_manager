@@ -1,18 +1,16 @@
 package engineer.thesis.core.model.dto;
 
-import engineer.thesis.core.model.Drug;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DrugDTO {
 
     private Long id;
     private String name;
     private Integer refundRate;
 
-    public DrugDTO(Drug drug) {
-        this.id = drug.getId();
-        this.name = drug.getName();
-        this.refundRate = drug.getRefundRate();
-    }
 }
