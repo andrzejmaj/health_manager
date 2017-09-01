@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MedicalCheckupService {
+public class MedicalCheckupService implements IMedicalCheckupService {
 
     @Autowired
     private MedicalCheckupRepository medicalCheckupRepository;
