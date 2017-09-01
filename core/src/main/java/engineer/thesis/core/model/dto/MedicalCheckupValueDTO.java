@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+@NoArgsConstructor
+@Data
+
+public class MedicalCheckupValueDTO {
 
     private Long id;
-    private String email;
-    private String role;
+    private String value;
+    private FormFieldDTO fomField;
+
 }

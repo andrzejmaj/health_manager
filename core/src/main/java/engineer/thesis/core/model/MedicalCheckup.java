@@ -1,20 +1,20 @@
 package engineer.thesis.core.model;
 
-
-import engineer.thesis.core.model.persistance.JsonbPostgreType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashMap;
-
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "hm_medical_checkup", schema = "hmanager")
-@TypeDef(name = "JsonbPostgreType", typeClass = JsonbPostgreType.class)
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "hm_medical_checkups", schema = "hmanager")
 public class MedicalCheckup {
 
     @Id
@@ -22,13 +22,26 @@ public class MedicalCheckup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "form_id")
+    private Form form;
+
+    @OneToOne
     @JoinColumn(name = "patient_id")
-    private Patient patientId;
+    private Patient patient;
 
-    @Column(name = "creation_date")
-    private Date creationDate;
+    @OneToOne
+    @JoinColumn(name = "created_by_id")
+    private User creator;
 
-    @Type(type = "JsonbPostgreType")
-    private HashMap<String, Object> data;
+    @Column(name = "created_date")
+    private Date createdDate;
+
+    @Column(name = "last_modified_date")
+    private Date lastModifiedDate;
+
+    @OneToMany(mappedBy = "medicalCheckup", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<MedicalCheckupValue> medicalCheckupValues;
+
 }

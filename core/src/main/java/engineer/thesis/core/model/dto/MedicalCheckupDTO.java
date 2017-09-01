@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class MedicalCheckupDTO {
-    Long id;
-    Long patientId;
-    Date creationDate;
-    Long timeSlotType;
-    HashMap<String,Object> data;
+
+    private Long id;
+    private List<MedicalCheckupValueDTO> medicalCheckupValues;
+    private PatientDTO patient;
+    private UserDTO creator;
+    private Date createdDate;
+    private Date lastModifiedDate;
 }

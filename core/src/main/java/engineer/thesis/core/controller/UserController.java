@@ -98,14 +98,8 @@ public class UserController {
                 return false;
             }
         };
-
-       UserRole userRole = null;
-
-        for (GrantedAuthority auth : securityUser.getAuthorities()) {
-            userRole = UserRole.valueOf((auth).getAuthority());
-        }
-
-        return new ResponseEntity<>(new AuthenticationResponse(tokenUtil.generateToken((SecurityUser) securityUser, myDevice), userRole),
+        
+        return new ResponseEntity<>(new AuthenticationResponse(tokenUtil.generateToken((SecurityUser) securityUser, myDevice)),
                 HttpStatus.OK);
     }
 
