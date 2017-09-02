@@ -2,6 +2,7 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.service.Interface.IFileService;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -9,9 +10,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Service
 public class FileService implements IFileService {
 
-    String IMAGES_PATH = "/Users/andrzejmaj123/Documents/health_manager/core/src/main/resources/images/";
+    String IMAGES_PATH = "/images/";
 
     @Override
     public FileSystemResource findProfilePicture(Long id) {

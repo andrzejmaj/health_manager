@@ -13,7 +13,6 @@ import engineer.thesis.core.security.model.RegisterRequest;
 import engineer.thesis.core.service.Interface.IUserService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
