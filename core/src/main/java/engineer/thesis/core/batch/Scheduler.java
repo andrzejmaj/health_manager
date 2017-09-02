@@ -24,7 +24,7 @@ public class Scheduler {
     @Qualifier("importDrugs")
     private Job importDrugJob;
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(cron = "0 0 1 * * 7")
     public void importDrugs() {
         try {
 
