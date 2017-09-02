@@ -42,8 +42,8 @@ public class UserService implements IUserService {
     @Autowired
     private CustomObjectMapper objectMapper;
 
-    @Value("${files.rootDirectory}")
-    private String rootDirectory;
+    //@Value("${files.rootDirectory}")
+    private String rootDirectory = "/Users/andrzejmaj123/Documents/health_manager/core/src/main/resources/images";
 
     private Path path;
 

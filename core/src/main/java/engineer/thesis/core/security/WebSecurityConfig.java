@@ -78,7 +78,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/personaldetails/*",
                         "/users/personaldetails"
                 ).permitAll()
-                .antMatchers(HttpMethod.GET, "/users").authenticated()
                 .anyRequest().permitAll();
 
 

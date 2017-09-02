@@ -218,11 +218,11 @@ public class UserController {
         }
     }
 
-    @RequestMapping(path = "/users/{id}", method = RequestMethod.POST)
+    @RequestMapping(path = "/users/{id}/picture", method = RequestMethod.POST)
     public ResponseEntity<?> saveProfilePicture(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
-        if (!canPerformUserAction(id, getCurrentUser())) {
-            return new ResponseEntity<>(NOT_ALLOWED_MESSAGE, HttpStatus.FORBIDDEN);
-        }
+//        if (!canPerformUserAction(id, getCurrentUser())) {
+//            return new ResponseEntity<>(NOT_ALLOWED_MESSAGE, HttpStatus.FORBIDDEN);
+//        }
         try {
             return new ResponseEntity<>(userService.saveUserProfilePicture(id, file), HttpStatus.OK);
         } catch (NoSuchElementException e) {
