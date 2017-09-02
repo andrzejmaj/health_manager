@@ -28,7 +28,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
-    @Transient
-    private MultipartFile userImage;
+//    @Column(name = "userImage")
+//    private String userImagePath;
 
 }

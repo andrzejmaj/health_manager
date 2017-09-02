@@ -13,6 +13,6 @@ public class UserDTO {
     private Long id;
     private String email;
     private String role;
-    private MultipartFile userImage;
+//    private String userImagePath;
 
 }

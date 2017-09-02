@@ -230,6 +230,16 @@ public class UserController {
         }
     }
 
+    @RequestMapping(path = "/users/{id}/picture", method = RequestMethod.GET)
+    public ResponseEntity<?> getProfilePicture(@PathVariable Long id) {
+
+        try {
+            return new ResponseEntity<>(userService.getUserProfilePicture(id), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     private SecurityUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (SecurityUser) authentication.getPrincipal();

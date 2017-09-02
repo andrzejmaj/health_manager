@@ -13,7 +13,7 @@ import engineer.thesis.core.security.model.RegisterRequest;
 import engineer.thesis.core.service.Interface.IUserService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,6 +108,23 @@ public class UserService implements IUserService {
         return "Image changed successfully";
     }
 
+
+    @Override
+    public FileSystemResource getUserProfilePicture(Long id) {
+
+        User user = userRepository.findOne(id);
+
+        if (user == null) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        path = Paths.get(rootDirectory +
+                user.getId() + ".png");
+
+        File file = new File(rootDirectory + id + ".png");
+
+        return new FileSystemResource(file);
+    }
 
     @Override
     public String changeUserPassword(String email, String password) {
