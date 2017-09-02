@@ -1,9 +1,13 @@
 package engineer.thesis.core.model.dto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@Value
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class SpecializationDTO {
-    Long id;
-    String description;
+    private Long id;
+    private String description;
 }

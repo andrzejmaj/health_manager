@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class DoctorDTO {
-    Long id;
+    private Long id;
     private AccountDTO account;
     private SpecializationDTO specialization;
 }
