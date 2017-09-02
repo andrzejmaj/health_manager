@@ -16,12 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -31,13 +27,13 @@ public class UserService implements IUserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private PasswordResetTokenRepository passwordTokenRepository;
 
     @Autowired
-    private PersonalDetailsService personalDetailsService;
+    private FileService fileService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private CustomObjectMapper objectMapper;
@@ -79,51 +75,6 @@ public class UserService implements IUserService {
 
         return objectMapper.convert(user, UserDTO.class);
 
-    }
-
-    public String saveUserProfilePicture(Long id, MultipartFile userImage) {
-
-        User user = userRepository.findOne(id);
-
-        if (user == null) {
-            throw new NoSuchElementException("User not found");
-        }
-
-        // change any provided image type to png
-        path = Paths.get(rootDirectory +
-                user.getId() + ".png");
-
-        // check whether image exists or not
-        if (userImage != null && !userImage.isEmpty()) {
-            try {
-                // convert the image type to png
-                userImage.transferTo(new File(path.toString()));
-            } catch (IllegalStateException | IOException e) {
-                // oops! something did not work as expected
-                e.printStackTrace();
-                throw new RuntimeException("Saving User image was not successful", e);
-            }
-        }
-
-        return "Image changed successfully";
-    }
-
-
-    @Override
-    public FileSystemResource getUserProfilePicture(Long id) {
-
-        User user = userRepository.findOne(id);
-
-        if (user == null) {
-            throw new NoSuchElementException("User not found");
-        }
-
-        path = Paths.get(rootDirectory +
-                user.getId() + ".png");
-
-        File file = new File(rootDirectory + id + ".png");
-
-        return new FileSystemResource(file);
     }
 
     @Override

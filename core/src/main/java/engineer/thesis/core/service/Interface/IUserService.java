@@ -25,5 +25,4 @@ public interface IUserService {
 
     Optional<User> findByEmail(String email);
 
-    FileSystemResource getUserProfilePicture(Long id);
 }

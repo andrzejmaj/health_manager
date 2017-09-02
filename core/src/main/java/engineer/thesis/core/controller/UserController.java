@@ -218,28 +218,6 @@ public class UserController {
         }
     }
 
-    @RequestMapping(path = "/users/{id}/picture", method = RequestMethod.POST)
-    public ResponseEntity<?> saveProfilePicture(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
-//        if (!canPerformUserAction(id, getCurrentUser())) {
-//            return new ResponseEntity<>(NOT_ALLOWED_MESSAGE, HttpStatus.FORBIDDEN);
-//        }
-        try {
-            return new ResponseEntity<>(userService.saveUserProfilePicture(id, file), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(path = "/users/{id}/picture", method = RequestMethod.GET)
-    public ResponseEntity<?> getProfilePicture(@PathVariable Long id) {
-
-        try {
-            return new ResponseEntity<>(userService.getUserProfilePicture(id), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
     private SecurityUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (SecurityUser) authentication.getPrincipal();
