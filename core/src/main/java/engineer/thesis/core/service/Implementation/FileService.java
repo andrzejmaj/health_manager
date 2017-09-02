@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 @Service
 public class FileService implements IFileService {
 
-    String IMAGES_PATH = "/images/";
+    private String IMAGES_PATH = "/Users/andrzejmaj123/Documents/health_manager/core/src/main/resources/images/";
 
     @Override
     public FileSystemResource findProfilePicture(Long id) {
@@ -31,7 +31,7 @@ public class FileService implements IFileService {
                 userImage.transferTo(new File(path.toString()));
             } catch (IllegalStateException | IOException e) {
                 e.printStackTrace();
-                throw new RuntimeException("Saving User image was not successful", e);
+                throw new RuntimeException("Saving profile picture was not successful", e);
             }
         }
 

@@ -101,7 +101,7 @@ public class AccountService implements IAccountService {
     @Override
     public FileSystemResource getProfilePicture(Long id) {
 
-        if (accountRepository.exists(id)) {
+        if (!accountRepository.exists(id)) {
             throw new NoSuchElementException("Account not found");
         }
 
