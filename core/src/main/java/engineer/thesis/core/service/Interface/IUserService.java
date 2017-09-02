@@ -14,7 +14,7 @@ public interface IUserService {
 
     String registerNewUser(RegisterRequest registerRequest) throws AlreadyExistsException;
 
-    UserDTO updateUser(UserDTO userDTO, String rootDirectory);
+    UserDTO updateUser(UserDTO userDTO);
 
     String changeUserPassword(String email, String password);
 

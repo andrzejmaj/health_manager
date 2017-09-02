@@ -13,6 +13,7 @@ import engineer.thesis.core.security.model.RegisterRequest;
 import engineer.thesis.core.service.Interface.IUserService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,9 @@ public class UserService implements IUserService {
     @Autowired
     private CustomObjectMapper objectMapper;
 
+    @Value("${files.rootDirectory}")
+    private String rootDirectory;
+
     private Path path;
 
     public Optional<User> findByEmail(String email) {
@@ -65,7 +69,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO updateUser(UserDTO userDTO, String rootDirectory) {
+    public UserDTO updateUser(UserDTO userDTO) {
 
         if (!userExists(userDTO.getEmail())) {
             throw new NoSuchElementException("User not found");
@@ -73,12 +77,21 @@ public class UserService implements IUserService {
 
         User user = userRepository.save(objectMapper.convert(userDTO, User.class));
 
-        // get the provided image from the form
-        MultipartFile userImage = user.getUserImage();
+        return objectMapper.convert(user, UserDTO.class);
+
+    }
+
+    public String saveUserProfilePicture(Long id, MultipartFile userImage) {
+
+        User user = userRepository.findOne(id);
+
+        if (user == null) {
+            throw new NoSuchElementException("User not found");
+        }
 
         // change any provided image type to png
-         path = Paths.get(rootDirectory + "/resources/images/" +
-         user.getId() + ".png");
+        path = Paths.get(rootDirectory +
+                user.getId() + ".png");
 
         // check whether image exists or not
         if (userImage != null && !userImage.isEmpty()) {
@@ -92,9 +105,9 @@ public class UserService implements IUserService {
             }
         }
 
-        return objectMapper.convert(user, UserDTO.class);
-
+        return "Image changed successfully";
     }
+
 
     @Override
     public String changeUserPassword(String email, String password) {

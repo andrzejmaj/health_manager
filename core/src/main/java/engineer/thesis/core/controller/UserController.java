@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
@@ -211,11 +212,22 @@ public class UserController {
             return new ResponseEntity<>(NOT_ALLOWED_MESSAGE, HttpStatus.FORBIDDEN);
         }
         try {
-            return new ResponseEntity<>(userService.updateUser(userDTO, request.getSession().getServletContext().getRealPath("/")), HttpStatus.OK);
+            return new ResponseEntity<>(userService.updateUser(userDTO), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
 
+    @RequestMapping(path = "/users/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> saveProfilePicture(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        if (!canPerformUserAction(id, getCurrentUser())) {
+            return new ResponseEntity<>(NOT_ALLOWED_MESSAGE, HttpStatus.FORBIDDEN);
+        }
+        try {
+            return new ResponseEntity<>(userService.saveUserProfilePicture(id, file), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     private SecurityUser getCurrentUser() {
