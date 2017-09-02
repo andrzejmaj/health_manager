@@ -11,10 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -60,6 +58,24 @@ public class AccountController {
         try {
             Long accountId = id.isPresent() ? id.get() : accountService.getAccountIdByUserId(getCurrentUser().getId());
             return new ResponseEntity<>(accountService.savePersonalDetails(accountId, personalDetails), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS_PICTURE, method = RequestMethod.POST)
+    public ResponseEntity<?> saveProfilePicture(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            return new ResponseEntity<>(accountService.saveProfilePicture(id, file), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS_PICTURE, method = RequestMethod.GET)
+    public ResponseEntity<?> getProfilePicture(@PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(accountService.getProfilePicture(id), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
