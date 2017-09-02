@@ -43,7 +43,7 @@ public class UserService implements IUserService {
     private CustomObjectMapper objectMapper;
 
     //@Value("${files.rootDirectory}")
-    private String rootDirectory = "/Users/andrzejmaj123/Documents/health_manager/core/src/main/resources/images";
+    private String rootDirectory = "/Users/andrzejmaj123/Documents/health_manager/core/src/main/resources/images/";
 
     private Path path;
 
