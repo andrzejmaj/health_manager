@@ -13,18 +13,18 @@ import java.nio.file.Paths;
 @Service
 public class FileService implements IFileService {
 
-    private String IMAGES_PATH = "/Users/andrzejmaj123/Documents/health_manager/core/src/main/resources/images/";
+    private String IMAGES_PATH = "images";
 
     @Override
     public FileSystemResource findProfilePicture(Long id) {
-        File file = new File(IMAGES_PATH + id + ".png");
+        File file = new File(IMAGES_PATH + "/" + id + ".png");
         return new FileSystemResource(file);
     }
 
     @Override
     public String saveProfilePicture(Long id, MultipartFile userImage) {
 
-        Path path = Paths.get(IMAGES_PATH + id + ".png");
+        Path path = Paths.get(IMAGES_PATH + "/" + id + ".png");
 
         if (userImage != null && !userImage.isEmpty()) {
             try {
