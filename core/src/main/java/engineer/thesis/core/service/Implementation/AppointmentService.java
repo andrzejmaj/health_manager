@@ -1,7 +1,4 @@
-package engineer.thesis.core.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.model.Appointment;
 import engineer.thesis.core.model.Patient;
@@ -10,9 +7,14 @@ import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;
+import engineer.thesis.core.service.Interface.IAppointmentService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AppointmentService implements IAppointmentService {
+    private final static Logger logger = Logger.getLogger(AppointmentService.class);
 
 	@Autowired
 	private AppointmentRepository appointmentRepository;
@@ -23,8 +25,9 @@ public class AppointmentService implements IAppointmentService {
 
 	@Override
 	public void save(AppointmentDTO appointmentDTO, long patientId) {
-		Appointment oldAppointment = appointmentRepository.findByTimeSlotId(appointmentDTO.getTimeSlotId());
-		if (oldAppointment != null) {
+        logger.info("Saveing new appointment for " + patientId + ".\n" + appointmentDTO.toString());
+        Appointment oldAppointment = appointmentRepository.findByTimeSlotId(appointmentDTO.getTimeSlotId());
+        if (oldAppointment != null) {
 			appointmentRepository.delete(oldAppointment);
 		}
 		

@@ -1,8 +1,9 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.model.PersonalDetails;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.PersonalDetailsRepository;
+import engineer.thesis.core.service.Interface.IPersonalDetailsService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class PersonalDetailsService implements IPersonalDetailsService {
     @Override
     public PersonalDetailsDTO save(PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementException {
 
-        PersonalDetails personalDetails = personalDetailsRepository.getOne(personalDetailsDTO.getId());
+        PersonalDetails personalDetails = personalDetailsRepository.findOne(personalDetailsDTO.getId());
         if (personalDetails == null) {
             throw new NoSuchElementException("Details not found XD");
         }

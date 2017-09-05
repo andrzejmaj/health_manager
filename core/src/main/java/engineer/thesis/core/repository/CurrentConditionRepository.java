@@ -1,12 +1,12 @@
 package engineer.thesis.core.repository;
 
-import engineer.thesis.core.model.PatientCondition;
+import engineer.thesis.core.model.CurrentCondition;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CurrentConditionRepository extends JpaRepository<PatientCondition, Long> {
+public interface CurrentConditionRepository extends JpaRepository<CurrentCondition, Long> {
 
-    List<PatientCondition> findByPatientId(Long id);
+    List<CurrentCondition> findByPatientId(Long id);
 
 }

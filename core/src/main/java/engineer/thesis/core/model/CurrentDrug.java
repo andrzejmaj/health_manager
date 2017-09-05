@@ -22,7 +22,7 @@ public class CurrentDrug {
 
     @OneToOne
     @JoinColumn(name = "condition_id")
-    private PatientCondition condition;
+    private CurrentCondition condition;
 
     @OneToOne
     @JoinColumn(name = "drug_id")

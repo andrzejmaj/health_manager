@@ -1,21 +1,11 @@
 package engineer.thesis;
 
-import engineer.thesis.core.model.UserRole;
-import engineer.thesis.core.model.dto.PatientDTO;
-import engineer.thesis.core.service.PatientService;
-import org.junit.Test;
+import engineer.thesis.core.service.Implementation.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 
 public class PatientControllerTest extends AbstractTest {
 
