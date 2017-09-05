@@ -83,6 +83,15 @@ public class PatientController {
         }
     }
 
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_EMAIL, method = RequestMethod.GET, params = "email")
+    public ResponseEntity<?> getPatientByEmail(@RequestParam String email) {
+        try {
+            return new ResponseEntity<Object>(patientService.findByEmail(email), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Patient not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
     @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.GET, params = "lastName")
     public ResponseEntity<?> getPatientsByLastName(@RequestParam String lastName) {
         List<PatientDTO> patients = patientService.findPatientsByLastName(lastName);
