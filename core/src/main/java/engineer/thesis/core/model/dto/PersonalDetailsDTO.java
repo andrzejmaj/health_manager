@@ -1,8 +1,6 @@
 package engineer.thesis.core.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-
 import java.util.Date;
 
 @NoArgsConstructor
@@ -14,7 +12,6 @@ public class PersonalDetailsDTO {
     private String lastName;
     private String gender;
     private String pesel;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date birthdate;
     private String phoneNumber;
     private String country;

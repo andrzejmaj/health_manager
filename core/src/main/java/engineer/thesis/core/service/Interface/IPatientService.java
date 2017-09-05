@@ -1,4 +1,4 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.model.dto.*;
@@ -25,17 +25,8 @@ public interface IPatientService {
 
     PersonalDetailsDTO findByIdEmergency(Long id);
 
-    PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact);
+    PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact) throws AlreadyExistsException;
 
-    MedicalInfoDTO findIdMedicalInfo(Long id) throws NoSuchElementException;
+    PersonalDetailsDTO updateEmergencyContact(Long id, PersonalDetailsDTO emergencyContact);
 
-    MedicalInfoDTO saveMedicalInfo(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementException, AlreadyExistsException;
-
-    MedicalInfoDTO updateMedicalInfo(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementException;
-
-//    List<CurrentStateDTO> getPatientCurrentCondition(Long id);
-//
-//    PatientMedicalInformationDTO getPatientMedicalInformation(Long id);
-//
-//    List<MedicalHistoryDTO> getPatientMedicalHistory(Long id);
 }

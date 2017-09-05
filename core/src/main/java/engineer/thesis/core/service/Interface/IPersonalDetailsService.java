@@ -1,4 +1,4 @@
-package engineer.thesis.core.service;
+package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import org.springframework.stereotype.Service;

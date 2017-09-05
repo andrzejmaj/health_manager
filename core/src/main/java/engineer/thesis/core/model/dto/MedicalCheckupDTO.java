@@ -1,12 +1,20 @@
 package engineer.thesis.core.model.dto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.Date;
+import java.util.List;
 
-@Value
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class MedicalCheckupDTO {
-    Long id;
-    Long doctorId;
-    Date creationDate;
-    Long timeSlotType;
+
+    private Long id;
+    private List<MedicalCheckupValueDTO> medicalCheckupValues;
+    private PatientDTO patient;
+    private UserDTO creator;
+    private Date createdDate;
+    private Date lastModifiedDate;
 }

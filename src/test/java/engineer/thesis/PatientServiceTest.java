@@ -1,31 +1,18 @@
 package engineer.thesis;
 
-import engineer.thesis.core.model.Patient;
-import engineer.thesis.core.model.PersonalDetails;
-import engineer.thesis.core.model.User;
-import engineer.thesis.core.model.dto.PatientDTO;
-import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.PersonalDetailsRepository;
-import engineer.thesis.core.service.IUserService;
-import engineer.thesis.core.service.PatientService;
-import engineer.thesis.core.service.PersonalDetailsService;
-import org.junit.Before;
+import engineer.thesis.core.service.Interface.IUserService;
+import engineer.thesis.core.service.Implementation.PatientService;
+import engineer.thesis.core.service.Implementation.PersonalDetailsService;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -93,7 +80,7 @@ public class PatientServiceTest {
         Mockito.when(patientRepository.findOne(ID)).thenReturn(patient);
         Mockito.when(patientRepository.findByUser_PersonalDetails_Pesel(PESEL)).thenReturn(patient);
         Mockito.when(patientRepository.findByUser_PersonalDetails_LastNameLike(LAST_NAME)).thenReturn(Collections.singletonList(patient));
-        Mockito.when(patientRepository.save(Matchers.any(Patient.class))).thenReturn(patient);
+        Mockito.when(patientRepository.saveDoctor(Matchers.any(Patient.class))).thenReturn(patient);
         Mockito.when(userService.findByEmail("mail@mail.pl")).thenReturn(Optional.of(user));
     }
 

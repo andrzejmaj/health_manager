@@ -1,8 +1,12 @@
 package engineer.thesis.core.model.dto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DiseaseDTO {
     Long id;
     String name;
