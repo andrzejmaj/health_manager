@@ -34,10 +34,14 @@ public class TimeSlot {
 	@ManyToOne(optional = false)
 	private Doctor doctor;
 
-	public TimeSlot(Date startDateTime, Date endDateTime, Doctor doctor) {
+	@Column(nullable = false)
+	private boolean availableForSelfSign;
+
+	public TimeSlot(Date startDateTime, Date endDateTime, Doctor doctor, boolean availableForSelfSign) {
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
 		this.doctor = doctor;
+		this.availableForSelfSign = availableForSelfSign;
 	}
 }
 

@@ -62,7 +62,7 @@ public class TimeSlotService implements ITimeSlotService {
 
 	private TimeSlot mapFromDTO(TimeSlotDTO timeSlotDTO, long doctorId) {
 		Doctor doctor = doctorRepository.findOne(doctorId);
-		TimeSlot timeSlot = new TimeSlot(timeSlotDTO.getStartDateTime(), timeSlotDTO.getEndDateTime(), doctor);
+		TimeSlot timeSlot = new TimeSlot(timeSlotDTO.getStartDateTime(), timeSlotDTO.getEndDateTime(), doctor, timeSlotDTO.isAvailableForSelfSign());
 		if (timeSlotDTO.getId() != null) {
 			timeSlot.setId(timeSlotDTO.getId());
 		}
@@ -71,7 +71,7 @@ public class TimeSlotService implements ITimeSlotService {
 	}
 
 	private static TimeSlotDTO mapToDTO(TimeSlot timeSlot) {
-		return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime());
+		return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime(), timeSlot.isAvailableForSelfSign());
 	}
 
 	private boolean isOwner(long doctorId, long timeSlotId) {

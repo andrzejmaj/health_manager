@@ -13,4 +13,6 @@ public class TimeSlotDTO {
     Date startDateTime;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
     Date endDateTime;
+
+    boolean availableForSelfSign;
 }
