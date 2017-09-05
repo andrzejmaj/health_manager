@@ -34,7 +34,7 @@ public class CurrentConditionService implements ICurrentConditionService {
 
     @Override
     public CurrentConditionDTO savePatientCondition(Long patientId, CurrentConditionDTO currentConditionDTO) throws NoSuchElementExistsException, DataIntegrityException {
-        if (!patientId.equals(currentConditionDTO.getPatientId())){
+        if (!patientId.equals(currentConditionDTO.getPatientId())) {
             throw new DataIntegrityException("Ids in model and path does not match");
         }
         Patient patient = patientRepository.findOne(patientId);
@@ -48,7 +48,7 @@ public class CurrentConditionService implements ICurrentConditionService {
 
     @Override
     public CurrentConditionDTO updatePatientCondition(Long patientId, CurrentConditionDTO currentConditionDTO) throws DataIntegrityException, NoSuchElementExistsException {
-        if (!patientId.equals(currentConditionDTO.getPatientId())){
+        if (!patientId.equals(currentConditionDTO.getPatientId())) {
             throw new DataIntegrityException("Ids in path and body does not match");
         }
 

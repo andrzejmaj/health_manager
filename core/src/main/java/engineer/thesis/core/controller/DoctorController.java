@@ -1,37 +1,30 @@
 package engineer.thesis.core.controller;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import engineer.thesis.core.model.dto.DoctorDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.model.Doctor;
 import engineer.thesis.core.model.TimeSlot;
+import engineer.thesis.core.model.dto.DoctorDTO;
 import engineer.thesis.core.model.dto.TimeSlotDTO;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;
 import engineer.thesis.core.service.Interface.IDoctorService;
 import engineer.thesis.core.service.Interface.ITimeSlotService;
-
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 public class DoctorController {
 
-    private final static Logger logger = Logger.getLogger(DoctorController.class);
+	private final static Logger logger = Logger.getLogger(DoctorController.class);
 
-    @Autowired
-    protected IDoctorService doctorService;
+	@Autowired
+	protected IDoctorService doctorService;
 	@Autowired
 	private ITimeSlotService timeSlotService;
 
@@ -45,27 +38,27 @@ public class DoctorController {
 		return new ResponseEntity<>(doctorService.getAllDoctors(), HttpStatus.OK);
 	}
 
-    @RequestMapping(path = "/doctors", method = RequestMethod.POST)
-    public ResponseEntity<?> saveDoctor(@RequestBody DoctorDTO doctorDTO) {
-        try {
-            return new ResponseEntity<>(doctorService.saveDoctor(doctorDTO), HttpStatus.OK);
-        } catch (AlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
-    }
+	@RequestMapping(path = "/doctors", method = RequestMethod.POST)
+	public ResponseEntity<?> saveDoctor(@RequestBody DoctorDTO doctorDTO) {
+		try {
+			return new ResponseEntity<>(doctorService.saveDoctor(doctorDTO), HttpStatus.OK);
+		} catch (AlreadyExistsException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		}
+	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/doctors/{id}")
 	public ResponseEntity<?> getDoctor(@PathVariable(name = "id") long id) {
-        try {
-             return new ResponseEntity<>(doctorService.findByID(id), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+		try {
+			return new ResponseEntity<>(doctorService.findByID(id), HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST, path = "/doctors/{docId}/slots")
 	public ResponseEntity<?> saveTimeSlot(@PathVariable(name = "docId") long docId,
-			@RequestBody TimeSlotDTO timeSlotDTO) {
+										  @RequestBody TimeSlotDTO timeSlotDTO) {
 		if (!doctorRepository.exists(docId)) {
 			return new ResponseEntity<>("No doctor with id: " + docId, HttpStatus.NOT_FOUND);
 		}

@@ -1,18 +1,12 @@
 package engineer.thesis.core.model;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -27,10 +21,10 @@ public class TimeSlot {
 	
 	@Column(nullable = false)
 	private Date startDateTime;
-	
+
 	@Column(nullable = false)
 	private Date endDateTime;
-	
+
 	@ManyToOne(optional = false)
 	private Doctor doctor;
 

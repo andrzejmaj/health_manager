@@ -28,13 +28,13 @@ public class AppointmentService implements IAppointmentService {
         logger.info("Saveing new appointment for " + patientId + ".\n" + appointmentDTO.toString());
         Appointment oldAppointment = appointmentRepository.findByTimeSlotId(appointmentDTO.getTimeSlotId());
         if (oldAppointment != null) {
-			appointmentRepository.delete(oldAppointment);
-		}
-		
-		Patient patient = patientRepository.findOne(patientId);
-		if (patient == null) {
-			throw new IllegalArgumentException("No patient with id " + patientId);
-		}
+            appointmentRepository.delete(oldAppointment);
+        }
+
+        Patient patient = patientRepository.findOne(patientId);
+        if (patient == null) {
+            throw new IllegalArgumentException("No patient with id " + patientId);
+        }
 		TimeSlot timeSlot = timeSlotRepository.findOne(appointmentDTO.getTimeSlotId());
 		if (timeSlot == null) {
 			throw new IllegalArgumentException("No timeSlot with id " + appointmentDTO.getTimeSlotId());
