@@ -1,17 +1,11 @@
 package engineer.thesis.core.service.Implementation;
 
-import engineer.thesis.core.exception.DataIntegrityException;
-import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.MedicalCheckup;
-import engineer.thesis.core.model.dto.MedicalCheckupDTO;
 import engineer.thesis.core.repository.MedicalCheckupRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.service.Interface.IMedicalCheckupService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MedicalCheckupService implements IMedicalCheckupService {

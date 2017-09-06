@@ -20,9 +20,9 @@ public class Doctor {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-	
-	@OneToOne
-	@JoinColumn(name = "user_id")
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Account account;
 

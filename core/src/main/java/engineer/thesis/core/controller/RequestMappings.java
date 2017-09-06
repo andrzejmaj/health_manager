@@ -31,7 +31,7 @@ final class RequestMappings {
         static final String FORMS_OWNER_ID = "/forms/owner/{id}";
         static final String FORMS_NAME = "/forms/name/{name}";
     }
-  
+
     static final class HISTORY {
         static final String PATIENT_HISTORY = "/patients/{patientId}/history";
         static final String PATIENT_HISTORY_ID = "/patients/{patientId}/history/{id}";

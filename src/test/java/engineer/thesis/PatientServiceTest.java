@@ -2,9 +2,9 @@ package engineer.thesis;
 
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.PersonalDetailsRepository;
-import engineer.thesis.core.service.Interface.IUserService;
 import engineer.thesis.core.service.Implementation.PatientService;
 import engineer.thesis.core.service.Implementation.PersonalDetailsService;
+import engineer.thesis.core.service.Interface.IUserService;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
@@ -14,24 +14,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @RunWith(SpringRunner.class)
 public class PatientServiceTest {
 
-    @TestConfiguration
-    static class PatientServiceTestContextConfiguration {
-        @Bean
-        public PatientService patientService() {
-            return new PatientService();
-        }
-
-        @Bean
-        public PersonalDetailsService personalDetailsService() {
-            return new PersonalDetailsService();
-        }
-    }
-
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
     @Autowired PatientService patientService;
 
     @Autowired
@@ -46,8 +33,18 @@ public class PatientServiceTest {
     @MockBean
     private IUserService userService;
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
+    @TestConfiguration
+    static class PatientServiceTestContextConfiguration {
+        @Bean
+        public PatientService patientService() {
+            return new PatientService();
+        }
+
+        @Bean
+        public PersonalDetailsService personalDetailsService() {
+            return new PersonalDetailsService();
+        }
+    }
 /*
     @Before
     public void setUp() {

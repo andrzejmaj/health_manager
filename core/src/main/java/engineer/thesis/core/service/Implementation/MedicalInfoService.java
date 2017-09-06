@@ -16,13 +16,11 @@ import org.springframework.stereotype.Service;
 public class MedicalInfoService implements IMedicalInfoService {
 
     @Autowired
+    CustomObjectMapper objectMapper;
+    @Autowired
     private MedicalInfoRepository medicalInfoRepository;
-
     @Autowired
     private PatientRepository patientRepository;
-
-    @Autowired
-    CustomObjectMapper objectMapper;
 
     @Override
     public MedicalInfoDTO findByPatientId(Long patientId) throws NoSuchElementExistsException {
@@ -47,7 +45,7 @@ public class MedicalInfoService implements IMedicalInfoService {
         }
         medicalInfoDTO.setId(null);
         patient.setMedicalInformation(objectMapper.convert(medicalInfoDTO, MedicalInformation.class));
-        return objectMapper.convert(patientRepository.save(patient).getMedicalInformation(), MedicalInfoDTO.class );
+        return objectMapper.convert(patientRepository.save(patient).getMedicalInformation(), MedicalInfoDTO.class);
 
     }
 

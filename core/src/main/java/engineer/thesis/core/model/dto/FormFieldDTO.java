@@ -1,7 +1,5 @@
 package engineer.thesis.core.model.dto;
 
-import engineer.thesis.core.model.FormAvailableValue;
-import engineer.thesis.core.model.FormFieldType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
