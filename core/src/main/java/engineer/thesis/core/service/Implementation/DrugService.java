@@ -7,6 +7,8 @@ import engineer.thesis.core.repository.DrugRepository;
 import engineer.thesis.core.service.Interface.IDrugService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,4 +41,10 @@ public class DrugService implements IDrugService {
         }
         return objectMapper.convert(drug, DrugDTO.class);
     }
+
+    @Override
+    public Page<DrugDTO> findAllPageable(String name, Pageable pageable) {
+        return drugRepository.findAllByNameContainingIgnoreCase(name, pageable).map(drug -> objectMapper.convert(drug, DrugDTO.class));
+    }
+
 }

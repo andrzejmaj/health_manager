@@ -13,11 +13,11 @@ import org.springframework.batch.item.xml.StaxEventItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.UrlResource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.security.util.InMemoryResource;
-import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
+import java.net.MalformedURLException;
 
 
 @Configuration
@@ -26,6 +26,7 @@ public class ExternalApiXmlBatchConfig {
 
     @Autowired
     public DataSource dataSource;
+    private String external = "http://pub.rejestrymedyczne.csioz.gov.pl/pobieranie_WS/Pobieranie.ashx?filetype=XMLFile&regtype=RPL_FILES";
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
     @Autowired
@@ -37,14 +38,14 @@ public class ExternalApiXmlBatchConfig {
 
     @Bean
     public ItemReader<ExternalDrugDTO> ExternalDrugXmlReader() {
-        RestTemplate externalTemplate = new RestTemplate();
-        String external = "http://pub.rejestrymedyczne.csioz.gov.pl/pobieranie_WS/Pobieranie.ashx?filetype=XMLFile&regtype=RPL_FILES";
-        String xmlAsString = externalTemplate.getForObject(external, String.class);
-
         StaxEventItemReader<ExternalDrugDTO> xmlFileReader = new StaxEventItemReader<>();
-
-        xmlFileReader.setResource(new InMemoryResource(xmlAsString));
 //        xmlFileReader.setResource(new ClassPathResource("test4.xml"));
+
+        try {
+            xmlFileReader.setResource(new UrlResource(external));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         xmlFileReader.setFragmentRootElementName("produktLeczniczy");
 

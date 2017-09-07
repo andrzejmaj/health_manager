@@ -3,33 +3,24 @@ package engineer.thesis.core.batch;
 import engineer.thesis.core.batch.model.DrugType;
 import engineer.thesis.core.model.Drug;
 import engineer.thesis.core.model.dto.ExternalDrugDTO;
-import engineer.thesis.core.repository.DrugRepository;
+import lombok.Setter;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public class DrugProcessor implements ItemProcessor<ExternalDrugDTO, Drug> {
 
-    @Autowired
-    private DrugRepository drugRepository;
-
     private Drug emptyDrug = new Drug();
 
+    @Setter
     private List<Drug> existingDrugs;
-
-    @PostConstruct
-    public void getDrugList() {
-        existingDrugs = drugRepository.findAll();
-    }
 
     @Override
     public Drug process(ExternalDrugDTO item) throws Exception {
-        System.out.println("processing: " + item.getRodzajPreparatu());
+        System.out.println("processing: " + item.getNazwaProduktu());
         Drug drug = new Drug();
         if (item.getRodzajPreparatu() == DrugType.weterynaryjny ) {
             return null;
