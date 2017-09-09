@@ -4,6 +4,7 @@ final class RequestMappings {
 
     static final class PATIENTS {
         static final String PATIENTS = "/patients";
+        static final String PATIENTS_EMAIL = "/patientByMail/{email}";
         static final String PATIENTS_ID = "/patients/{id}";
         static final String EMERGENCY = "/patients/{id}/emergency";
     }
