@@ -1,7 +1,7 @@
 package engineer.thesis.core.repository;
 
-import engineer.thesis.core.model.Doctor;
-import engineer.thesis.core.model.TimeSlot;
+import engineer.thesis.core.model.entity.Doctor;
+import engineer.thesis.core.model.entity.TimeSlot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

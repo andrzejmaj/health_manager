@@ -1,5 +1,6 @@
-package engineer.thesis.core.model;
+package engineer.thesis.core.model.entity;
 
+import engineer.thesis.core.model.entity.medcom.Study;
 import lombok.*;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
@@ -43,4 +44,8 @@ public class Patient {
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     private List<MedicalHistory> medicalHistories;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    @Cascade(CascadeType.ALL)
+    private List<Study> dicomStudies;
 }

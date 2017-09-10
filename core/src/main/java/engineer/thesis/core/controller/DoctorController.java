@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
-import engineer.thesis.core.model.Doctor;
-import engineer.thesis.core.model.TimeSlot;
+import engineer.thesis.core.model.entity.Doctor;
+import engineer.thesis.core.model.entity.TimeSlot;
 import engineer.thesis.core.model.dto.TimeSlotDTO;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;

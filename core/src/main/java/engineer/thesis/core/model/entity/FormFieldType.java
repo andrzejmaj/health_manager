@@ -1,4 +1,4 @@
-package engineer.thesis.core.model;
+package engineer.thesis.core.model.entity;
 
 import engineer.thesis.core.model.enums.FieldType;
 import lombok.AllArgsConstructor;

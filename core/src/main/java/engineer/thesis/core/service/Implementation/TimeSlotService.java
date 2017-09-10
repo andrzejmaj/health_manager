@@ -1,8 +1,8 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.controller.TimeSlotController;
-import engineer.thesis.core.model.Doctor;
-import engineer.thesis.core.model.TimeSlot;
+import engineer.thesis.core.model.entity.Doctor;
+import engineer.thesis.core.model.entity.TimeSlot;
 import engineer.thesis.core.model.dto.TimeSlotDTO;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;

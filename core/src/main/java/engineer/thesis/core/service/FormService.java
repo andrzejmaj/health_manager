@@ -1,6 +1,6 @@
 package engineer.thesis.core.service;
 
-import engineer.thesis.core.model.Form;
+import engineer.thesis.core.model.entity.Form;
 import engineer.thesis.core.model.dto.FormDTO;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;

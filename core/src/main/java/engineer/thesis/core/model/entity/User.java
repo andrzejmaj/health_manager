@@ -1,8 +1,7 @@
-package engineer.thesis.core.model;
+package engineer.thesis.core.model.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 

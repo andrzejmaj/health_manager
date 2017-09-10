@@ -1,6 +1,6 @@
 package engineer.thesis.core.repository;
 
-import engineer.thesis.core.model.CurrentDrug;
+import engineer.thesis.core.model.entity.CurrentDrug;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

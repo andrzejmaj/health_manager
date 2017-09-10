@@ -1,14 +1,12 @@
 package engineer.thesis.core.security;
 
-import engineer.thesis.core.model.User;
+import engineer.thesis.core.model.entity.User;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.SecurityUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;

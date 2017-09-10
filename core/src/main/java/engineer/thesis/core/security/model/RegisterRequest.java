@@ -1,6 +1,6 @@
 package engineer.thesis.core.security.model;
 
-import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.entity.UserRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

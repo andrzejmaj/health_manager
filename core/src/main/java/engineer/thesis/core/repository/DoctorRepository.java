@@ -4,11 +4,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import engineer.thesis.core.model.Doctor;
-import engineer.thesis.core.model.Specialization;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
+import engineer.thesis.core.model.entity.Doctor;
+import engineer.thesis.core.model.entity.Specialization;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 

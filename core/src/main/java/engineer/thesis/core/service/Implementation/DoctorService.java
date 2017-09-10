@@ -1,7 +1,7 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
-import engineer.thesis.core.model.Doctor;
+import engineer.thesis.core.model.entity.Doctor;
 import engineer.thesis.core.model.dto.DoctorDTO;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.service.Interface.IDoctorService;

@@ -1,7 +1,7 @@
 package engineer.thesis.core.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.entity.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

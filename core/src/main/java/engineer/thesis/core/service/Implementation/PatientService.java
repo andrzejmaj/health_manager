@@ -1,8 +1,8 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
-import engineer.thesis.core.model.Patient;
-import engineer.thesis.core.model.PersonalDetails;
+import engineer.thesis.core.model.entity.Patient;
+import engineer.thesis.core.model.entity.PersonalDetails;
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.MedicalInfoRepository;

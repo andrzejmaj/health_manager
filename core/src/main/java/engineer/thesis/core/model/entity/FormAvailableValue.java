@@ -1,4 +1,5 @@
-package engineer.thesis.core.model;
+package engineer.thesis.core.model.entity;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +11,8 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "hm_medical_checkups_values", schema = "hmanager")
-public class MedicalCheckupValue {
+@Table(name = "hm_form_available_values", schema = "hmanager")
+public class FormAvailableValue {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -19,12 +20,11 @@ public class MedicalCheckupValue {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "medical_checkup_id")
-    private MedicalCheckup medicalCheckup;
-
-    @OneToOne
     @JoinColumn(name = "form_field_id")
     private FormField formField;
+
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "value")
     private String value;

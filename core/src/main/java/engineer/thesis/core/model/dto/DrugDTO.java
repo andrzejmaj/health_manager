@@ -1,6 +1,6 @@
 package engineer.thesis.core.model.dto;
 
-import engineer.thesis.core.model.Drug;
+import engineer.thesis.core.model.entity.Drug;
 import lombok.Value;
 
 @Value

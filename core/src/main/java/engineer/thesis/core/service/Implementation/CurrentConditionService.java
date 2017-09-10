@@ -2,8 +2,8 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.CurrentCondition;
-import engineer.thesis.core.model.Patient;
+import engineer.thesis.core.model.entity.CurrentCondition;
+import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.dto.CurrentConditionDTO;
 import engineer.thesis.core.repository.CurrentConditionRepository;
 import engineer.thesis.core.repository.PatientRepository;

@@ -2,7 +2,7 @@ package engineer.thesis.core.controller;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
-import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.entity.UserRole;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
 import engineer.thesis.core.model.dto.UserDTO;
 import engineer.thesis.core.security.TokenUtils;
@@ -18,12 +18,10 @@ import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
