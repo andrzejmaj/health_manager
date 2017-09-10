@@ -6,7 +6,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-public class PropertyConfig extends WebMvcConfigurerAdapter{
+public class PropertyConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {

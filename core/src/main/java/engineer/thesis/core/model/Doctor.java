@@ -22,7 +22,7 @@ public class Doctor {
     private long id;
 	
 	@OneToOne
-	@JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Account account;
 

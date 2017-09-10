@@ -25,6 +25,10 @@ public class TimeSlotService implements ITimeSlotService {
 	@Autowired
 	private DoctorRepository doctorRepository;
 
+	private static TimeSlotDTO mapToDTO(TimeSlot timeSlot) {
+		return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime(), timeSlot.isAvailableForSelfSign());
+	}
+
 	@Override
 	public TimeSlotDTO saveTimeSlot(TimeSlotDTO timeSlotDTO, long doctorId) throws IllegalArgumentException {
 		if (timeSlotRepository.exists(timeSlotDTO.getId()) && !isOwner(doctorId, timeSlotDTO.getId())) {
@@ -68,10 +72,6 @@ public class TimeSlotService implements ITimeSlotService {
 		}
 
 		return timeSlot;
-	}
-
-	private static TimeSlotDTO mapToDTO(TimeSlot timeSlot) {
-		return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime(), timeSlot.isAvailableForSelfSign());
 	}
 
 	private boolean isOwner(long doctorId, long timeSlotId) {

@@ -36,6 +36,10 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
         logger.info("Token: " + token);
 
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+        }
+
         if (token != null) {
             token = token.replace(tokenPrefix, "");
             String email;

@@ -27,7 +27,6 @@ public class GoogleOAuthFilter extends OncePerRequestFilter {
         String token = request.getHeader(tokenHeader);
         AccessTokenValidator accessTokenValidator;
 
-
         logger.info("Token google: " + token);
 
         if (token != null) {

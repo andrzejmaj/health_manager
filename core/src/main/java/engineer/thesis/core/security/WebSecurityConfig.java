@@ -29,6 +29,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    //used only for token initialization
+    @Autowired
+    private TokenUtils tokenUtils;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private GoogleTokenServices googleTokenServices;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
@@ -39,13 +46,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    //used only for token initialization
-    @Autowired
-    private TokenUtils tokenUtils;
-
-    @Autowired
-    private UserRepository userRepository;
 
     public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
         return new AuthenticationTokenFilter(tokenUtils, userRepository);
@@ -78,13 +78,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.authorizeRequests().antMatchers("/patients/*/currentCondition").authenticated();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(oAuthFilter(), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(authenticationTokenFilterBean(), GoogleOAuthFilter.class);
 
         http.headers().cacheControl();
     }
-
-    @Autowired
-    private GoogleTokenServices googleTokenServices;
 
     @Bean
     public GoogleOAuthFilter oAuthFilter() {
