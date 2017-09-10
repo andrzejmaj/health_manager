@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @EqualsAndHashCode(of = "account")
 @NoArgsConstructor
-@Table(schema = "hmanager", name = "hm_doctor")
+@Table(name = "hm_doctor", schema = "hmanager")
 public class Doctor {
 
     @Id
@@ -22,7 +22,7 @@ public class Doctor {
     private long id;
 	
 	@OneToOne
-	@JoinColumn(name = "account_id")
+	@JoinColumn(name = "user_id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Account account;
 

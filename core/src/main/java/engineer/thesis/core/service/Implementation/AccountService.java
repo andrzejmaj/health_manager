@@ -9,7 +9,9 @@ import engineer.thesis.core.repository.AccountRepository;
 import engineer.thesis.core.service.Interface.IAccountService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -19,6 +21,9 @@ public class AccountService implements IAccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private FileService fileService;
 
     @Autowired
     private CustomObjectMapper objectMapper;
@@ -69,10 +74,39 @@ public class AccountService implements IAccountService {
     @Override
     public Long getAccountIdByUserId(Long id) {
         Optional<Account> account = Optional.ofNullable(accountRepository.findByUser_Id(id));
-        if (account.isPresent()) {
+        if (!account.isPresent()) {
             throw new NoSuchElementException("Account not found");
         }
         return account.get().getId();
+    }
+
+    @Override
+    public String saveProfilePicture(Long id, MultipartFile userImage) {
+
+        Account account = accountRepository.findOne(id);
+
+        if (account == null) {
+            throw new NoSuchElementException("Account not found");
+        }
+
+        String imagePath = fileService.saveProfilePicture(id, userImage);
+
+        account.setImageUrl(imagePath);
+
+        accountRepository.save(account);
+
+        return "Image changed successfully";
+    }
+
+    @Override
+    public FileSystemResource getProfilePicture(Long id) {
+
+        if (!accountRepository.exists(id)) {
+            throw new NoSuchElementException("Account not found");
+        }
+
+        return fileService.findProfilePicture(id);
+
     }
 
     protected Boolean doesAccountExist(Long id) {

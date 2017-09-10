@@ -33,7 +33,7 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS_ID, method = RequestMethod.PUT)
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.PUT)
     public ResponseEntity<?> updatePatient(@RequestBody PatientDTO patientDTO) {
         System.out.println(patientDTO);
         try {

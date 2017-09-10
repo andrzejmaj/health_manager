@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class DoctorDTO {
+public class FormAvailableValueDTO {
+
     private Long id;
-    private AccountDTO account;
-    private SpecializationDTO specialization;
+    private String name;
+    private String value;
 }

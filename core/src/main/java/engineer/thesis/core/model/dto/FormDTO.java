@@ -4,11 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class DoctorDTO {
+public class FormDTO {
+
     private Long id;
-    private AccountDTO account;
-    private SpecializationDTO specialization;
+    private String name;
+    private List<FormFieldDTO> formFields;
+    private UserDTO owner;
+
 }

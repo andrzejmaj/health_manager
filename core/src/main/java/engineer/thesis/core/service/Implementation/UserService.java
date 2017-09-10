@@ -9,10 +9,12 @@ import engineer.thesis.core.repository.*;
 import engineer.thesis.core.security.model.PasswordResetToken;
 import engineer.thesis.core.security.model.RegisterRequest;
 import engineer.thesis.core.service.Interface.IUserService;
+import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
 import java.util.*;
 
 @Service
@@ -22,13 +24,21 @@ public class UserService implements IUserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private PasswordResetTokenRepository passwordTokenRepository;
 
     @Autowired
-    private PersonalDetailsService personalDetailsService;
+    private FileService fileService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CustomObjectMapper objectMapper;
+
+    //@Value("${files.rootDirectory}")
+    private String rootDirectory = "/Users/andrzejmaj123/Documents/health_manager/core/src/main/resources/images/";
+
+    private Path path;
 
     @Autowired
     private PatientRepository patientRepository;
@@ -89,16 +99,15 @@ public class UserService implements IUserService {
 
     @Override
     public UserDTO updateUser(UserDTO userDTO) {
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDTO.getEmail()));
 
-        if (!user.isPresent()) {
+        if (!userExists(userDTO.getEmail())) {
             throw new NoSuchElementException("User not found");
         }
 
-        user.get().setEmail(userDTO.getEmail());
-        user.get().setRole(UserRole.valueOf(userDTO.getRole()));
+        User user = userRepository.save(objectMapper.convert(userDTO, User.class));
 
-        return mapToDTO(user.get());
+        return objectMapper.convert(user, UserDTO.class);
+
     }
 
     @Override
@@ -193,11 +202,4 @@ public class UserService implements IUserService {
         passwordTokenRepository.save(resetToken);
     }
 
-    private UserDTO mapToDTO(User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getEmail(),
-                String.valueOf(user.getRole())
-        );
-    }
 }
