@@ -104,7 +104,7 @@ public class TokenUtils {
                     .getBody();
         } catch (ExpiredJwtException e) {
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
 

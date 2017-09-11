@@ -65,7 +65,7 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         if (registerRequest.getRole() != null) {
             user.setRole(registerRequest.getRole());
-        } else{
+        } else {
             user.setRole(UserRole.ROLE_PATIENT);
         }
 
@@ -73,19 +73,19 @@ public class UserService implements IUserService {
         account.setUser(user);
         account.setCreatedDate(new Date());
 
-        switch (user.getRole()){
-            case ROLE_PATIENT:{
+        switch (user.getRole()) {
+            case ROLE_PATIENT: {
                 Patient patient = new Patient();
                 patient.setAccount(account);
                 patientRepository.save(patient);
                 break;
             }
-            case ROLE_DOCTOR:{
+            case ROLE_DOCTOR: {
                 Doctor doctor = new Doctor(account, null);
                 doctorRepository.save(doctor);
                 break;
             }
-            default:{
+            default: {
                 accountRepository.save(account);
                 break;
             }

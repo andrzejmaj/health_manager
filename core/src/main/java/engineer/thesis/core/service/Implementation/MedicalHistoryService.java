@@ -60,7 +60,7 @@ public class MedicalHistoryService extends BaseService implements IMedicalHistor
     }
 
     @Override
-    public MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException {
+    public MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO, boolean b) throws NoSuchElementExistsException, DataIntegrityException {
         // TODO: 20.08.17  add permission to do action check
 
         if (!patientRepository.exists(medicalHistoryDTO.getPatientId())) {

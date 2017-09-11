@@ -3,7 +3,6 @@ package engineer.thesis.core.service.Implementation;
 import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.CurrentCondition;
-import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.dto.CurrentConditionDTO;
 import engineer.thesis.core.repository.CurrentConditionRepository;
 import engineer.thesis.core.repository.PatientRepository;
@@ -45,7 +44,7 @@ public class CurrentConditionService implements ICurrentConditionService {
 
         if (currentConditionDTO.getId() != null &&
                 currentConditionRepository.findByPatientId(patientId).stream()
-                    .noneMatch(cond -> Objects.equals(currentConditionDTO.getId(), cond.getId()))) {
+                        .noneMatch(cond -> Objects.equals(currentConditionDTO.getId(), cond.getId()))) {
 
             throw new DataIntegrityException("Current condition doesn't belong to the patient");
         }
