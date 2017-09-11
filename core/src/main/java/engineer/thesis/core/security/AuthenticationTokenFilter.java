@@ -38,6 +38,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         if (token != null) {
