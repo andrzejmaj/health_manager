@@ -83,7 +83,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().cacheControl();
     }
 
-    @Bean
     public GoogleOAuthFilter oAuthFilter() {
         return new GoogleOAuthFilter(googleTokenServices, userRepository);
     }

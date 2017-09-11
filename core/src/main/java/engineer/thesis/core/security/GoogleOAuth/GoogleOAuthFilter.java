@@ -4,6 +4,7 @@ import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.service.GoogleTokenServices;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,15 +30,19 @@ public class GoogleOAuthFilter extends OncePerRequestFilter {
 
         logger.info("Token google: " + token);
 
-        if (token != null) {
-            token = token.replace(tokenPrefix, "");
-            OAuth2Authentication tokenUser;
-            tokenUser = googleTokenServices.loadAuthentication(token);
-            logger.info("Logged with google as: " + tokenUser.getName());
-            SecurityContextHolder.getContext().setAuthentication(tokenUser.getUserAuthentication());
-
+        try {
+            if (token != null) {
+                token = token.replace(tokenPrefix, "");
+                OAuth2Authentication tokenUser;
+                tokenUser = googleTokenServices.loadAuthentication(token);
+                logger.info("Logged with google as: " + tokenUser.getName());
+                SecurityContextHolder.getContext().setAuthentication(tokenUser.getUserAuthentication());
+            }
+        } catch (InvalidTokenException inv) {
+            logger.warn("Token isn't compatible with google");
+        } finally {
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
     }
 
 }
