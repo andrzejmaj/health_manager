@@ -6,6 +6,7 @@ import engineer.thesis.core.model.PersonalDetails;
 import engineer.thesis.core.model.dto.AccountDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.AccountRepository;
+import engineer.thesis.core.service.Interface.BaseService;
 import engineer.thesis.core.service.Interface.IAccountService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class AccountService implements IAccountService {
+public class AccountService extends BaseService implements IAccountService {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -107,6 +108,11 @@ public class AccountService implements IAccountService {
 
         return fileService.findProfilePicture(id);
 
+    }
+
+    @Override
+    public String getMyRole() {
+        return getCurrentUser().getUserRole().toString();
     }
 
     protected Boolean doesAccountExist(Long id) {

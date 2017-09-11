@@ -80,6 +80,15 @@ public class AccountController {
         }
     }
 
+    @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS_ROLE, method = RequestMethod.GET)
+    public ResponseEntity<?> getMyRole() {
+        try {
+            return new ResponseEntity<>(accountService.getMyRole(), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     private SecurityUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (SecurityUser) authentication.getPrincipal();
