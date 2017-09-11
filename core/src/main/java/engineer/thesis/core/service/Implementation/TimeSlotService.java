@@ -25,15 +25,15 @@ public class TimeSlotService implements ITimeSlotService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    private static TimeSlotDTO mapToDTO(TimeSlot timeSlot) {
-        return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime(), timeSlot.isAvailableForSelfSign());
-    }
+	private static TimeSlotDTO mapToDTO(TimeSlot timeSlot) {
+		return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime(), timeSlot.isAvailableForSelfSign());
+	}
 
-    @Override
-    public TimeSlotDTO saveTimeSlot(TimeSlotDTO timeSlotDTO, long doctorId) throws IllegalArgumentException {
-        if (timeSlotRepository.exists(timeSlotDTO.getId()) && !isOwner(doctorId, timeSlotDTO.getId())) {
-            throw new IllegalArgumentException("Bad id (the slot is owned by another doctor)");
-        }
+	@Override
+	public TimeSlotDTO saveTimeSlot(TimeSlotDTO timeSlotDTO, long doctorId) throws IllegalArgumentException {
+		if (timeSlotRepository.exists(timeSlotDTO.getId()) && !isOwner(doctorId, timeSlotDTO.getId())) {
+			throw new IllegalArgumentException("Bad id (the slot is owned by another doctor)");
+		}
 
         TimeSlot timeSlot = mapFromDTO(timeSlotDTO, doctorId);
         if (isValid(timeSlot)) {
@@ -74,7 +74,7 @@ public class TimeSlotService implements ITimeSlotService {
         return timeSlot;
     }
 
-    private boolean isOwner(long doctorId, long timeSlotId) {
-        return timeSlotRepository.findOne(timeSlotId).getDoctor().getId() == doctorId;
-    }
+	private boolean isOwner(long doctorId, long timeSlotId) {
+		return timeSlotRepository.findOne(timeSlotId).getDoctor().getId() == doctorId;
+	}
 }

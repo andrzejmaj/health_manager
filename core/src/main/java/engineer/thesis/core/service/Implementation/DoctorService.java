@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class DoctorService implements IDoctorService {
+
     private final static Logger logger = Logger.getLogger(DoctorService.class);
 
     @Autowired

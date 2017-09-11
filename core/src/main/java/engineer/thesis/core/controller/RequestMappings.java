@@ -23,6 +23,7 @@ final class RequestMappings {
         static final String PERS_DETAILS = "/accounts/{id}/personaldetails";
         static final String MY_PERS_DETAILLS = "/accounts/personaldetails";
         static final String ACCOUNTS_PICTURE = "/accounts/{id}/picture";
+        static final String ACCOUNTS_ROLE = "/accounts/role";
     }
 
     static final class FORMS {
@@ -45,13 +46,23 @@ final class RequestMappings {
 
     static final class CHECKUP {
         static final String PATIENT_CHECKUP = "/patients/{patientId}/checkups";
-        static final String CHECKUP = "/checkups";
-        static final String CHECKUP_ID = "/checkups/{id}";
+        static final String PATIENT_CHECKUP_ID = "/patients/{patientId}/checkups/{id}";
     }
 
-    static final class MEDICAL {
-        static final String PATIENT_MEDICAL = "/patients/{patientId}/medicalInformations";
-        static final String PATIENT_MEDICAL_ID = "/patients/{patientId}/medicalInformations/{id}";
+    static final class MEDICAL_INFO {
+        static final String PATIENT_MEDICAL = "/patients/{patientId}/medicalInformation";
+        static final String PATIENT_MEDICAL_ID = "/patients/{patientId}/medicalInformation/{id}";
+    }
+
+    static final class PERS_DETAILS {
+        static final String MY_PERS_DETAILS = "/accounts/personalDetails";
+        static final String PATIENT_PERS_DETAILS = "patients/{patientId}/personalDetails";
+        static final String DOCTOR_PERS_DETAILS = "doctors/{doctorId}/personalDetails";
+    }
+
+    static final class DOCTORS {
+        static final String DOCTORS = "/doctors";
+        static final String DOCTORS_ID = "/doctors/{doctorId}";
     }
 
     static final class DRUGS {

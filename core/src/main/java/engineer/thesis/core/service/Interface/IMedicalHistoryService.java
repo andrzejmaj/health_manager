@@ -15,5 +15,5 @@ public interface IMedicalHistoryService {
 
     void delete(Long patientId, Long id) throws NoSuchElementExistsException;
 
-    MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO, boolean save) throws NoSuchElementExistsException, DataIntegrityException;
+    MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException;
 }

@@ -1,10 +1,16 @@
 package engineer.thesis.core.security;
 
+import engineer.thesis.core.repository.UserRepository;
+import engineer.thesis.core.security.GoogleOAuth.GoogleOAuthFilter;
+import engineer.thesis.core.security.service.GoogleTokenServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -21,6 +29,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    //used only for token initialization
+    @Autowired
+    private TokenUtils tokenUtils;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private GoogleTokenServices googleTokenServices;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
@@ -32,9 +47,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
     public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-        return new AuthenticationTokenFilter();
+        return new AuthenticationTokenFilter(tokenUtils, userRepository);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(
+                "/users/login",
+                "/users/register"
+        );
     }
 
     @Override
@@ -50,32 +72,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling().authenticationEntryPoint(entryPoint);
 
-            .and()
-                .exceptionHandling().authenticationEntryPoint( entryPoint )
-            .and()
-            .authorizeRequests()
-                // TODO: 01.07.17
-                // change later to some variables
-                .antMatchers("/admin/**")
-                    .hasRole("PATIENT")
-                .antMatchers("/medcom/**")
-                    //.hasRole("DOCTOR")
-                    .permitAll()
-                .antMatchers(
-                        "/users/register",
-                        "/users/login",
-                        "/users/resetPassword",
-                        "/",
-                        ///for test remove/move to protected
-                        "/personaldetails/*",
-                        "/users/personaldetails"
-                ).permitAll()
-                .anyRequest().permitAll();
-
-
-        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+//        http.authorizeRequests().antMatchers("/patients/*/history").hasRole("ADMIN");
+//        http.authorizeRequests().antMatchers("/patients/*/checkups").hasRole("PATIENT");
+//        http.authorizeRequests().antMatchers("/patients/*/currentCondition").authenticated();
+        http.authorizeRequests().anyRequest().authenticated();
+        http.addFilterBefore(oAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(authenticationTokenFilterBean(), GoogleOAuthFilter.class);
 
         http.headers().cacheControl();
+    }
+
+    public GoogleOAuthFilter oAuthFilter() {
+        return new GoogleOAuthFilter(googleTokenServices, userRepository);
     }
 }

@@ -69,9 +69,7 @@ public class UserController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails securityUser = userDetailsService.loadUserByUsername(
-                authenticationRequest.getEmail()
-        );
+        UserDetails securityUser = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
 
         //TODO:
         // change this later

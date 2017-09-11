@@ -30,7 +30,10 @@ public class MedicalHistoryController {
     }
 
     @RequestMapping(path = RequestMappings.HISTORY.PATIENT_HISTORY, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody MedicalHistoryDTO medicalHistoryDTO) {
+    public ResponseEntity<?> saveOrUpdate(@PathVariable Long patientId, @RequestBody MedicalHistoryDTO medicalHistoryDTO) {
+        if (!patientId.equals(medicalHistoryDTO.getPatientId())) {
+            return new ResponseEntity<>("Ids in the body and path does not match", HttpStatus.BAD_REQUEST);
+        }
         try {
             return new ResponseEntity<>(medicalHistoryService.saveOrUpdate(patientId, medicalHistoryDTO, true), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {

@@ -1,5 +1,6 @@
 package engineer.thesis.core.controller;
 
+import engineer.thesis.core.exception.AccessDeniedException;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.MedicalInfoDTO;
@@ -17,36 +18,31 @@ public class MedicalInfoController {
     @Autowired
     private IMedicalInfoService medicalInfoService;
 
-    @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL, method = RequestMethod.GET)
+    @RequestMapping(path = RequestMappings.MEDICAL_INFO.PATIENT_MEDICAL, method = RequestMethod.GET)
     public ResponseEntity<?> get(@PathVariable Long patientId) {
         try {
             return new ResponseEntity<>(medicalInfoService.findByPatientId(patientId), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (AccessDeniedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 
-    @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody MedicalInfoDTO medicalInfoDTO) {
+    @RequestMapping(path = RequestMappings.MEDICAL_INFO.PATIENT_MEDICAL, method = RequestMethod.POST)
+    public ResponseEntity<?> saveOrUpdate(@PathVariable Long patientId, @RequestBody MedicalInfoDTO medicalInfoDTO) {
         try {
-            return new ResponseEntity<>(medicalInfoService.save(patientId, medicalInfoDTO), HttpStatus.OK);
+            return new ResponseEntity<>(medicalInfoService.saveOrUpdate(patientId, medicalInfoDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (AccessDeniedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 
-    @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL, method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@PathVariable Long patientId, @RequestBody MedicalInfoDTO medicalInfoDTO) {
-        try {
-            return new ResponseEntity<>(medicalInfoService.update(patientId, medicalInfoDTO), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL, method = RequestMethod.DELETE)
+    @RequestMapping(path = RequestMappings.MEDICAL_INFO.PATIENT_MEDICAL, method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long patientId) {
         try {
             medicalInfoService.delete(patientId);

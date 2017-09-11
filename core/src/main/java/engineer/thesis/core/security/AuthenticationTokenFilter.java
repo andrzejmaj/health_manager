@@ -3,12 +3,11 @@ package engineer.thesis.core.security;
 import engineer.thesis.core.model.User;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.SecurityUserFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import io.jsonwebtoken.ExpiredJwtException;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -17,11 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@AllArgsConstructor
 public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
+
     private TokenUtils tokenUtils;
-    @Autowired
+
     private UserRepository userRepository;
 
     @Override
@@ -29,15 +29,25 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+
         String tokenHeader = "Authorization";
         String tokenPrefix = "Bearer ";
         String token = request.getHeader(tokenHeader);
 
         logger.info("Token: " + token);
 
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+        }
+
         if (token != null) {
             token = token.replace(tokenPrefix, "");
-            String email = tokenUtils.getUsername(token);
+            String email;
+            try {
+                email = tokenUtils.getUsername(token);
+            } catch (ExpiredJwtException e) {
+                throw e;
+            }
 
             logger.info("Email in token: " + email);
 

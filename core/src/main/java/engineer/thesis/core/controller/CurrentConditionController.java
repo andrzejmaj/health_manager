@@ -25,20 +25,9 @@ public class CurrentConditionController {
     }
 
     @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody CurrentConditionDTO currentConditionDTO) {
+    public ResponseEntity<?> saveOrUpdate(@PathVariable Long patientId, @RequestBody CurrentConditionDTO currentConditionDTO) {
         try {
-            return new ResponseEntity<>(currentConditionService.savePatientCondition(patientId, currentConditionDTO), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (DataIntegrityException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION, method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@PathVariable Long patientId, @RequestBody CurrentConditionDTO currentConditionDTO) {
-        try {
-            return new ResponseEntity<>(currentConditionService.updatePatientCondition(patientId, currentConditionDTO), HttpStatus.OK);
+            return new ResponseEntity<>(currentConditionService.saveOrUpdate(patientId, currentConditionDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (DataIntegrityException e) {

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,32 +34,20 @@ public class CurrentConditionService implements ICurrentConditionService {
     }
 
     @Override
-    public CurrentConditionDTO savePatientCondition(Long patientId, CurrentConditionDTO currentConditionDTO) throws NoSuchElementExistsException, DataIntegrityException {
+    public CurrentConditionDTO saveOrUpdate(Long patientId, CurrentConditionDTO currentConditionDTO) throws NoSuchElementExistsException, DataIntegrityException {
         if (!patientId.equals(currentConditionDTO.getPatientId())) {
             throw new DataIntegrityException("Ids in model and path does not match");
-        }
-        Patient patient = patientRepository.findOne(patientId);
-        if (patient == null) {
-            throw new NoSuchElementExistsException("Patient doesn't exists");
-        }
-        CurrentCondition currentCondition = objectMapper.convert(currentConditionDTO, CurrentCondition.class);
-        currentCondition.setId(null);
-        return objectMapper.convert(currentConditionRepository.save(currentCondition), CurrentConditionDTO.class);
-    }
-
-    @Override
-    public CurrentConditionDTO updatePatientCondition(Long patientId, CurrentConditionDTO currentConditionDTO) throws DataIntegrityException, NoSuchElementExistsException {
-        if (!patientId.equals(currentConditionDTO.getPatientId())) {
-            throw new DataIntegrityException("Ids in path and body does not match");
-        }
-
-        CurrentCondition currentCondition = currentConditionRepository.findOne(currentConditionDTO.getId());
-        if (currentCondition == null) {
-            throw new NoSuchElementExistsException("Condition doesn't exists");
         }
 
         if (!patientRepository.exists(patientId)) {
             throw new NoSuchElementExistsException("Patient doesn't exists");
+        }
+
+        if (currentConditionDTO.getId() != null &&
+                currentConditionRepository.findByPatientId(patientId).stream()
+                    .noneMatch(cond -> Objects.equals(currentConditionDTO.getId(), cond.getId()))) {
+
+            throw new DataIntegrityException("Current condition doesn't belong to the patient");
         }
 
         return objectMapper.convert(currentConditionRepository.save(objectMapper.convert(currentConditionDTO, CurrentCondition.class)), CurrentConditionDTO.class);

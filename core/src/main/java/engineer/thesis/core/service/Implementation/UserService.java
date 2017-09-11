@@ -2,12 +2,10 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
-import engineer.thesis.core.model.User;
-import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.*;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
 import engineer.thesis.core.model.dto.UserDTO;
-import engineer.thesis.core.repository.PasswordResetTokenRepository;
-import engineer.thesis.core.repository.UserRepository;
+import engineer.thesis.core.repository.*;
 import engineer.thesis.core.security.model.PasswordResetToken;
 import engineer.thesis.core.security.model.RegisterRequest;
 import engineer.thesis.core.service.Interface.IUserService;
@@ -42,6 +40,15 @@ public class UserService implements IUserService {
 
     private Path path;
 
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
@@ -56,7 +63,34 @@ public class UserService implements IUserService {
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(UserRole.ROLE_PATIENT);
+        if (registerRequest.getRole() != null) {
+            user.setRole(registerRequest.getRole());
+        } else{
+            user.setRole(UserRole.ROLE_PATIENT);
+        }
+
+        Account account = new Account();
+        account.setUser(user);
+        account.setCreatedDate(new Date());
+
+        switch (user.getRole()){
+            case ROLE_PATIENT:{
+                Patient patient = new Patient();
+                patient.setAccount(account);
+                patientRepository.save(patient);
+                break;
+            }
+            case ROLE_DOCTOR:{
+                Doctor doctor = new Doctor(account, null);
+                doctorRepository.save(doctor);
+                break;
+            }
+            default:{
+                accountRepository.save(account);
+                break;
+            }
+        }
+
 
         userRepository.save(user);
 
@@ -145,10 +179,6 @@ public class UserService implements IUserService {
 
     private boolean userExists(String email) {
         return userRepository.findByEmail(email) != null;
-    }
-
-    private boolean userExists(Long id) {
-        return userRepository.findOne(id) != null;
     }
 
     private Boolean isResetPasswordTokenValid(String email, String token) {

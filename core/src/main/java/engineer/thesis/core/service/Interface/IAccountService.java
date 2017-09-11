@@ -23,4 +23,6 @@ public interface IAccountService {
     String saveProfilePicture(Long id, MultipartFile file);
 
     FileSystemResource getProfilePicture(Long id);
+
+    String getMyRole();
 }

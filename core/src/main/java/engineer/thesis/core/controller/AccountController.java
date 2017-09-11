@@ -10,14 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-@Controller
+@RestController
 public class AccountController {
 
     @Autowired
@@ -79,6 +78,11 @@ public class AccountController {
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS_ROLE, method = RequestMethod.GET)
+    public ResponseEntity<?> getMyRole() {
+        return new ResponseEntity<>(accountService.getMyRole(), HttpStatus.OK);
     }
 
     private SecurityUser getCurrentUser() {
