@@ -11,16 +11,19 @@ import javax.persistence.*;
  * @since 11.09.2017
  */
 @Entity
-@Table(name = "dcm_property", schema = "hmanager")
+@Table(name = "dcm_attribute", schema = "hmanager")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Property {
+public class Attribute {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "code", nullable = false)
+    private Integer code;
 
     @Column(name = "name", nullable = false)
     private String name;

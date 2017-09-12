@@ -2,7 +2,7 @@ package engineer.thesis.medcom.controllers;
 
 import engineer.thesis.medcom.dicom.repository.ArchiveRepository;
 import engineer.thesis.medcom.dicom.store.StoreSCPAdapter;
-import engineer.thesis.medcom.model.DicomInstance;
+import engineer.thesis.medcom.model.old.DicomInstance;
 import engineer.thesis.medcom.model.exceptions.InstanceNotFoundException;
 import org.apache.log4j.Logger;
 import org.dcm4che3.data.UID;

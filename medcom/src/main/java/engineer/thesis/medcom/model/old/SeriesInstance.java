@@ -1,4 +1,4 @@
-package engineer.thesis.medcom.model;
+package engineer.thesis.medcom.model.old;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

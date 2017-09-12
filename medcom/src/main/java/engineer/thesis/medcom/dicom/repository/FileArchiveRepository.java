@@ -1,7 +1,7 @@
 package engineer.thesis.medcom.dicom.repository;
 
 import engineer.thesis.medcom.dicom.store.StoreSCPAdapter;
-import engineer.thesis.medcom.model.*;
+import engineer.thesis.medcom.model.old.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;

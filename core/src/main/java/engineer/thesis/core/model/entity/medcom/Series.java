@@ -8,6 +8,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,6 +27,9 @@ public class Series {
     @Column(name = "dicom_id", nullable = false)
     private String dicom_id;
 
+    @Column(name = "creation_date")
+    private Date creationDate;
+
     @OneToOne
     @JoinColumn(name = "modality_id")
     @Cascade(CascadeType.ALL)
@@ -37,7 +41,7 @@ public class Series {
 
     @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Property> properties;
+    private List<Attribute> attributes;
 
     @OneToMany(mappedBy = "series", fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)

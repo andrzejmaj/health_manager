@@ -1,7 +1,7 @@
 package engineer.thesis.medcom.controllers;
 
 import engineer.thesis.medcom.dicom.repository.ArchiveRepository;
-import engineer.thesis.medcom.model.DicomArchive;
+import engineer.thesis.medcom.model.old.DicomArchive;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

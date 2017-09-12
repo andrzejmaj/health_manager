@@ -1,4 +1,4 @@
-package engineer.thesis.medcom.model;
+package engineer.thesis.medcom.model.old;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -13,16 +13,15 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
  * @author MKlaman
  * @since 11.06.2017
  */
+//TODO join with db patient
 @Data
 @Builder
-public class StudyInstance {
+public class Patient {
 
-    private String studyInstanceUid;
-
-    @JsonInclude(NON_NULL)
     private String patientId;
 
     @JsonInclude(NON_NULL)
-    @Singular("series")
-    private List<SeriesInstance> series;
+    @Singular()
+    private List<StudyInstance> studies;
+
 }

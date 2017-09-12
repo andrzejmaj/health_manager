@@ -1,7 +1,7 @@
 package engineer.thesis.medcom.dicom.repository;
 
-import engineer.thesis.medcom.model.DicomArchive;
-import engineer.thesis.medcom.model.DicomInstance;
+import engineer.thesis.medcom.model.old.DicomArchive;
+import engineer.thesis.medcom.model.old.DicomInstance;
 
 import java.io.File;
 import java.util.List;

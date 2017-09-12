@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,29 +18,28 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class DicomInstance extends DicomAttributesContainer {
+public class DicomSeries extends DicomAttributesContainer {
 
     private static final DicomModule[] modules = {
-            DicomModules.commonModule,
-            DicomModules.generalImageModule
+            DicomModules.generalSeriesModule
     };
 
 
     private String instanceUID;
 
-    // TODO SOP class
+    private List<DicomInstance> instances;
 
 
-    public DicomInstance(Attributes dicomAttributes) {
+    public DicomSeries(Attributes dicomAttributes) {
         super(modules);
         loadAttributes(dicomAttributes);
 
-        instanceUID = getAttribute(Tag.SOPInstanceUID)
+        instanceUID = getAttribute(Tag.SeriesInstanceUID)
                 .map(DicomAttribute::getValue)
-                .orElseThrow(() -> new IllegalArgumentException("can not create instance - SOPInstanceUID is missing!"));
+                .orElseThrow(() -> new IllegalArgumentException("can not create series - SeriesInstanceUID is missing!"));
     }
 
-    public DicomInstance(String instanceUID, Map<Integer, DicomAttribute> attributes) {
+    public DicomSeries(String instanceUID, Map<Integer, DicomAttribute> attributes) {
         super(modules);
         this.instanceUID = instanceUID;
         setAttributes(attributes);

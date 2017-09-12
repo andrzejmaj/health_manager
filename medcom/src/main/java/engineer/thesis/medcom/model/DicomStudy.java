@@ -6,9 +6,11 @@ import engineer.thesis.medcom.model.core.DicomModule;
 import engineer.thesis.medcom.model.core.DicomModules;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Singular;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,31 +19,34 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class DicomInstance extends DicomAttributesContainer {
+public class DicomStudy extends DicomAttributesContainer {
 
     private static final DicomModule[] modules = {
-            DicomModules.commonModule,
-            DicomModules.generalImageModule
+            DicomModules.generalStudyModule,
+            DicomModules.patientStudyModule
     };
 
 
     private String instanceUID;
 
-    // TODO SOP class
+    @Singular("series")
+    private List<DicomSeries> series;
 
 
-    public DicomInstance(Attributes dicomAttributes) {
+
+    public DicomStudy(Attributes dicomAttributes) {
         super(modules);
         loadAttributes(dicomAttributes);
 
-        instanceUID = getAttribute(Tag.SOPInstanceUID)
+        instanceUID = getAttribute(Tag.StudyInstanceUID)
                 .map(DicomAttribute::getValue)
-                .orElseThrow(() -> new IllegalArgumentException("can not create instance - SOPInstanceUID is missing!"));
+                .orElseThrow(() -> new IllegalArgumentException("can not create study - StudyInstanceUID is missing!"));
     }
 
-    public DicomInstance(String instanceUID, Map<Integer, DicomAttribute> attributes) {
+    public DicomStudy(String instanceUID, Map<Integer, DicomAttribute> attributes) {
         super(modules);
         this.instanceUID = instanceUID;
         setAttributes(attributes);
     }
+
 }

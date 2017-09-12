@@ -9,6 +9,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,13 +28,16 @@ public class Study {
     @Column(name = "dicom_id", nullable = false)
     private String dicom_id;
 
+    @Column(name = "creation_date")
+    private Date creationDate;
+
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
     @OneToMany(mappedBy = "study", fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
-    private List<Property> properties;
+    private List<Attribute> attributes;
 
     @OneToMany(mappedBy = "study", fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)

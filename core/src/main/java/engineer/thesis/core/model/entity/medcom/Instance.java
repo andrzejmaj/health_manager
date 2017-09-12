@@ -23,7 +23,7 @@ public class Instance {
     @Column(name = "dicom_id", nullable = false)
     private String dicom_id;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date")
     private Date creationDate;
 
     @ManyToOne
@@ -32,5 +32,5 @@ public class Instance {
 
     @OneToMany(mappedBy = "instance", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Property> properties;
+    private List<Attribute> attributes;
 }
