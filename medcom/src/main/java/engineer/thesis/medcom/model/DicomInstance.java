@@ -37,10 +37,7 @@ public class DicomInstance extends DicomAttributesContainer {
     public DicomInstance(Attributes dicomAttributes) {
         super(modules);
         this.loadAttributes(dicomAttributes);
-
-        instanceUID = getAttribute(Tag.SOPInstanceUID)
-                .map(DicomAttribute::getValue)
-                .orElseThrow(() -> new IllegalArgumentException("can not create instance - SOPInstanceUID is missing!"));
+        this.setRequiredField(Tag.SOPInstanceUID, this::setInstanceUID);
     }
 
     public DicomInstance(String instanceUID, Set<DicomAttribute> attributes) {

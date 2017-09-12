@@ -33,4 +33,11 @@ public class Instance {
     @OneToMany(mappedBy = "instance", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Attribute> attributes;
+
+
+    public void setAttributes(List<Attribute> attributes) {
+        attributes.forEach(attribute ->
+                attribute.setInstance(this));
+        this.attributes = attributes;
+    }
 }

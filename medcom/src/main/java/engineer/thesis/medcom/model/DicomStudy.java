@@ -34,10 +34,7 @@ public class DicomStudy extends DicomAttributesContainer {
     public DicomStudy(Attributes dicomAttributes) {
         super(modules);
         this.loadAttributes(dicomAttributes);
-
-        instanceUID = getAttribute(Tag.StudyInstanceUID)
-                .map(DicomAttribute::getValue)
-                .orElseThrow(() -> new IllegalArgumentException("can not create study - StudyInstanceUID is missing!"));
+        this.setRequiredField(Tag.StudyInstanceUID, this::setInstanceUID);
     }
 
     public DicomStudy(String instanceUID, Set<DicomAttribute> attributes) {

@@ -6,6 +6,9 @@ import engineer.thesis.core.model.entity.medcom.Instance;
 import engineer.thesis.core.model.entity.medcom.Series;
 import engineer.thesis.core.model.entity.medcom.Study;
 import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.repository.medcom.InstanceRepository;
+import engineer.thesis.core.repository.medcom.SeriesRepository;
+import engineer.thesis.core.repository.medcom.StudyRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.medcom.model.DicomInstance;
 import engineer.thesis.medcom.model.DicomSeries;
@@ -18,6 +21,7 @@ import org.dcm4che3.io.DicomInputStream;
 import org.dcm4che3.util.SafeClose;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,42 +37,60 @@ public class DatabaseStorageService {
     private final static Logger logger = Logger.getLogger(DatabaseStorageService.class);
 
     private final PatientRepository patientRepository;
+    private final StudyRepository studyRepository;
+    private final SeriesRepository seriesRepository;
+    private final InstanceRepository instanceRepository;
     private final CustomObjectMapper objectMapper;
 
     @Autowired
     public DatabaseStorageService(PatientRepository patientRepository,
+                                  StudyRepository studyRepository,
+                                  SeriesRepository seriesRepository,
+                                  InstanceRepository instanceRepository,
                                   CustomObjectMapper objectMapper) {
         this.patientRepository = patientRepository;
+        this.studyRepository = studyRepository;
+        this.seriesRepository = seriesRepository;
+        this.instanceRepository = instanceRepository;
         this.objectMapper = objectMapper;
     }
 
+    @Transactional
     public void store(File dicomFile) {
         Attributes attributes = parseFile(dicomFile);
 
         String pesel = getPesel(attributes);
-        Patient patient = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel))
+        Patient patientEntity = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel))
                 .orElseThrow(() -> new DatabaseStorageException(String.format("could not find patient with PESEL: %s", pesel)));
 
+        // if corresponding entity already exists then ignores the received model
+        // TODO: if corresponding entity already exists merge and save?
 
-        // DONE: create DicomStudy, DicomSeries and DicomInstance from attributes
-        DicomStudy study = new DicomStudy(attributes);
-        DicomSeries series = new DicomSeries(attributes);
         DicomInstance instance = new DicomInstance(attributes);
-
-        logger.info("succesfully parsed data");
-
-        // DONE: bidirectional conversion between model classes and entity classes
-        Study studyEntity = objectMapper.convert(study, Study.class);
-        Series seriesEntity = objectMapper.convert(series, Series.class);
+        if (instanceRepository.exists(instance.getInstanceUID())){
+            logger.info(String.format("instance %s already persisted", instance.getInstanceUID()));
+            return;
+        }
         Instance instanceEntity = objectMapper.convert(instance, Instance.class);
 
-        DicomStudy study2 = objectMapper.convert(studyEntity, DicomStudy.class);
-        DicomSeries series2 = objectMapper.convert(seriesEntity, DicomSeries.class);
-        DicomInstance instance2 = objectMapper.convert(instanceEntity, DicomInstance.class);
+        DicomSeries series = new DicomSeries(attributes);
+        Series seriesEntity = Optional.ofNullable(seriesRepository.findOne(series.getInstanceUID()))
+                .orElse(objectMapper.convert(series, Series.class));
 
-        // TODO: if corresponding entity does not exist then save
 
-        // TODO: if corresponding entity already exists merge and save
+        DicomStudy study = new DicomStudy(attributes);
+        Study studyEntity = Optional.ofNullable(studyRepository.findOne(study.getInstanceUID()))
+                .orElse(objectMapper.convert(study, Study.class));
+
+
+        studyEntity.setPatient(patientEntity);
+        seriesEntity.setStudy(studyEntity);
+        seriesEntity.addInstance(instanceEntity);
+
+        studyRepository.save(studyEntity);
+        seriesRepository.save(seriesEntity);
+
+        logger.info("successfully persisted dicom instance in database");
     }
 
     private Attributes parseFile(File dicomFile) {
@@ -89,6 +111,5 @@ public class DatabaseStorageService {
         return Optional.ofNullable(attributes.getString(Tag.PatientID))
                 .orElseThrow(() -> new DatabaseStorageException("could not extract patient`s PESEL"));
     }
-
 
 }

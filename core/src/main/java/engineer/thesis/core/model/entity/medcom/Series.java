@@ -8,6 +8,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,5 +46,17 @@ public class Series {
 
     @OneToMany(mappedBy = "series", fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
-    private List<Instance> instances;
+    private List<Instance> instances = new ArrayList<>();
+
+
+    public void setAttributes(List<Attribute> attributes) {
+        attributes.forEach(attribute ->
+                attribute.setSeries(this));
+        this.attributes = attributes;
+    }
+
+    public void addInstance(Instance instance) {
+        instance.setSeries(this);
+        this.instances.add(instance);
+    }
 }

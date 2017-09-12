@@ -33,10 +33,7 @@ public class DicomSeries extends DicomAttributesContainer {
     public DicomSeries(Attributes dicomAttributes) {
         super(modules);
         this.loadAttributes(dicomAttributes);
-
-        instanceUID = getAttribute(Tag.SeriesInstanceUID)
-                .map(DicomAttribute::getValue)
-                .orElseThrow(() -> new IllegalArgumentException("can not create series - SeriesInstanceUID is missing!"));
+        this.setRequiredField(Tag.SeriesInstanceUID, this::setInstanceUID);
     }
 
     public DicomSeries(String instanceUID, Set<DicomAttribute> attributes) {

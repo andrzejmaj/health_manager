@@ -9,6 +9,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,5 +42,12 @@ public class Study {
 
     @OneToMany(mappedBy = "study", fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
-    private List<Series> series;
+    private List<Series> series = new ArrayList<>();
+
+
+    public void setAttributes(List<Attribute> attributes) {
+        attributes.forEach(attribute ->
+                attribute.setStudy(this));
+        this.attributes = attributes;
+    }
 }
