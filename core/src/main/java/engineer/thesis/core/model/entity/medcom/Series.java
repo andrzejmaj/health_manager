@@ -24,8 +24,8 @@ import java.util.List;
 public class Series {
 
     @Id
-    @Column(name = "dicom_id", nullable = false)
-    private String dicom_id;
+    @Column(name = "instance_uid", nullable = false)
+    private String instanceUID;
 
     @Column(name = "creation_date")
     private Date creationDate;

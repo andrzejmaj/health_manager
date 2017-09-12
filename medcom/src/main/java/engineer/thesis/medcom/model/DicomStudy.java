@@ -6,12 +6,10 @@ import engineer.thesis.medcom.model.core.DicomModule;
 import engineer.thesis.medcom.model.core.DicomModules;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Singular;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * @author MKlaman
@@ -29,24 +27,23 @@ public class DicomStudy extends DicomAttributesContainer {
 
     private String instanceUID;
 
-    @Singular("series")
-    private List<DicomSeries> series;
-
-
+    public DicomStudy() {
+        super(modules);
+    }
 
     public DicomStudy(Attributes dicomAttributes) {
         super(modules);
-        loadAttributes(dicomAttributes);
+        this.loadAttributes(dicomAttributes);
 
         instanceUID = getAttribute(Tag.StudyInstanceUID)
                 .map(DicomAttribute::getValue)
                 .orElseThrow(() -> new IllegalArgumentException("can not create study - StudyInstanceUID is missing!"));
     }
 
-    public DicomStudy(String instanceUID, Map<Integer, DicomAttribute> attributes) {
+    public DicomStudy(String instanceUID, Set<DicomAttribute> attributes) {
         super(modules);
         this.instanceUID = instanceUID;
-        setAttributes(attributes);
+        this.setAttributes(attributes);
     }
 
 }

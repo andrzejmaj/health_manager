@@ -1,6 +1,7 @@
 package engineer.thesis.core.model.entity.medcom;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "dcm_attribute", schema = "hmanager")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Attribute {

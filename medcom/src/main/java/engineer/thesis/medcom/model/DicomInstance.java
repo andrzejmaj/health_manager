@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 
-import java.util.Map;
+import java.util.Set;
 
 /**
  * @author MKlaman
@@ -30,18 +30,22 @@ public class DicomInstance extends DicomAttributesContainer {
     // TODO SOP class
 
 
+    public DicomInstance() {
+        super(modules);
+    }
+
     public DicomInstance(Attributes dicomAttributes) {
         super(modules);
-        loadAttributes(dicomAttributes);
+        this.loadAttributes(dicomAttributes);
 
         instanceUID = getAttribute(Tag.SOPInstanceUID)
                 .map(DicomAttribute::getValue)
                 .orElseThrow(() -> new IllegalArgumentException("can not create instance - SOPInstanceUID is missing!"));
     }
 
-    public DicomInstance(String instanceUID, Map<Integer, DicomAttribute> attributes) {
+    public DicomInstance(String instanceUID, Set<DicomAttribute> attributes) {
         super(modules);
         this.instanceUID = instanceUID;
-        setAttributes(attributes);
+        this.setAttributes(attributes);
     }
 }

@@ -9,8 +9,7 @@ import lombok.Setter;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * @author MKlaman
@@ -27,21 +26,22 @@ public class DicomSeries extends DicomAttributesContainer {
 
     private String instanceUID;
 
-    private List<DicomInstance> instances;
-
+    public DicomSeries() {
+        super(modules);
+    }
 
     public DicomSeries(Attributes dicomAttributes) {
         super(modules);
-        loadAttributes(dicomAttributes);
+        this.loadAttributes(dicomAttributes);
 
         instanceUID = getAttribute(Tag.SeriesInstanceUID)
                 .map(DicomAttribute::getValue)
                 .orElseThrow(() -> new IllegalArgumentException("can not create series - SeriesInstanceUID is missing!"));
     }
 
-    public DicomSeries(String instanceUID, Map<Integer, DicomAttribute> attributes) {
+    public DicomSeries(String instanceUID, Set<DicomAttribute> attributes) {
         super(modules);
         this.instanceUID = instanceUID;
-        setAttributes(attributes);
+        this.setAttributes(attributes);
     }
 }

@@ -5,9 +5,7 @@ import lombok.Setter;
 import org.dcm4che3.data.Attributes;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * DicomAttributesContainer owns a set of dicom attributes
@@ -19,21 +17,23 @@ public abstract class DicomAttributesContainer extends DicomModule {
 
     @Getter
     @Setter
-    private Map<Integer, DicomAttribute> attributes = new HashMap<>();
+    private Set<DicomAttribute> attributes = new HashSet<>();
 
     public DicomAttributesContainer(DicomModule[] modules) {
         super(modules);
     }
 
-    public Optional<DicomAttribute> getAttribute(Integer tag) {
-        return Optional.ofNullable(attributes.get(tag));
+    public Optional<DicomAttribute> getAttribute(Integer code) {
+        return attributes.stream()
+                .filter(attribute -> attribute.getCode().equals(code))
+                .findAny();
     }
 
     public final void loadAttributes(Attributes dicomAttributes) {
-        super.getAttributeTags().forEach(tag -> {
+        this.getAttributeTags().forEach(tag -> {
             String value = dicomAttributes.getString(tag.getCode());
             if (!StringUtils.isEmpty(value)) {
-                this.attributes.put(tag.getCode(), new DicomAttribute(tag, value));
+                this.attributes.add(new DicomAttribute(tag.getCode(), value, tag.getName()));
             }
         });
     }
@@ -45,8 +45,7 @@ public abstract class DicomAttributesContainer extends DicomModule {
      * @param other
      */
     public void merge(DicomAttributesContainer other) {
-        other.getAttributes().forEach((key, attribute) ->
-                this.attributes.merge(key, attribute, (thisAttribute, otherAttribute) -> thisAttribute));
+        this.attributes.addAll(other.getAttributes());
     }
 
 }

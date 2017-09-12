@@ -2,7 +2,11 @@ package engineer.thesis.medcom.dicom.store;
 
 
 import engineer.thesis.core.model.entity.Patient;
+import engineer.thesis.core.model.entity.medcom.Instance;
+import engineer.thesis.core.model.entity.medcom.Series;
+import engineer.thesis.core.model.entity.medcom.Study;
 import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.medcom.model.DicomInstance;
 import engineer.thesis.medcom.model.DicomSeries;
 import engineer.thesis.medcom.model.DicomStudy;
@@ -29,10 +33,13 @@ public class DatabaseStorageService {
     private final static Logger logger = Logger.getLogger(DatabaseStorageService.class);
 
     private final PatientRepository patientRepository;
+    private final CustomObjectMapper objectMapper;
 
     @Autowired
-    public DatabaseStorageService(PatientRepository patientRepository) {
+    public DatabaseStorageService(PatientRepository patientRepository,
+                                  CustomObjectMapper objectMapper) {
         this.patientRepository = patientRepository;
+        this.objectMapper = objectMapper;
     }
 
     public void store(File dicomFile) {
@@ -50,7 +57,14 @@ public class DatabaseStorageService {
 
         logger.info("succesfully parsed data");
 
-        // TODO: bidirectional conversion between model classes and entity classes
+        // DONE: bidirectional conversion between model classes and entity classes
+        Study studyEntity = objectMapper.convert(study, Study.class);
+        Series seriesEntity = objectMapper.convert(series, Series.class);
+        Instance instanceEntity = objectMapper.convert(instance, Instance.class);
+
+        DicomStudy study2 = objectMapper.convert(studyEntity, DicomStudy.class);
+        DicomSeries series2 = objectMapper.convert(seriesEntity, DicomSeries.class);
+        DicomInstance instance2 = objectMapper.convert(instanceEntity, DicomInstance.class);
 
         // TODO: if corresponding entity does not exist then save
 

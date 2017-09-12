@@ -1,6 +1,7 @@
 package engineer.thesis.medcom.model.core;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.dcm4che3.data.Keyword;
 
 /**
@@ -8,23 +9,25 @@ import org.dcm4che3.data.Keyword;
  * @since 12.09.2017
  */
 @Data
+@NoArgsConstructor
 public class DicomAttribute {
 
-    public DicomAttribute(Integer code, String value) {
-        this(DicomAttributeTag.of(code), value);
-    }
-
-    public DicomAttribute(DicomAttributeTag tag, String value) {
-        this.tag = tag;
+    public DicomAttribute(Integer code, String value, String name) {
+        this.code = code;
         this.value = value;
+        this.name = name;
     }
 
-    private final DicomAttributeTag tag;
+    public DicomAttribute(Integer code, String value) {
+        this(code, value, Keyword.valueOf(code));
+    }
 
-    private final String value;
+    private Integer code;
+    private String name;
+    private String value;
 
     @Override
     public String toString() {
-        return String.format("[%s]: %s", tag.getName(), value);
+        return String.format("[%s]: %s", name, value);
     }
 }
