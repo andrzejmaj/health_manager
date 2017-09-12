@@ -1,7 +1,5 @@
 package engineer.thesis.core.model;
 
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"timeSlot"})
 public class Appointment {
 
 	@Id
@@ -48,21 +48,5 @@ public class Appointment {
 		this.officeNumber = officeNumber;
 		this.tookPlace = tookPlace;
 		this.data = data;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Appointment) {
-			Appointment a = (Appointment) obj;
-			
-			return Objects.equals(a.timeSlot, this.timeSlot);
-		}
-		
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(timeSlot);
 	}
 }

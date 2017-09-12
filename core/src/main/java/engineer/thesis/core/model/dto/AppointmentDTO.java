@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class AppointmentDTO {
-    Long id;
-    Long timeSlotId;
-    Boolean tookPlace;
-    Integer officeNumber;
-    String data;
+    private Long id;
+    private Long patientId;
+    private Long timeSlotId;
+    private Boolean tookPlace;
+    private Integer officeNumber;
+    private String data;
 }

@@ -1,10 +1,9 @@
 package engineer.thesis.core.controller;
 
-import engineer.thesis.core.model.Appointment;
 import engineer.thesis.core.model.dto.AppointmentDTO;
-import engineer.thesis.core.repository.AppointmentRepository;
-import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.service.Interface.IAppointmentService;
+import engineer.thesis.core.service.Interface.IPatientService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +13,16 @@ import org.springframework.web.bind.annotation.*;
 public class AppointmentController {
 
     @Autowired
-    private AppointmentRepository appointmentRepository;
-    @Autowired
-    private PatientRepository patientRepository;
+	private IPatientService patientService;
     @Autowired
     private IAppointmentService appointmentService;
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/appointments/byTimeSlot/{timeSlotId}")
     public ResponseEntity<?> getAppointmentByTimeSlot(@PathVariable(name = "timeSlotId") long timeSlotId) {
-        Appointment appointment = appointmentRepository.findByTimeSlotId(timeSlotId);
-        if (appointment != null) {
-            return new ResponseEntity<>(appointment, HttpStatus.OK);
+		AppointmentDTO appointmentDTO = appointmentService.findByTimeSlotId(timeSlotId);
+		if (appointmentDTO != null) {
+			return new ResponseEntity<>(appointmentDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("No appointment with timeSlotId " + timeSlotId, HttpStatus.NOT_FOUND);
         }
@@ -33,17 +30,17 @@ public class AppointmentController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/patients/{patientId}/appointments")
     public ResponseEntity<?> getAppointments(@PathVariable(name = "patientId") long patientId) {
-        if (!patientRepository.exists(patientId)) {
+		if (!patientService.exists(patientId)) {
             return new ResponseEntity<>("Patient with id " + patientId + "not found", HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(appointmentRepository.findByPatientId(patientId), HttpStatus.OK);
+		return new ResponseEntity<>(appointmentService.findByPatientId(patientId), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/patients/{patientId}/appointments")
     public ResponseEntity<?> createAppointment(@PathVariable(name = "patientId") long patientId,
                                                @RequestBody AppointmentDTO appointmentDTO) {
-        if (!patientRepository.exists(patientId)) {
+		if (!patientService.exists(patientId)) {
             return new ResponseEntity<>("Patient with id " + patientId + "not found", HttpStatus.NOT_FOUND);
         }
 
@@ -58,7 +55,7 @@ public class AppointmentController {
     @RequestMapping(method = RequestMethod.POST, path = "/patients/{patientId}/appointments")
     public ResponseEntity<?> updateAppointment(@PathVariable(name = "patientId") long patientId,
                                                AppointmentDTO appointmentDTO) {
-        if (!patientRepository.exists(patientId)) {
+		if (!patientService.exists(patientId)) {
             return new ResponseEntity<>("Patient with id " + patientId + "not found", HttpStatus.NOT_FOUND);
         }
 

@@ -14,6 +14,8 @@ public interface IPatientService {
 
     List<PatientDTO> getAllPatients();
 
+	boolean exists(Long id);
+
     PatientDTO findByPesel(String pesel);
 
     PatientDTO findByEmail(String email);

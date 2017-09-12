@@ -116,4 +116,9 @@ public class PatientService implements IPatientService {
         patient.setEmergencyContact(objectMapper.convert(emergencyContact, PersonalDetails.class));
         return objectMapper.convert(patientRepository.save(patient), PersonalDetailsDTO.class);
     }
+
+	@Override
+	public boolean exists(Long id) {
+		return patientRepository.exists(id);
+	}
 }
