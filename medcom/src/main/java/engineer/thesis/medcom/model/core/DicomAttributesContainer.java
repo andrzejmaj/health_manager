@@ -1,13 +1,19 @@
 package engineer.thesis.medcom.model.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Keyword;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * DicomAttributesContainer owns a set of dicom attributes
@@ -19,6 +25,7 @@ public abstract class DicomAttributesContainer extends DicomModule {
 
     @Getter
     @Setter
+    @JsonIgnore
     private Set<DicomAttribute> attributes = new HashSet<>();
 
     public DicomAttributesContainer(DicomModule[] modules) {
@@ -64,6 +71,12 @@ public abstract class DicomAttributesContainer extends DicomModule {
         getAttribute(attributeCode)
                 .map(DicomAttribute::getValue)
                 .ifPresent(setter);
+    }
+
+    @JsonProperty("attributes")
+    public Map<String, String> getAttributesAsMap() {
+         return attributes.stream()
+                .collect(Collectors.toMap(DicomAttribute::getName, DicomAttribute::getValue));
     }
 
 }

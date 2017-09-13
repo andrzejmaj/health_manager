@@ -1,5 +1,6 @@
 package engineer.thesis.medcom.model.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import lombok.Getter;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class DicomModule {
 
     @Getter
+    @JsonIgnore
     private final Set<DicomAttributeTag> attributeTags;
 
     private DicomModule(Set<DicomAttributeTag> attributeTags) {

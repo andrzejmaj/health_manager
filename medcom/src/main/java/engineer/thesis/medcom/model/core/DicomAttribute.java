@@ -10,7 +10,7 @@ import org.dcm4che3.data.Keyword;
  */
 @Data
 @NoArgsConstructor
-public class DicomAttribute {
+public class DicomAttribute{
 
     public DicomAttribute(Integer code, String value, String name) {
         this.code = code;

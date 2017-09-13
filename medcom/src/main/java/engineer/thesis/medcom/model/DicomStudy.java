@@ -1,5 +1,6 @@
 package engineer.thesis.medcom.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import engineer.thesis.medcom.model.core.DicomAttribute;
 import engineer.thesis.medcom.model.core.DicomAttributesContainer;
 import engineer.thesis.medcom.model.core.DicomModule;
@@ -17,6 +18,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
+@JsonPropertyOrder({"instanceUID", "attributes"})
 public class DicomStudy extends DicomAttributesContainer {
 
     private static final DicomModule[] modules = {

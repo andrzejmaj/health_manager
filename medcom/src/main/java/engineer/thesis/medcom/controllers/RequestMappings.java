@@ -13,9 +13,19 @@ final class RequestMappings {
 
     static final class INSTANCES {
         static final String GET_ALL = "/medcom/instances";
-        static final String GET_INFO = "/medcom/instances/{instanceId}";
+        static final String GET_DETAILS = "/medcom/instances/{instanceId}";
         static final String GET_DICOM = "/medcom/instances/{instanceId}/dicom";
         static final String GET_RENDERED_IMAGE = "/medcom/instances/{instanceId}/rendered";
+    }
+
+    static final class SERIES {
+        static final String GET_DETAILS = "/medcom/series/{seriesId}";
+        static final String GET_INSTANCES_LIST = "/medcom/series/{seriesId}/instances";
+    }
+
+    static final class STUDIES {
+        static final String GET_DETAILS = "/medcom/studies/{studyId}";
+        static final String GET_SERIES_LIST = "/medcom/studies/{studyId}/series";
     }
 
 }

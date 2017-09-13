@@ -2,6 +2,7 @@ package engineer.thesis.medcom.controllers;
 
 import engineer.thesis.medcom.dicom.repository.ArchiveRepository;
 import engineer.thesis.medcom.dicom.store.StoreSCPAdapter;
+import engineer.thesis.medcom.model.exceptions.ErrorMessage;
 import engineer.thesis.medcom.model.old.DicomInstance;
 import engineer.thesis.medcom.model.exceptions.InstanceNotFoundException;
 import org.apache.log4j.Logger;
@@ -59,12 +60,12 @@ public class DicomInstancesController {
         response.setContentType("application/dicom");
     }
 
-    @ExceptionHandler(InstanceNotFoundException.class)
+    @ExceptionHandler(InstanceNotFoundException.class) // TODO global exception handler
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public @ResponseBody
-    String handleException(InstanceNotFoundException ex) {
+    ErrorMessage handleException(InstanceNotFoundException ex) {
         logger.error(ex);
-        return ex.getMessage();
+        return new ErrorMessage(ex.getMessage());
     }
 
 }
