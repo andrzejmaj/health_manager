@@ -67,8 +67,8 @@ public class DatabaseStorageService {
         // TODO: if corresponding entity already exists merge and save?
 
         DicomInstance instance = new DicomInstance(attributes);
-        if (instanceRepository.exists(instance.getInstanceUID())){
-            logger.info(String.format("instance %s already persisted", instance.getInstanceUID()));
+        if (instanceRepository.exists(instance.getInstanceUID())) {
+            logger.warn(String.format("instance '%s' already persisted", instance.getInstanceUID()));
             return;
         }
         Instance instanceEntity = objectMapper.convert(instance, Instance.class);
@@ -89,6 +89,11 @@ public class DatabaseStorageService {
 
         studyRepository.save(studyEntity);
         seriesRepository.save(seriesEntity);
+
+        if (patientEntity.getLastDicomStudyDate() == null || patientEntity.getLastDicomStudyDate().before(studyEntity.getCreationDate())) {
+            patientEntity.setLastDicomStudyDate(studyEntity.getCreationDate());
+            patientRepository.save(patientEntity);
+        }
 
         logger.info("successfully persisted dicom instance in database");
     }

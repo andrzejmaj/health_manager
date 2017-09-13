@@ -1,7 +1,6 @@
 package engineer.thesis.medcom.model;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import engineer.thesis.medcom.model.core.DicomAttribute;
 import engineer.thesis.medcom.model.core.DicomAttributesContainer;
 import engineer.thesis.medcom.model.core.DicomModule;
 import engineer.thesis.medcom.model.core.DicomModules;
@@ -10,7 +9,7 @@ import lombok.Setter;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 
-import java.util.Set;
+import java.util.Date;
 
 /**
  * @author MKlaman
@@ -18,7 +17,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-@JsonPropertyOrder({"instanceUID", "attributes"})
+@JsonPropertyOrder({"instanceUID", "creationDate", "attributes"})
 public class DicomInstance extends DicomAttributesContainer {
 
     private static final DicomModule[] modules = {
@@ -28,9 +27,8 @@ public class DicomInstance extends DicomAttributesContainer {
 
 
     private String instanceUID;
-
+    private Date creationDate;
     // TODO SOP class
-
 
     public DicomInstance() {
         super(modules);
@@ -40,11 +38,7 @@ public class DicomInstance extends DicomAttributesContainer {
         super(modules);
         this.loadAttributes(dicomAttributes);
         this.setRequiredField(Tag.SOPInstanceUID, this::setInstanceUID);
-    }
+        creationDate = new Date(); // TODO set from attributes
 
-    public DicomInstance(String instanceUID, Set<DicomAttribute> attributes) {
-        super(modules);
-        this.instanceUID = instanceUID;
-        this.setAttributes(attributes);
     }
 }

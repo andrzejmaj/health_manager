@@ -2,12 +2,11 @@ package engineer.thesis.core.model.entity;
 
 import engineer.thesis.core.model.entity.medcom.Study;
 import lombok.*;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -48,4 +47,7 @@ public class Patient {
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     private List<Study> dicomStudies;
+
+    @Column(name = "last_dicom_study_date")
+    private Date lastDicomStudyDate;
 }
