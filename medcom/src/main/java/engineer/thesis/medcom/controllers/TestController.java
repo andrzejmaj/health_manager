@@ -1,6 +1,6 @@
 package engineer.thesis.medcom.controllers;
 
-import engineer.thesis.core.model.dto.PatientDTO;
+import engineer.thesis.core.model.dto.ShortPatientDTO;
 import engineer.thesis.core.service.Interface.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +23,7 @@ public class TestController {
     }
 
     @GetMapping("/medcom/patients")
-    public List<PatientDTO> getAllPatients() {
-        return patientService.getAllPatients();
+    public List<ShortPatientDTO> getAllPatients() {
+        return patientService.getAllPatientsShort();
     }
 }

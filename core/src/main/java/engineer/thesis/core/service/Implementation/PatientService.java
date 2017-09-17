@@ -1,19 +1,21 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
+import engineer.thesis.core.model.Account;
 import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.PersonalDetails;
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
-import engineer.thesis.core.repository.MedicalInfoRepository;
+import engineer.thesis.core.model.dto.ShortPatientDTO;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.service.Interface.IPatientService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,74 +27,65 @@ public class PatientService implements IPatientService {
 
     @Autowired
     private AccountService accountService;
-    
+
     @Autowired
     private CustomObjectMapper objectMapper;
 
-    @Autowired
-    private MedicalInfoRepository medicalInfoRepository;
-
     @Override
-    public List<PatientDTO> getAllPatients() {
-        return patientRepository.findAll().stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public PatientDTO findById(Long id) throws NoSuchElementException {
+    public PatientDTO findById(Long id) throws NoSuchElementExistsException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
-        return objectMapper.convert(patient.orElseThrow(NoSuchElementException::new), PatientDTO.class);
+        return convertToDTO(patient.orElseThrow(() -> new NoSuchElementExistsException("Patient not found")));
     }
 
     @Override
-    public PatientDTO findByPesel(String pesel) throws NoSuchElementException {
+    public PatientDTO findByPesel(String pesel) throws NoSuchElementExistsException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel));
-        return objectMapper.convert(patient.orElseThrow(NoSuchElementException::new), PatientDTO.class);
+        return convertToDTO(patient.orElseThrow(() -> new NoSuchElementExistsException("Patient not found")));
     }
 
     @Override
-    public PatientDTO findByEmail(String email) throws NoSuchElementException {
+    public PatientDTO findByEmail(String email) throws NoSuchElementExistsException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findByAccount_User_Email(email));
-        return objectMapper.convert(patient.orElseThrow(NoSuchElementException::new), PatientDTO.class);
+        return convertToDTO(patient.orElseThrow(() -> new NoSuchElementExistsException("Patient not found")));
+    }
+
+    @Override
+    public List<ShortPatientDTO> getAllPatientsShort() {
+        return patientRepository.findAll().stream().map(p -> objectMapper.convert(p, ShortPatientDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public List<PatientDTO> findPatientsByLastName(String lastName) {
-        return patientRepository.findByAccount_PersonalDetails_LastNameIgnoreCase(lastName).stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
+        return patientRepository.findByAccount_PersonalDetails_LastNameIgnoreCase(lastName).stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public PatientDTO savePatient(PatientDTO patientDTO) throws AlreadyExistsException {
-        if (accountService.doesAccountExist(patientDTO.getAccount().getPersonalDetails().getPesel())) {
-            throw new AlreadyExistsException("Account with such pesel number already exists");
+        if (accountService.doesAccountExist(patientDTO.getPesel())) {
+            throw new AlreadyExistsException("Patient with such pesel number already exists");
         }
-        return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);
+        patientDTO.setId(null);
+
+        return convertToDTO(patientRepository.save(convertFromDTO(patientDTO)));
     }
 
     @Override
-    public PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException {
-        if (patientRepository.findOne(patientDTO.getId())==null) {
-            throw new NoSuchElementException("Patient does not exist");
-        }
-        return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);
-    }
-
-    @Override
-    public PersonalDetailsDTO findByIdEmergency(Long id) {
+    public PersonalDetailsDTO findEmergencyById(Long id) throws NoSuchElementExistsException {
         Patient patient = patientRepository.findOne(id);
         if (patient == null) {
-            throw new NoSuchElementException("Patient not found");
+            throw new NoSuchElementExistsException("Patient not found");
         }
         if (patient.getEmergencyContact() == null) {
-            throw new NoSuchElementException("Emergency contact not found");
+            throw new NoSuchElementExistsException("Emergency contact not found");
         }
         return objectMapper.convert(patient.getEmergencyContact(), PersonalDetailsDTO.class);
     }
 
     @Override
-    public PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact) throws AlreadyExistsException {
+    public PersonalDetailsDTO saveEmergency(Long id, PersonalDetailsDTO emergencyContact) throws AlreadyExistsException, NoSuchElementExistsException {
         Patient patient = patientRepository.findOne(id);
         if (patient == null) {
-            throw new NoSuchElementException("Patient not found");
+            throw new NoSuchElementExistsException("Patient not found");
         }
         if (patient.getEmergencyContact() != null) {
             throw new AlreadyExistsException("Emergency contact already exists");
@@ -103,17 +96,33 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public PersonalDetailsDTO updateEmergencyContact(Long id, PersonalDetailsDTO emergencyContact) {
+    public PersonalDetailsDTO updateEmergency(Long id, PersonalDetailsDTO emergencyContact) throws NoSuchElementExistsException {
         Patient patient = patientRepository.findOne(id);
         if (patient == null) {
-            throw new NoSuchElementException("Patient doesnt exist");
+            throw new NoSuchElementExistsException("Patient doesn't exist");
         }
         if (patient.getEmergencyContact() != null) {
-            throw new NoSuchElementException("Patient haven't set emergency constact");
+            throw new NoSuchElementExistsException("Patient haven't set emergency contact");
         }
 
         emergencyContact.setId(patient.getEmergencyContact().getId());
         patient.setEmergencyContact(objectMapper.convert(emergencyContact, PersonalDetails.class));
         return objectMapper.convert(patientRepository.save(patient), PersonalDetailsDTO.class);
+    }
+
+    private PatientDTO convertToDTO(Patient patient) {
+        PatientDTO patientDTO = objectMapper.convert(patient.getAccount().getPersonalDetails(), PatientDTO.class);
+        patientDTO.setInsuranceNumber(patient.getInsuranceNumber());
+        patientDTO.setId(patient.getId());
+        return patientDTO;
+    }
+
+    private Patient convertFromDTO(PatientDTO patientDTO) {
+        Patient patient = new Patient();
+        patient.setAccount(new Account());
+        patient.getAccount().setCreatedDate(new Date());
+        patient.getAccount().setPersonalDetails(objectMapper.convert(patientDTO, PersonalDetails.class));
+        patient.setInsuranceNumber(patientDTO.getInsuranceNumber());
+        return patient;
     }
 }

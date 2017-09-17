@@ -1,35 +1,33 @@
 package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
+import engineer.thesis.core.model.dto.ShortPatientDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public interface IPatientService {
 
+    PatientDTO findById(Long id) throws NoSuchElementExistsException;
 
-    List<PatientDTO> getAllPatients();
+    PatientDTO findByPesel(String pesel) throws NoSuchElementExistsException;
 
-    PatientDTO findByPesel(String pesel);
+    PatientDTO findByEmail(String email) throws NoSuchElementExistsException;
 
-    PatientDTO findByEmail(String email);
-
-    PatientDTO findById(Long id);
+    List<ShortPatientDTO> getAllPatientsShort();
 
     List<PatientDTO> findPatientsByLastName(String lastName);
 
     PatientDTO savePatient(PatientDTO personalDetailDTO) throws AlreadyExistsException;
 
-    PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException;
+    PersonalDetailsDTO findEmergencyById(Long id) throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO findByIdEmergency(Long id);
+    PersonalDetailsDTO saveEmergency(Long id, PersonalDetailsDTO emergencyContact) throws AlreadyExistsException, NoSuchElementExistsException;
 
-    PersonalDetailsDTO saveEmergencyContact(Long id, PersonalDetailsDTO emergencyContact) throws AlreadyExistsException;
-
-    PersonalDetailsDTO updateEmergencyContact(Long id, PersonalDetailsDTO emergencyContact);
+    PersonalDetailsDTO updateEmergency(Long id, PersonalDetailsDTO emergencyContact) throws NoSuchElementExistsException;
 
 }
