@@ -30,15 +30,15 @@ public class DicomInstance extends DicomAttributesContainer {
     private Date creationDate;
     // TODO SOP class
 
+
     public DicomInstance() {
         super(modules);
     }
 
     public DicomInstance(Attributes dicomAttributes) {
         super(modules);
-        this.loadAttributes(dicomAttributes);
-        this.setRequiredField(Tag.SOPInstanceUID, this::setInstanceUID);
-        creationDate = new Date(); // TODO set from attributes
-
+        super.loadAttributes(dicomAttributes);
+        super.setRequiredField(Tag.SOPInstanceUID, this::setInstanceUID);
+        super.setDateTimeField(Tag.InstanceCreationDate, Tag.InstanceCreationTime, this::setCreationDate);
     }
 }

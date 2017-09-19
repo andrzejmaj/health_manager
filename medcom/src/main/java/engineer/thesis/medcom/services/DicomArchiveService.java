@@ -48,7 +48,7 @@ public class DicomArchiveService { // TODO generify
     public List<PatientDTO> getAllMedcomPatients() {
         return patientRepository.findAll()
                 .stream()
-                .filter(patientEntity -> patientEntity.getLastDicomStudyDate() != null)
+                .filter(patientEntity -> !patientEntity.getDicomStudies().isEmpty())
                 .map(entity -> objectMapper.convert(entity, PatientDTO.class))
                 .sorted(Comparator.comparing(PatientDTO::getLastDicomStudyDate).reversed())
                 .collect(Collectors.toList());

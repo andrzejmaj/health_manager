@@ -36,8 +36,9 @@ public class DicomStudy extends DicomAttributesContainer {
 
     public DicomStudy(Attributes dicomAttributes) {
         super(modules);
-        this.loadAttributes(dicomAttributes);
-        this.setRequiredField(Tag.StudyInstanceUID, this::setInstanceUID);
-        creationDate = new Date(); // TODO set from attributes
+        super.loadAttributes(dicomAttributes);
+        super.setRequiredField(Tag.StudyInstanceUID, this::setInstanceUID);
+        super.setDateTimeField(Tag.StudyDate, Tag.StudyTime, this::setCreationDate);
     }
+
 }

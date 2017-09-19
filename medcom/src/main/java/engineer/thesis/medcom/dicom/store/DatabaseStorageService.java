@@ -56,7 +56,7 @@ public class DatabaseStorageService {
     }
 
     @Transactional
-    public void store(File dicomFile) {
+    void store(File dicomFile) {
         Attributes attributes = parseFile(dicomFile);
 
         String pesel = getPesel(attributes);
@@ -90,7 +90,8 @@ public class DatabaseStorageService {
         studyRepository.save(studyEntity);
         seriesRepository.save(seriesEntity);
 
-        if (patientEntity.getLastDicomStudyDate() == null || patientEntity.getLastDicomStudyDate().before(studyEntity.getCreationDate())) {
+        if (studyEntity.getCreationDate() != null &&
+                (patientEntity.getLastDicomStudyDate() == null || patientEntity.getLastDicomStudyDate().before(studyEntity.getCreationDate()))) {
             patientEntity.setLastDicomStudyDate(studyEntity.getCreationDate());
             patientRepository.save(patientEntity);
         }

@@ -28,14 +28,15 @@ public class DicomSeries extends DicomAttributesContainer {
     private String instanceUID;
     private Date creationDate;
 
+
     public DicomSeries() {
         super(modules);
     }
 
     public DicomSeries(Attributes dicomAttributes) {
         super(modules);
-        this.loadAttributes(dicomAttributes);
-        this.setRequiredField(Tag.SeriesInstanceUID, this::setInstanceUID);
-        creationDate = new Date(); // TODO set from attributes
+        super.loadAttributes(dicomAttributes);
+        super.setRequiredField(Tag.SeriesInstanceUID, this::setInstanceUID);
+        super.setDateTimeField(Tag.SeriesDate, Tag.SeriesTime, this::setCreationDate);
     }
 }

@@ -44,4 +44,6 @@ public class FileUtils {
                 .collect(Collectors.toList());
     }
 
+    private FileUtils() {}
+
 }

@@ -2,16 +2,15 @@ package engineer.thesis.medcom.model.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import engineer.thesis.medcom.utils.DicomUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Keyword;
 import org.springframework.util.StringUtils;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.time.Instant;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -49,7 +48,7 @@ public abstract class DicomAttributesContainer extends DicomModule {
     }
 
     protected final void loadAttributes(Attributes dicomAttributes) {
-        this.getAttributeTags().forEach(tag -> {
+        super.getAttributeTags().forEach(tag -> {
             String value = dicomAttributes.getString(tag.getCode());
             if (!StringUtils.isEmpty(value)) {
                 this.attributes.add(new DicomAttribute(tag.getCode(), value, tag.getName()));
@@ -57,20 +56,31 @@ public abstract class DicomAttributesContainer extends DicomModule {
         });
     }
 
-    protected void setRequiredField(Integer attributeCode, Consumer<String> setter) {
-        String value = getAttribute(attributeCode)
+    protected void setRequiredField(Integer tag, Consumer<String> setter) {
+        String value = getAttribute(tag)
                 .map(DicomAttribute::getValue)
                 .orElseThrow(() -> new IllegalArgumentException(
-                        String.format("attribute %s is missing!", Keyword.valueOf(attributeCode))
+                        String.format("attribute %s is missing!", Keyword.valueOf(tag))
                 ));
 
         setter.accept(value);
     }
 
-    protected void setOptionalField(Integer attributeCode, Consumer<String> setter) {
-        getAttribute(attributeCode)
+    protected void setOptionalField(Integer tag, Consumer<String> setter) {
+        getAttribute(tag)
                 .map(DicomAttribute::getValue)
                 .ifPresent(setter);
+    }
+
+    protected void setDateTimeField(Integer dateTag, Integer timeTag, Consumer<Date> setter) {
+        Instant instant = DicomUtils.parseDateTime(
+                getAttribute(dateTag).map(DicomAttribute::getValue).orElse(null),
+                getAttribute(timeTag).map(DicomAttribute::getValue).orElse("000000")
+        );
+
+        if (instant != null) {
+            setter.accept(Date.from(instant));
+        }
     }
 
     @JsonProperty("attributes")
