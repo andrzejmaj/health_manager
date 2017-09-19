@@ -1,6 +1,5 @@
 package engineer.thesis.core.model.dto;
 
-import engineer.thesis.core.model.CurrentDrug;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ public class CurrentConditionDTO {
 
     private Long Id;
     private Long patientId;
-    private String conditionName;
+    private String diseaseName;
     private String symptoms;
     private List<DrugDTO> takenDrugs;
 

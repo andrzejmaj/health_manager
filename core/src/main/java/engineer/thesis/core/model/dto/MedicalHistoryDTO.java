@@ -15,7 +15,7 @@ public class MedicalHistoryDTO {
     private String name;
     private String symptoms;
     private Long patientId;
-    private DiseaseDTO disease;
+    private String diseaseName;
     private Date detectionDate;
     private Date cureDate;
 

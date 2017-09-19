@@ -20,8 +20,8 @@ public class CurrentCondition {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
-    @Column(name = "condition_name")
-    private String conditionName;
+    @Column(name = "disease")
+    private Disease disease;
 
     @Column(name = "symptoms")
     private String symptoms;
