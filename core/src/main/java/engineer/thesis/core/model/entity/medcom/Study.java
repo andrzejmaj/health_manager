@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class Study {
     private List<Attribute> attributes;
 
     @OneToMany(mappedBy = "study", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
     @Cascade(CascadeType.ALL)
     private List<Series> series = new ArrayList<>();
 

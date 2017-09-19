@@ -4,6 +4,8 @@ import engineer.thesis.core.model.entity.medcom.Study;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -45,6 +47,7 @@ public class Patient {
     private List<MedicalHistory> medicalHistories;
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
     @Cascade(CascadeType.ALL)
     private List<Study> dicomStudies;
 
