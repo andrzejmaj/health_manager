@@ -5,6 +5,8 @@ import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public interface IPatientService {
     PatientDTO findByEmail(String email) throws NoSuchElementExistsException;
 
     List<ShortPatientDTO> getAllPatientsShort();
+
+    Page<ShortPatientDTO> getAllPatientsShort(Pageable pageable);
 
     List<PatientDTO> findPatientsByLastName(String lastName);
 

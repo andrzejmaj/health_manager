@@ -6,6 +6,7 @@ import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.service.Interface.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,13 @@ public class PatientController {
     public ResponseEntity<?> getAllPatientsShort() {
         return new ResponseEntity<Object>(patientService.getAllPatientsShort(), HttpStatus.OK);
     }
+
+    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.GET, params = {"page", "size"})
+    public ResponseEntity<?> getAllPatientsShort(Pageable pageable) {
+        return new ResponseEntity<Object>(patientService.getAllPatientsShort(pageable), HttpStatus.OK);
+    }
+
+
 
     @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.GET, params = "lastName")
     public ResponseEntity<?> getPatientsByLastName(@RequestParam String lastName) {

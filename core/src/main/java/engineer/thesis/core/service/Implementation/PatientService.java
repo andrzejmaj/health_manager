@@ -12,6 +12,8 @@ import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.service.Interface.IPatientService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -52,6 +54,11 @@ public class PatientService implements IPatientService {
     @Override
     public List<ShortPatientDTO> getAllPatientsShort() {
         return patientRepository.findAll().stream().map(p -> objectMapper.convert(p, ShortPatientDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ShortPatientDTO> getAllPatientsShort(Pageable pageable) {
+        return patientRepository.findAll(pageable).map(p -> objectMapper.convert(p, ShortPatientDTO.class));
     }
 
     @Override

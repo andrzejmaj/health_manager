@@ -13,14 +13,15 @@ public class CurrentCondition {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
-    @Column(name = "disease")
+    @ManyToOne
+    @JoinColumn(name = "disease")
     private Disease disease;
 
     @Column(name = "symptoms")
