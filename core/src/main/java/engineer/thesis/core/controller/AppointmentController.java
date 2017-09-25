@@ -40,6 +40,12 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentRepository.findByPatientId(patientId), HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, path = "/appointments/{appointmentId}")
+    public ResponseEntity<?> removeAppointment(@PathVariable(name = "appointmentId") long appointmentId) {
+        appointmentRepository.delete(appointmentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @RequestMapping(method = RequestMethod.PUT, path = "/patients/{patientId}/appointments")
     public ResponseEntity<?> createAppointment(@PathVariable(name = "patientId") long patientId,
                                                @RequestBody AppointmentDTO appointmentDTO) {
