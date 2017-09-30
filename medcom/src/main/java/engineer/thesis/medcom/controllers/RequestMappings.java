@@ -34,4 +34,12 @@ final class RequestMappings {
         static final String GET_STUDIES_LIST = "/medcom/patients/{patientId}/studies";
     }
 
+    static final class MODALITY {
+        static final String GET_ALL = "/medcom/modalities";
+        static final String UPDATE = "/medcom/modalities/{aet}";
+    }
+
+
+    private RequestMappings() {
+    }
 }

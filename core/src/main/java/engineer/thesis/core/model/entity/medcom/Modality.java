@@ -32,6 +32,9 @@ public class Modality {
     @Column(name = "type", length = 30)
     private String type;
 
+    @Column(name = "stationName")
+    private String stationName;
+
     @Column(name = "description", length = 512)
     private String description;
 
@@ -40,4 +43,13 @@ public class Modality {
 
     @Column(name = "manufacturer")
     private String manufacturer;
+
+    @Column(name = "manufacturerModelName")
+    private String manufacturerModelName;
+
+    @Column(name = "softwareVersions")
+    private String softwareVersions;
+
+    @Column(name = "serialNumber")
+    private String serialNumber;
 }

@@ -48,12 +48,11 @@ public abstract class DicomAttributesContainer extends DicomModule {
     }
 
     protected final void loadAttributes(Attributes dicomAttributes) {
-        super.getAttributeTags().forEach(tag -> {
-            String value = dicomAttributes.getString(tag.getCode());
-            if (!StringUtils.isEmpty(value)) {
-                this.attributes.add(new DicomAttribute(tag.getCode(), value, tag.getName()));
-            }
-        });
+        super.getAttributeTags().forEach(tag ->
+                DicomUtils.getAttributeValue(dicomAttributes, tag.getCode())
+                        .ifPresent(value ->
+                                this.attributes.add(new DicomAttribute(tag.getCode(), value, tag.getName()))
+                        ));
     }
 
     protected void setRequiredField(Integer tag, Consumer<String> setter) {
@@ -85,7 +84,7 @@ public abstract class DicomAttributesContainer extends DicomModule {
 
     @JsonProperty("attributes")
     public Map<String, String> getAttributesAsMap() {
-         return attributes.stream()
+        return attributes.stream()
                 .collect(Collectors.toMap(DicomAttribute::getName, DicomAttribute::getValue));
     }
 

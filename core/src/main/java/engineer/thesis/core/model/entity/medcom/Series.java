@@ -42,6 +42,8 @@ public class Series {
     @JoinColumn(name = "study_id")
     private Study study;
 
+    // TODO add reference to modality
+
     @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Attribute> attributes;

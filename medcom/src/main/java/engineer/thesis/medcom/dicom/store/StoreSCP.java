@@ -119,11 +119,10 @@ public class StoreSCP {
                                 ? iuid
                                 : filePathFormat.format(parse(file)));
                 renameTo(as, file, finalFile);
-                try {
-                    databaseStorageService.store(finalFile);
-                } catch (DatabaseStorageException e) { // do not remove file from the disk
-                    LOG.error("database persistence failure", e);
-                }
+
+                databaseStorageService.store(finalFile, as);
+            } catch (DatabaseStorageException e) { // do not remove file from the disk
+                LOG.error("database persistence failure", e);
             } catch (Exception e) {
                 deleteFile(as, file);
                 throw new DicomServiceException(Status.ProcessingFailure, e);

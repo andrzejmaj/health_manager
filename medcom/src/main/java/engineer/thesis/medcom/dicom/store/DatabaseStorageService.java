@@ -3,21 +3,25 @@ package engineer.thesis.medcom.dicom.store;
 
 import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.entity.medcom.Instance;
+import engineer.thesis.core.model.entity.medcom.Modality;
 import engineer.thesis.core.model.entity.medcom.Series;
 import engineer.thesis.core.model.entity.medcom.Study;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.medcom.InstanceRepository;
+import engineer.thesis.core.repository.medcom.ModalityRepository;
 import engineer.thesis.core.repository.medcom.SeriesRepository;
 import engineer.thesis.core.repository.medcom.StudyRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.medcom.model.DicomInstance;
 import engineer.thesis.medcom.model.DicomSeries;
 import engineer.thesis.medcom.model.DicomStudy;
+import engineer.thesis.medcom.model.MedcomModality;
 import engineer.thesis.medcom.model.exceptions.DatabaseStorageException;
 import org.apache.log4j.Logger;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.io.DicomInputStream;
+import org.dcm4che3.net.Association;
 import org.dcm4che3.util.SafeClose;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,7 @@ public class DatabaseStorageService {
     private final static Logger logger = Logger.getLogger(DatabaseStorageService.class);
 
     private final PatientRepository patientRepository;
+    private final ModalityRepository modalityRepository;
     private final StudyRepository studyRepository;
     private final SeriesRepository seriesRepository;
     private final InstanceRepository instanceRepository;
@@ -44,11 +49,13 @@ public class DatabaseStorageService {
 
     @Autowired
     public DatabaseStorageService(PatientRepository patientRepository,
+                                  ModalityRepository modalityRepository,
                                   StudyRepository studyRepository,
                                   SeriesRepository seriesRepository,
                                   InstanceRepository instanceRepository,
                                   CustomObjectMapper objectMapper) {
         this.patientRepository = patientRepository;
+        this.modalityRepository = modalityRepository;
         this.studyRepository = studyRepository;
         this.seriesRepository = seriesRepository;
         this.instanceRepository = instanceRepository;
@@ -56,8 +63,19 @@ public class DatabaseStorageService {
     }
 
     @Transactional
-    void store(File dicomFile) {
+    void store(File dicomFile, Association association) {
         Attributes attributes = parseFile(dicomFile);
+
+        // resolve modality
+        MedcomModality modality = new MedcomModality(
+                association.getCallingAET(),
+                association.getSocket().getInetAddress().toString(),
+                association.getSocket().getPort(),
+                attributes
+        );
+        Modality modalityEntity = Optional.ofNullable(modalityRepository.findOne(modality.getApplicationEntity()))
+                .orElse(objectMapper.convert(modality, Modality.class)); // TODO merge exisiting if present?
+        modalityRepository.save(modalityEntity);
 
         String pesel = getPesel(attributes);
         Patient patientEntity = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel))

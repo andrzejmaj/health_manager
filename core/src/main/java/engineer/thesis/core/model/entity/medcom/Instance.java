@@ -29,6 +29,9 @@ public class Instance {
     @Column(name = "creation_date")
     private Date creationDate;
 
+    @Column(name = "sop_class_name")
+    private String sopClassName;
+
     @ManyToOne
     @JoinColumn(name = "series_id")
     private Series series;
