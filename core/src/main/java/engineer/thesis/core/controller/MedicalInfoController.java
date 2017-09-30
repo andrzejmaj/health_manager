@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
 
 @RestController
@@ -29,7 +30,7 @@ public class MedicalInfoController {
     }
 
     @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody MedicalInfoDTO medicalInfoDTO) {
+    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Valid MedicalInfoDTO medicalInfoDTO) {
         try {
             return new ResponseEntity<>(medicalInfoService.save(patientId, medicalInfoDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
@@ -42,7 +43,7 @@ public class MedicalInfoController {
     }
 
     @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL_ID, method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@PathVariable Long patientId, @PathVariable Long id, @RequestBody MedicalInfoDTO medicalInfoDTO) {
+    public ResponseEntity<?> update(@PathVariable Long patientId, @PathVariable Long id, @RequestBody @Valid MedicalInfoDTO medicalInfoDTO) {
         try {
             return new ResponseEntity<>(medicalInfoService.update(patientId, id, medicalInfoDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -52,7 +53,7 @@ public class FormController {
     }
 
     @RequestMapping(path = RequestMappings.FORMS.FORMS, method = RequestMethod.POST)
-    public ResponseEntity<?> saveForm(@RequestBody FormDTO form) {
+    public ResponseEntity<?> saveForm(@RequestBody @Valid FormDTO form) {
         System.out.println("FormController - saveForm");
         return new ResponseEntity<Object>(formService.saveForm(form), HttpStatus.OK);
     }

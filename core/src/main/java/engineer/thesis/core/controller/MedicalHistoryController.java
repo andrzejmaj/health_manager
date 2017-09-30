@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
@@ -30,7 +31,7 @@ public class MedicalHistoryController {
     }
 
     @RequestMapping(path = RequestMappings.HISTORY.PATIENT_HISTORY, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody MedicalHistoryDTO medicalHistoryDTO) {
+    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Valid MedicalHistoryDTO medicalHistoryDTO) {
         try {
             return new ResponseEntity<>(medicalHistoryService.save(patientId, medicalHistoryDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
@@ -41,7 +42,7 @@ public class MedicalHistoryController {
     }
 
     @RequestMapping(path = RequestMappings.HISTORY.PATIENT_HISTORY_ID, method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@PathVariable Long patientId, @PathVariable Long id, @RequestBody MedicalHistoryDTO medicalHistoryDTO) {
+    public ResponseEntity<?> update(@PathVariable Long patientId, @PathVariable Long id, @RequestBody @Valid MedicalHistoryDTO medicalHistoryDTO) {
         try {
             return new ResponseEntity<>(medicalHistoryService.update(patientId, medicalHistoryDTO, id), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {

@@ -11,7 +11,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class PatientDTO {
     private Long id;
-    private Integer k;
     private String firstName;
     private String lastName;
     private String gender;

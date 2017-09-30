@@ -1,11 +1,10 @@
 package engineer.thesis.core.model.dto;
 
-import engineer.thesis.core.model.FormAvailableValue;
-import engineer.thesis.core.model.FormFieldType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @AllArgsConstructor
@@ -14,9 +13,13 @@ import java.util.List;
 public class FormFieldDTO {
 
     private Long id;
+    @NotNull
     private FormFieldTypeDTO fieldType;
+    @NotNull
     private String name;
+    @NotNull
     private Boolean isRequired;
+    @NotNull
     private Boolean isEditable;
     private String label;
     private String placeholder;
