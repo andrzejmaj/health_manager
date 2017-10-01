@@ -16,7 +16,7 @@ import engineer.thesis.medcom.model.DicomInstance;
 import engineer.thesis.medcom.model.DicomSeries;
 import engineer.thesis.medcom.model.DicomStudy;
 import engineer.thesis.medcom.model.MedcomModality;
-import engineer.thesis.medcom.model.exceptions.DatabaseStorageException;
+import engineer.thesis.medcom.model.error.DatabaseStorageException;
 import org.apache.log4j.Logger;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;

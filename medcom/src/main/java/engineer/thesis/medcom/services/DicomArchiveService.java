@@ -9,7 +9,7 @@ import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.medcom.model.DicomInstance;
 import engineer.thesis.medcom.model.DicomSeries;
 import engineer.thesis.medcom.model.DicomStudy;
-import engineer.thesis.medcom.model.exceptions.InstanceNotFoundException;
+import engineer.thesis.medcom.model.error.InstanceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

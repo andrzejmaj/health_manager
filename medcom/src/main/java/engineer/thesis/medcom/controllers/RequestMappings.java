@@ -36,7 +36,8 @@ final class RequestMappings {
 
     static final class MODALITY {
         static final String GET_ALL = "/medcom/modalities";
-        static final String UPDATE = "/medcom/modalities/{aet}";
+        static final String UPDATE = "/medcom/modalities";
+        static final String DELETE = "/medcom/modalities/{aet}";
     }
 
 
