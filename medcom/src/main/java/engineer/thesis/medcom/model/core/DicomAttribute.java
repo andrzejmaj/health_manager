@@ -1,5 +1,6 @@
 package engineer.thesis.medcom.model.core;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dcm4che3.data.Keyword;
@@ -10,21 +11,16 @@ import org.dcm4che3.data.Keyword;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class DicomAttribute{
-
-    public DicomAttribute(Integer code, String value, String name) {
-        this.code = code;
-        this.value = value;
-        this.name = name;
-    }
 
     public DicomAttribute(Integer code, String value) {
         this(code, value, Keyword.valueOf(code));
     }
 
     private Integer code;
-    private String name;
     private String value;
+    private String name;
 
     @Override
     public String toString() {

@@ -16,6 +16,7 @@ import engineer.thesis.medcom.model.DicomInstance;
 import engineer.thesis.medcom.model.DicomSeries;
 import engineer.thesis.medcom.model.DicomStudy;
 import engineer.thesis.medcom.model.MedcomModality;
+import engineer.thesis.medcom.model.core.DicomAttribute;
 import engineer.thesis.medcom.model.error.DatabaseStorageException;
 import org.apache.log4j.Logger;
 import org.dcm4che3.data.Attributes;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -45,6 +47,8 @@ public class DatabaseStorageService {
     private final StudyRepository studyRepository;
     private final SeriesRepository seriesRepository;
     private final InstanceRepository instanceRepository;
+
+    private final DicomAttributesReader dicomAttributesReader;
     private final CustomObjectMapper objectMapper;
 
     @Autowired
@@ -53,18 +57,21 @@ public class DatabaseStorageService {
                                   StudyRepository studyRepository,
                                   SeriesRepository seriesRepository,
                                   InstanceRepository instanceRepository,
+                                  DicomAttributesReader dicomAttributesReader,
                                   CustomObjectMapper objectMapper) {
         this.patientRepository = patientRepository;
         this.modalityRepository = modalityRepository;
         this.studyRepository = studyRepository;
         this.seriesRepository = seriesRepository;
         this.instanceRepository = instanceRepository;
+        this.dicomAttributesReader = dicomAttributesReader;
         this.objectMapper = objectMapper;
     }
 
     @Transactional
     void store(File dicomFile, Association association) {
         Attributes attributes = parseFile(dicomFile);
+        List<DicomAttribute> resolvedAttributes = readAttributes(dicomFile);
 
         // resolve modality
         MedcomModality modality = new MedcomModality(
@@ -128,6 +135,15 @@ public class DatabaseStorageService {
         } finally {
             if (in != null)
                 SafeClose.close(in);
+        }
+    }
+
+    private List<DicomAttribute> readAttributes(File dicomFile) {
+        try {
+            DicomInputStream in = new DicomInputStream(dicomFile);
+            return dicomAttributesReader.read(in);
+        } catch (Exception ex) {
+            throw new DatabaseStorageException("failed to persist dicom - fatal error while reading file", ex);
         }
     }
 
