@@ -2,6 +2,7 @@ package engineer.thesis.medcom.model.core;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.dcm4che3.data.Keyword;
 
@@ -12,6 +13,7 @@ import org.dcm4che3.data.Keyword;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"name"})
 public class DicomAttribute{
 
     public DicomAttribute(Integer code, String value) {

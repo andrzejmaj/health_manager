@@ -14,7 +14,7 @@ import org.dcm4che3.data.Tag;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MedcomModality {
+public class MedcomModality { // TODO make DicomObject
 
     private String applicationEntity;
     private String address;

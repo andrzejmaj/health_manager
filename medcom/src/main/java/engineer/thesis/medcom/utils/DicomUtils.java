@@ -27,9 +27,9 @@ public final class DicomUtils {
 
 
     public static Instant parseDateTime(String dicomDate, String dicomTime) {
-        return (dicomDate != null && dicomTime != null)
-                ? LocalDateTime.parse(dicomDate + dicomTime, DATE_TIME_FORMATTER).toInstant(ZoneOffset.UTC)
-                : null;
+        if (dicomDate == null || dicomTime == null)
+            throw new IllegalArgumentException("arguments can not be null");
+        return LocalDateTime.parse(dicomDate + dicomTime, DATE_TIME_FORMATTER).toInstant(ZoneOffset.UTC);
     }
 
     public static Optional<String> getAttributeValue(Attributes attributes, int tag) {

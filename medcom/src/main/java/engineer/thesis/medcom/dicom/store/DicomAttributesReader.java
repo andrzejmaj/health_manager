@@ -1,6 +1,7 @@
 package engineer.thesis.medcom.dicom.store;
 
 import engineer.thesis.medcom.model.core.DicomAttribute;
+import engineer.thesis.medcom.model.error.DataExtractionException;
 import lombok.RequiredArgsConstructor;
 import org.dcm4che3.data.*;
 import org.dcm4che3.io.DicomInputHandler;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
 @Component
 public class DicomAttributesReader {
 
-    public List<DicomAttribute> read(DicomInputStream in) throws IOException {
+    public List<DicomAttribute> read(DicomInputStream in) {
         List<DicomAttribute> attributes = new ArrayList<>();
         InputHandler handler = new InputHandler(attributes::add);
 
@@ -27,15 +28,19 @@ public class DicomAttributesReader {
         return attributes;
     }
 
-    public void read(DicomInputStream in, Consumer<DicomAttribute> onAttribute) throws IOException {
+    public void read(DicomInputStream in, Consumer<DicomAttribute> onAttribute) {
         InputHandler handler = new InputHandler(onAttribute);
         readDataset(in, handler);
     }
 
-    private void readDataset(DicomInputStream in, InputHandler handler) throws IOException {
-        in.setDicomInputHandler(handler);
-        in.setIncludeBulkData(DicomInputStream.IncludeBulkData.NO);
-        in.readDataset(-1, Tag.PixelData);
+    private void readDataset(DicomInputStream in, InputHandler handler) {
+        try {
+            in.setDicomInputHandler(handler);
+            in.setIncludeBulkData(DicomInputStream.IncludeBulkData.NO);
+            in.readDataset(-1, Tag.PixelData);
+        } catch (IOException ex) {
+            throw new DataExtractionException("error while reading dicom attributes", ex);
+        }
     }
 
     @RequiredArgsConstructor
@@ -47,7 +52,7 @@ public class DicomAttributesReader {
         @Override
         public void readValue(DicomInputStream in, Attributes attributes) throws IOException {
             VR vr = in.vr();
-            if(VR.SQ.equals(vr) || in.length() == -1) {
+            if (VR.SQ.equals(vr) || in.length() == -1) {
                 return; // TODO handle sequence attributes
             }
 

@@ -3,7 +3,6 @@ package engineer.thesis.medcom.dicom.store;
 
 import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.entity.medcom.Instance;
-import engineer.thesis.core.model.entity.medcom.Modality;
 import engineer.thesis.core.model.entity.medcom.Series;
 import engineer.thesis.core.model.entity.medcom.Study;
 import engineer.thesis.core.repository.PatientRepository;
@@ -12,11 +11,12 @@ import engineer.thesis.core.repository.medcom.ModalityRepository;
 import engineer.thesis.core.repository.medcom.SeriesRepository;
 import engineer.thesis.core.repository.medcom.StudyRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
+import engineer.thesis.medcom.model.DicomData;
 import engineer.thesis.medcom.model.DicomInstance;
 import engineer.thesis.medcom.model.DicomSeries;
 import engineer.thesis.medcom.model.DicomStudy;
-import engineer.thesis.medcom.model.MedcomModality;
 import engineer.thesis.medcom.model.core.DicomAttribute;
+import engineer.thesis.medcom.model.error.DataExtractionException;
 import engineer.thesis.medcom.model.error.DatabaseStorageException;
 import org.apache.log4j.Logger;
 import org.dcm4che3.data.Attributes;
@@ -48,7 +48,7 @@ public class DatabaseStorageService {
     private final SeriesRepository seriesRepository;
     private final InstanceRepository instanceRepository;
 
-    private final DicomAttributesReader dicomAttributesReader;
+    private final DicomDataExtractor dicomDataExtractor;
     private final CustomObjectMapper objectMapper;
 
     @Autowired
@@ -57,22 +57,22 @@ public class DatabaseStorageService {
                                   StudyRepository studyRepository,
                                   SeriesRepository seriesRepository,
                                   InstanceRepository instanceRepository,
-                                  DicomAttributesReader dicomAttributesReader,
+                                  DicomDataExtractor dicomDataExtractor,
                                   CustomObjectMapper objectMapper) {
         this.patientRepository = patientRepository;
         this.modalityRepository = modalityRepository;
         this.studyRepository = studyRepository;
         this.seriesRepository = seriesRepository;
         this.instanceRepository = instanceRepository;
-        this.dicomAttributesReader = dicomAttributesReader;
+        this.dicomDataExtractor = dicomDataExtractor;
         this.objectMapper = objectMapper;
     }
 
     @Transactional
     void store(File dicomFile, Association association) {
-        Attributes attributes = parseFile(dicomFile);
-        List<DicomAttribute> resolvedAttributes = readAttributes(dicomFile);
+        Attributes attributes = parseFile(dicomFile); // TODO remove
 
+        /* TODO: make modality part of DicomData
         // resolve modality
         MedcomModality modality = new MedcomModality(
                 association.getCallingAET(),
@@ -81,8 +81,11 @@ public class DatabaseStorageService {
                 attributes
         );
         Modality modalityEntity = Optional.ofNullable(modalityRepository.findOne(modality.getApplicationEntity()))
-                .orElse(objectMapper.convert(modality, Modality.class)); // TODO merge exisiting if present?
+                .orElse(objectMapper.convert(modality, Modality.class)); // TODO merge exsisting if present?
         modalityRepository.save(modalityEntity);
+        */
+
+        DicomData dicomData = getDicomData(dicomFile);
 
         String pesel = getPesel(attributes);
         Patient patientEntity = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel))
@@ -91,19 +94,19 @@ public class DatabaseStorageService {
         // if corresponding entity already exists then ignores the received model
         // TODO: if corresponding entity already exists merge and save?
 
-        DicomInstance instance = new DicomInstance(attributes);
+        DicomInstance instance = dicomData.getInstance();
         if (instanceRepository.exists(instance.getInstanceUID())) {
             logger.warn(String.format("instance '%s' already persisted", instance.getInstanceUID()));
             return;
         }
         Instance instanceEntity = objectMapper.convert(instance, Instance.class);
 
-        DicomSeries series = new DicomSeries(attributes);
+        DicomSeries series = dicomData.getSeries();
         Series seriesEntity = Optional.ofNullable(seriesRepository.findOne(series.getInstanceUID()))
                 .orElse(objectMapper.convert(series, Series.class));
 
 
-        DicomStudy study = new DicomStudy(attributes);
+        DicomStudy study = dicomData.getStudy();
         Study studyEntity = Optional.ofNullable(studyRepository.findOne(study.getInstanceUID()))
                 .orElse(objectMapper.convert(study, Study.class));
 
@@ -138,12 +141,12 @@ public class DatabaseStorageService {
         }
     }
 
-    private List<DicomAttribute> readAttributes(File dicomFile) {
+    private DicomData getDicomData(File dicomFile) {
         try {
             DicomInputStream in = new DicomInputStream(dicomFile);
-            return dicomAttributesReader.read(in);
+            return dicomDataExtractor.extract(in);
         } catch (Exception ex) {
-            throw new DatabaseStorageException("failed to persist dicom - fatal error while reading file", ex);
+            throw new DatabaseStorageException("failed to persist dicom", ex);
         }
     }
 
