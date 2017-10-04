@@ -1,4 +1,4 @@
-package engineer.thesis.medcom.dicom.store
+package engineer.thesis.medcom.services
 
 import engineer.thesis.medcom.model.AttributeModules
 import engineer.thesis.medcom.model.DicomSeries
@@ -17,7 +17,7 @@ import java.util.stream.Collectors
  * @author MKlaman
  * @since 03.10.2017
  */
-class DicomDataExtractorTest extends Specification {
+class DicomDataServiceTest extends Specification {
 
     private static final AttributeModule expectedStudyAttributes = DicomStudy.attributeModule
     private static final AttributeModule expectedSeriesAttributes = DicomSeries.attributeModule
@@ -31,11 +31,11 @@ class DicomDataExtractorTest extends Specification {
 
 
     DicomAttributesReader dicomAttributesReaderMock
-    DicomDataExtractor dicomDataExtractor
+    DicomDataService dicomDataService
 
     void setup() {
         dicomAttributesReaderMock = Mock()
-        dicomDataExtractor = new DicomDataExtractor(dicomAttributesReaderMock)
+        dicomDataService = new DicomDataService(dicomAttributesReaderMock)
     }
 
     def '.extract should create dicom object with correctly distributed attributes'() {
@@ -49,24 +49,30 @@ class DicomDataExtractorTest extends Specification {
                 }
 
         when:
-        def result = dicomDataExtractor.extract(dicomInputStream)
+        def result = dicomDataService.extract(dicomInputStream)
 
         then:
         result != null
-        with(result.getInstance()) {
-            getInstanceUID() == instanceAttributeValue
-            getAttributes().size() == expectedInstanceAttributes.getAttributeTags().size()
-            assertAllAttributesValue(getAttributes(), instanceAttributeValue)
+        with(result.instance) {
+            instanceUID == instanceAttributeValue
+            attributes.size() == expectedInstanceAttributes.attributeTags.size()
+            attributes.every {
+                it.value == instanceAttributeValue
+            }
         }
-        with(result.getSeries()) {
-            getInstanceUID() == seriesAttributeValue
-            getAttributes().size() == expectedSeriesAttributes.getAttributeTags().size()
-            assertAllAttributesValue(getAttributes(), seriesAttributeValue)
+        with(result.series) {
+            instanceUID == seriesAttributeValue
+            attributes.size() == expectedSeriesAttributes.attributeTags.size()
+            attributes.every {
+                it.value == seriesAttributeValue
+            }
         }
-        with(result.getStudy()) {
-            getInstanceUID() == studyAttributeValue
-            getAttributes().size() == expectedStudyAttributes.getAttributeTags().size()
-            assertAllAttributesValue(getAttributes(), studyAttributeValue)
+        with(result.study) {
+            instanceUID == studyAttributeValue
+            attributes.size() == expectedStudyAttributes.attributeTags.size()
+            attributes.every {
+                it.value == studyAttributeValue
+            }
         }
     }
 
@@ -76,7 +82,7 @@ class DicomDataExtractorTest extends Specification {
         dicomAttributesReaderMock.read(_, _) >> { throw new DataExtractionException('test exception') }
 
         when:
-        dicomDataExtractor.extract(dicomInputStream)
+        dicomDataService.extract(dicomInputStream)
 
         then:
         thrown(DataExtractionException)
@@ -93,31 +99,26 @@ class DicomDataExtractorTest extends Specification {
                 }
 
         when:
-        dicomDataExtractor.extract(dicomInputStream)
+        dicomDataService.extract(dicomInputStream)
 
         then:
-        IllegalArgumentException ex = thrown()
-        ex.message.contains('missing required attribute')
-    }
-
-    def assertAllAttributesValue(Collection<DicomAttribute> attributes, String expectedValue) {
-        attributes.forEach({ attribute ->
-            assert attribute.getValue() == expectedValue
-        })
+        DataExtractionException ex = thrown()
+        ex.cause instanceof IllegalArgumentException
+        ex.cause.message.contains('missing required attribute')
     }
 
     List<DicomAttribute> mockAttributes() {
         def allAttributes = []
-        allAttributes << createAttributes(expectedStudyAttributes.getAttributeTags(), studyAttributeValue)
-        allAttributes << createAttributes(expectedSeriesAttributes.getAttributeTags(), seriesAttributeValue)
-        allAttributes << createAttributes(expectedInstanceAttributes.getAttributeTags(), instanceAttributeValue)
+        allAttributes.addAll createAttributes(expectedStudyAttributes.attributeTags, studyAttributeValue)
+        allAttributes.addAll createAttributes(expectedSeriesAttributes.attributeTags, seriesAttributeValue)
+        allAttributes.addAll createAttributes(expectedInstanceAttributes.attributeTags, instanceAttributeValue)
         return allAttributes
     }
 
     List<DicomAttribute> createAttributes(Collection<DicomAttributeTag> tags, String value) {
         return tags
                 .stream()
-                .map({ tag -> new DicomAttribute(tag.getCode(), value, tag.getName()) })
+                .map({ tag -> new DicomAttribute(tag.code, value, tag.name) })
                 .collect(Collectors.toList())
     }
 }

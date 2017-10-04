@@ -1,8 +1,12 @@
 package engineer.thesis.medcom.model.core;
 
 import com.google.common.collect.ImmutableSet;
+import engineer.thesis.medcom.model.DicomInstance;
+import engineer.thesis.medcom.model.DicomSeries;
+import engineer.thesis.medcom.model.DicomStudy;
 
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author MKlaman
@@ -10,8 +14,8 @@ import java.util.Comparator;
  */
 public abstract class DicomObjectBuilder<T extends DicomObject> implements Comparable<DicomObjectBuilder> {
 
-    private static final Comparator<DicomObjectBuilder> comparator =
-            Comparator.comparingInt(DicomObjectBuilder::getPriority);
+    private static final Comparator<DicomObjectBuilder> priorityComparator =
+            Comparator.<DicomObjectBuilder>comparingInt(DicomObjectBuilder::getPriority).reversed();
 
     protected ImmutableSet.Builder<DicomAttribute> attributes = new ImmutableSet.Builder<>();
 
@@ -31,6 +35,6 @@ public abstract class DicomObjectBuilder<T extends DicomObject> implements Compa
 
     @Override
     public int compareTo(DicomObjectBuilder other) {
-        return comparator.compare(this, other);
+        return priorityComparator.compare(this, other);
     }
 }

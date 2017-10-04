@@ -1,5 +1,6 @@
 package engineer.thesis.medcom.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Getter;
  * @since 03.10.2017
  */
 @Getter
+@AllArgsConstructor
 public class DicomData {
 
     private final DicomInstance instance;
@@ -15,13 +17,4 @@ public class DicomData {
     private final DicomStudy study;
     //private final DicomPatient patient // TODO
 
-
-    public DicomData(DicomInstance.Builder instanceBuilder,
-                     DicomSeries.Builder seriesBuilder,
-                     DicomStudy.Builder studyBuilder) {
-
-        this.instance = instanceBuilder.build();
-        this.series = seriesBuilder.build();
-        this.study = studyBuilder.build();
-    }
 }

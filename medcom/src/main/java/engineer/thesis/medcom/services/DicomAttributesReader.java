@@ -1,4 +1,4 @@
-package engineer.thesis.medcom.dicom.store;
+package engineer.thesis.medcom.services;
 
 import engineer.thesis.medcom.model.core.DicomAttribute;
 import engineer.thesis.medcom.model.error.DataExtractionException;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.dcm4che3.data.*;
 import org.dcm4che3.io.DicomInputHandler;
 import org.dcm4che3.io.DicomInputStream;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * @author MKlaman
  * @since 01.10.2017
  */
-@Component
+@Service
 public class DicomAttributesReader {
 
     public List<DicomAttribute> read(DicomInputStream in) {

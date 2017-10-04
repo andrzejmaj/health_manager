@@ -15,9 +15,9 @@ import engineer.thesis.medcom.model.DicomData;
 import engineer.thesis.medcom.model.DicomInstance;
 import engineer.thesis.medcom.model.DicomSeries;
 import engineer.thesis.medcom.model.DicomStudy;
-import engineer.thesis.medcom.model.core.DicomAttribute;
 import engineer.thesis.medcom.model.error.DataExtractionException;
 import engineer.thesis.medcom.model.error.DatabaseStorageException;
+import engineer.thesis.medcom.services.DicomDataService;
 import org.apache.log4j.Logger;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,7 +47,7 @@ public class DatabaseStorageService {
     private final SeriesRepository seriesRepository;
     private final InstanceRepository instanceRepository;
 
-    private final DicomDataExtractor dicomDataExtractor;
+    private final DicomDataService dicomDataService;
     private final CustomObjectMapper objectMapper;
 
     @Autowired
@@ -57,14 +56,14 @@ public class DatabaseStorageService {
                                   StudyRepository studyRepository,
                                   SeriesRepository seriesRepository,
                                   InstanceRepository instanceRepository,
-                                  DicomDataExtractor dicomDataExtractor,
+                                  DicomDataService dicomDataService,
                                   CustomObjectMapper objectMapper) {
         this.patientRepository = patientRepository;
         this.modalityRepository = modalityRepository;
         this.studyRepository = studyRepository;
         this.seriesRepository = seriesRepository;
         this.instanceRepository = instanceRepository;
-        this.dicomDataExtractor = dicomDataExtractor;
+        this.dicomDataService = dicomDataService;
         this.objectMapper = objectMapper;
     }
 
@@ -144,7 +143,7 @@ public class DatabaseStorageService {
     private DicomData getDicomData(File dicomFile) {
         try {
             DicomInputStream in = new DicomInputStream(dicomFile);
-            return dicomDataExtractor.extract(in);
+            return dicomDataService.extract(in);
         } catch (Exception ex) {
             throw new DatabaseStorageException("failed to persist dicom", ex);
         }
