@@ -3,6 +3,7 @@ package engineer.thesis.core.service.Interface;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.PatientDTO;
+import engineer.thesis.core.model.dto.PatientDetailsDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
 import org.springframework.data.domain.Page;
@@ -20,9 +21,9 @@ public interface IPatientService {
 
     PatientDTO findByEmail(String email) throws NoSuchElementExistsException;
 
-    List<ShortPatientDTO> getAllPatientsShort();
+    List<ShortPatientDTO> findAllPatientsShort();
 
-    Page<ShortPatientDTO> getAllPatientsShort(Pageable pageable);
+    Page<ShortPatientDTO> findAllPatientsShort(Pageable pageable);
 
     List<PatientDTO> findPatientsByLastName(String lastName);
 
@@ -34,4 +35,5 @@ public interface IPatientService {
 
     PersonalDetailsDTO updateEmergency(Long id, PersonalDetailsDTO emergencyContact) throws NoSuchElementExistsException;
 
+    PatientDTO register(PatientDetailsDTO patientDetails) throws AlreadyExistsException;
 }

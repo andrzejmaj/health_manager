@@ -6,9 +6,11 @@ import engineer.thesis.core.model.Account;
 import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.PersonalDetails;
 import engineer.thesis.core.model.dto.PatientDTO;
+import engineer.thesis.core.model.dto.PatientDetailsDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
 import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.repository.PersonalDetailsRepository;
 import engineer.thesis.core.service.Interface.IPatientService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class PatientService implements IPatientService {
     @Autowired
     private CustomObjectMapper objectMapper;
 
+    @Autowired
+    private PersonalDetailsRepository personalDetailsRepository;
+
     @Override
     public PatientDTO findById(Long id) throws NoSuchElementExistsException {
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(id));
@@ -52,12 +57,12 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public List<ShortPatientDTO> getAllPatientsShort() {
+    public List<ShortPatientDTO> findAllPatientsShort() {
         return patientRepository.findAll().stream().map(p -> objectMapper.convert(p, ShortPatientDTO.class)).collect(Collectors.toList());
     }
 
     @Override
-    public Page<ShortPatientDTO> getAllPatientsShort(Pageable pageable) {
+    public Page<ShortPatientDTO> findAllPatientsShort(Pageable pageable) {
         return patientRepository.findAll(pageable).map(p -> objectMapper.convert(p, ShortPatientDTO.class));
     }
 
@@ -68,7 +73,7 @@ public class PatientService implements IPatientService {
 
     @Override
     public PatientDTO savePatient(PatientDTO patientDTO) throws AlreadyExistsException {
-        if (accountService.doesAccountExist(patientDTO.getPesel())) {
+        if (accountService.checkExitance(patientDTO.getPesel())) {
             throw new AlreadyExistsException("Patient with such pesel number already exists");
         }
         patientDTO.setId(null);
@@ -115,6 +120,19 @@ public class PatientService implements IPatientService {
         emergencyContact.setId(patient.getEmergencyContact().getId());
         patient.setEmergencyContact(objectMapper.convert(emergencyContact, PersonalDetails.class));
         return objectMapper.convert(patientRepository.save(patient), PersonalDetailsDTO.class);
+    }
+
+    @Override
+    public PatientDTO register(PatientDetailsDTO patientDetails) throws AlreadyExistsException {
+        if (personalDetailsRepository.findByPesel(patientDetails.getPesel()) != null) {
+            throw new AlreadyExistsException("Patient with given pesel already exists");
+        }
+
+        Patient patient = new Patient();
+        patient.setAccount(accountService.newAccount(objectMapper.convert(patientDetails, PersonalDetails.class), null));
+        patient.setInsuranceNumber(patientDetails.getInsuranceNumber());
+
+        return convertToDTO(patientRepository.save(patient));
     }
 
     private PatientDTO convertToDTO(Patient patient) {

@@ -25,7 +25,6 @@ public class CustomObjectMapper {
     @PostConstruct
     public void setupMappings() {
         modelMapper.addMappings(new PatientShortPatientMap());
-
     }
 
     private class PatientShortPatientMap extends PropertyMap<Patient, ShortPatientDTO> {

@@ -83,7 +83,7 @@ public class PatientServiceTest {
 
     @Test
     public void findAllPatients_Test() {
-        List<PatientDTO2> patients = patientService.getAllPatientsShort();
+        List<PatientDTO2> patients = patientService.findAllPatientsShort();
         assertThat(patients.size()).isEqualTo(1);
     }
 

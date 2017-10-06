@@ -1,26 +1,35 @@
 package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
-import engineer.thesis.core.model.dto.AccountDTO;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
+import engineer.thesis.core.model.Account;
+import engineer.thesis.core.model.PersonalDetails;
+import engineer.thesis.core.model.User;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 @Service
 public interface IAccountService {
 
-    String deleteAccount(Long id);
+    String deleteAccount(UUID uuid) throws NoSuchElementExistsException;
 
-    Long getAccountIdByUserId(Long id);
+    PersonalDetailsDTO getPersonalDetails(UUID uuid) throws NoSuchElementExistsException;
 
-    AccountDTO saveNewAccount(AccountDTO accountDTO) throws AlreadyExistsException;
+    PersonalDetailsDTO getMyPersonalDetails(Long id) throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO getPersonalDetails(Long accountId);
+    PersonalDetailsDTO savePersonalDetails(UUID uuid, PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO savePersonalDetails(Long accountId, PersonalDetailsDTO personalDetailsDTO);
+    PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException, AlreadyExistsException;
 
-    String saveProfilePicture(Long id, MultipartFile file);
+    FileSystemResource getProfilePicture(UUID uuid) throws NoSuchElementExistsException;
 
-    FileSystemResource getProfilePicture(Long id);
+    String saveProfilePicture(UUID uuid, MultipartFile userImage) throws NoSuchElementExistsException;
+
+    Account newAccount(PersonalDetails personalDetails, User user);
+
+    boolean checkExitance(String pesel);
 }

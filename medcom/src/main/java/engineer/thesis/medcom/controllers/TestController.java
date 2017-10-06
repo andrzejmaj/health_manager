@@ -24,6 +24,6 @@ public class TestController {
 
     @GetMapping("/medcom/patients")
     public List<ShortPatientDTO> getAllPatients() {
-        return patientService.getAllPatientsShort();
+        return patientService.findAllPatientsShort();
     }
 }

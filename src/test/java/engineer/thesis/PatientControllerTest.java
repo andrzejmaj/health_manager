@@ -23,7 +23,7 @@ public class PatientControllerTest extends AbstractTest {
 
         List<PatientDTO2> allPatients = Collections.singletonList(patient);
 
-        given(service.getAllPatientsShort()).willReturn(allPatients);
+        given(service.findAllPatientsShort()).willReturn(allPatients);
 
         try {
             Boolean doesContain = mvc.perform(MockMvcRequestBuilders.get("/patients")
