@@ -1,7 +1,7 @@
 package engineer.thesis.core.model.enums;
 
 
-public enum  FieldType {
+public enum FieldType {
     CHECKBOX("CHECKBOX"),
     DATE("DATE"),
     EMAIL("EMAIL"),

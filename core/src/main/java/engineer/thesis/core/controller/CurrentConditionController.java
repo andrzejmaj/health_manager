@@ -49,7 +49,7 @@ public class CurrentConditionController {
     }
 
     @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION_ID, method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable Long patientId, @PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long patientId, @PathVariable Long id) {
         try {
             currentConditionService.delete(patientId, id);
             return new ResponseEntity<>(true, HttpStatus.OK);

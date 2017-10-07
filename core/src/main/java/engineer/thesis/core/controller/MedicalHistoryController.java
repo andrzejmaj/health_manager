@@ -53,7 +53,7 @@ public class MedicalHistoryController {
     }
 
     @RequestMapping(path = RequestMappings.HISTORY.PATIENT_HISTORY_ID, method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable Long patientId, @PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long patientId, @PathVariable Long id) {
         try {
             medicalHistoryService.delete(patientId, id);
             return new ResponseEntity<>(true, HttpStatus.OK);

@@ -19,7 +19,6 @@ public class MedicalInfoService implements IMedicalInfoService, BasePatientServi
 
     @Autowired
     private MedicalInfoRepository medicalInfoRepository;
-
     @Autowired
     private PatientRepository patientRepository;
 
@@ -47,7 +46,7 @@ public class MedicalInfoService implements IMedicalInfoService, BasePatientServi
         }
         medicalInfoDTO.setId(null);
         patient.setMedicalInformation(objectMapper.convert(medicalInfoDTO, MedicalInformation.class));
-        return objectMapper.convert(patientRepository.save(patient).getMedicalInformation(), MedicalInfoDTO.class );
+        return objectMapper.convert(patientRepository.save(patient).getMedicalInformation(), MedicalInfoDTO.class);
 
     }
 

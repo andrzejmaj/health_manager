@@ -39,7 +39,7 @@ public class CurrentConditionService implements BasePatientService, ICurrentCond
 
     @Override
     public CurrentConditionDTO savePatientCondition(Long patientId, CurrentConditionDTO currentConditionDTO) throws NoSuchElementExistsException, DataIntegrityException {
-        if (!patientId.equals(currentConditionDTO.getPatientId())){
+        if (!patientId.equals(currentConditionDTO.getPatientId())) {
             throw new DataIntegrityException("Ids in model and path does not match");
         }
 

@@ -54,7 +54,7 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public List<DoctorDTO> getAllDoctors() {
-        return doctorRepository.findAll().stream().map(d -> objectMapper.convert(d,DoctorDTO.class)).collect(Collectors.toList());
+        return doctorRepository.findAll().stream().map(d -> objectMapper.convert(d, DoctorDTO.class)).collect(Collectors.toList());
     }
 
     @Override

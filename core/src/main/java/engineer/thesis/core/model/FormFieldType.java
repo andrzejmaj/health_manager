@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "hm_form_field_type", schema= "hmanager")
+@Table(name = "hm_form_field_type", schema = "hmanager")
 public class FormFieldType {
 
     @Id
