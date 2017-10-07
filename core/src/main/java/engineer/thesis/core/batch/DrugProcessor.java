@@ -20,16 +20,26 @@ public class DrugProcessor implements ItemProcessor<ExternalDrugDTO, Drug> {
 
     @Override
     public Drug process(ExternalDrugDTO item) throws Exception {
+
         System.out.println("processing: " + item.getNazwaProduktu());
+
         Drug drug = new Drug();
-        if (item.getRodzajPreparatu() == DrugType.weterynaryjny ) {
+
+        if (item.getRodzajPreparatu() == DrugType.weterynaryjny) {
             return null;
         }
-        Optional<Drug> foundDrug = existingDrugs.stream().filter(d -> d.getName().equals(item.getNazwaProduktu())).findFirst();
-        drug.setId(foundDrug.orElse(emptyDrug).getId());
 
+        Optional<Drug> foundDrug = existingDrugs.stream().filter(d -> d.getName().equals(item.getNazwaProduktu())).findFirst();
+
+        drug.setId(foundDrug.orElse(emptyDrug).getId());
         drug.setName(item.getNazwaProduktu());
+        drug.setCommonName(item.getNazwaPowszechnieStosowana());
+        drug.setDrugForm(item.getPostac());
+        drug.setEntityResponsible(item.getPodmiotOdpowiedzialny());
+        drug.setPermitValidity(item.getWaznoscPozwolenia());
+        drug.setStrength(item.getMoc());
         drug.setRefundRate(0);
+        
         return drug;
     }
 
