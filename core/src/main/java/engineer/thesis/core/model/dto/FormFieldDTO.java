@@ -14,7 +14,7 @@ public class FormFieldDTO {
 
     private Long id;
     @NotNull
-    private String fieldType;
+    private String type;
     @NotNull
     private String name;
     private Boolean isRequired;

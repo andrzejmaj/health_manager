@@ -58,7 +58,7 @@ public class FormService implements IFormService {
 
     @Override
     public FormDTO saveForm(FormDTO formDTO) {
-        formDTO.getFormFields().forEach(field -> field.setFieldType(field.getFieldType().toUpperCase()));
+        formDTO.getFormFields().forEach(field -> field.setType(field.getType().toUpperCase()));
         Form form = objectMapper.convert(formDTO, Form.class);
         form.getFormFields().forEach(field -> {
             if (field.getFieldAvailableValues() != null) {
