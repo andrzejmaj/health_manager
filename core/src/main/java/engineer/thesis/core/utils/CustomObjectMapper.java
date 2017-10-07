@@ -1,8 +1,10 @@
 package engineer.thesis.core.utils;
 
 
+import engineer.thesis.core.model.FormFieldType;
 import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
+import engineer.thesis.core.model.enums.FieldType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,7 @@ public class CustomObjectMapper {
     @PostConstruct
     public void setupMappings() {
         modelMapper.addMappings(new PatientShortPatientMap());
+        modelMapper.createTypeMap(String.class, FormFieldType.class).setConverter(context -> context.getSource() == null ? null : new FormFieldType(null, FieldType.valueOf(context.getSource())));
     }
 
     private class PatientShortPatientMap extends PropertyMap<Patient, ShortPatientDTO> {

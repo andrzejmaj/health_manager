@@ -12,7 +12,5 @@ import javax.validation.constraints.NotNull;
 public class FormAvailableValueDTO {
     private Long id;
     @NotNull
-    private String name;
-    @NotNull
     private String value;
 }

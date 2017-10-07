@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +18,6 @@ public class FormDTO {
     private String name;
     @NotNull
     private List<FormFieldDTO> formFields;
-    @NotNull
-    private UserDTO owner;
+    private UUID owner;
 
 }

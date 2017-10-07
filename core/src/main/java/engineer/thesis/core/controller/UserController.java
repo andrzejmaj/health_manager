@@ -9,8 +9,6 @@ import engineer.thesis.core.security.TokenUtils;
 import engineer.thesis.core.security.model.*;
 import engineer.thesis.core.service.Implementation.UserService;
 import engineer.thesis.core.utils.MailService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,6 @@ import java.util.NoSuchElementException;
 public class UserController {
 
     private static final String NOT_ALLOWED_MESSAGE = "You are not allowed to perform this operation";
-    private final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
     @Autowired
@@ -94,6 +91,7 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
+
 
     @RequestMapping(path = RequestMappings.USERS.REGISTER_ON_BEHALF, method = RequestMethod.POST)
     public ResponseEntity<?> registerOnBehalf(@RequestBody @Valid RegisterOnBehalfRequest request) {

@@ -14,12 +14,10 @@ public class FormFieldDTO {
 
     private Long id;
     @NotNull
-    private FormFieldTypeDTO fieldType;
+    private String fieldType;
     @NotNull
     private String name;
-    @NotNull
     private Boolean isRequired;
-    @NotNull
     private Boolean isEditable;
     private String label;
     private String placeholder;
