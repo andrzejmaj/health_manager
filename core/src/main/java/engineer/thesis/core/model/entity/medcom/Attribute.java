@@ -34,6 +34,10 @@ public class Attribute {
     private String value;
 
     @ManyToOne
+    @JoinColumn(name = "modality_id")
+    private Modality modality;
+
+    @ManyToOne
     @JoinColumn(name = "study_id")
     private Study study;
 

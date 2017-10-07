@@ -13,8 +13,12 @@ public class DicomData {
 
     private final DicomInstance instance;
     private final DicomSeries series;
-    //private final DicomModality modality // TODO
     private final DicomStudy study;
-    //private final DicomPatient patient // TODO
+    private final DicomModality modality;
+    private final DicomPatient patient;
 
+    public void setModalityMetadata(String address, int port) {
+        modality.setAddress(address);
+        modality.setPort(port);
+    }
 }

@@ -21,11 +21,6 @@ import java.util.Set;
 @JsonPropertyOrder({"instanceUID", "creationDate", "sopClassName", "attributes"})
 public class DicomInstance extends DicomObject {
 
-//    private static final AttributeModule[] modules = {
-//            AttributeModules.commonModule,
-//            AttributeModules.generalImageModule
-//    };
-
     private String instanceUID;
     private Date creationDate;
     private String sopClassName;

@@ -33,16 +33,13 @@ public class Series {
     @Column(name = "creation_date")
     private Date creationDate;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "modality_id")
-    @Cascade(CascadeType.ALL)
     private Modality modality;
 
     @ManyToOne
     @JoinColumn(name = "study_id")
     private Study study;
-
-    // TODO add reference to modality
 
     @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)

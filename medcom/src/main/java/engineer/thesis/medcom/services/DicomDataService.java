@@ -1,9 +1,6 @@
 package engineer.thesis.medcom.services;
 
-import engineer.thesis.medcom.model.DicomData;
-import engineer.thesis.medcom.model.DicomInstance;
-import engineer.thesis.medcom.model.DicomSeries;
-import engineer.thesis.medcom.model.DicomStudy;
+import engineer.thesis.medcom.model.*;
 import engineer.thesis.medcom.model.core.DicomAttribute;
 import engineer.thesis.medcom.model.core.DicomObjectBuilder;
 import engineer.thesis.medcom.model.error.DataExtractionException;
@@ -30,7 +27,7 @@ public class DicomDataService {
         this.dicomAttributesReader = dicomAttributesReader;
     }
 
-    public DicomData extract(DicomInputStream in) {
+    public DicomData create(DicomInputStream in) {
         DicomObjectBuildersChain builderChain = new DicomObjectBuildersChain();
 
         dicomAttributesReader.read(in, builderChain::accept);
@@ -39,7 +36,9 @@ public class DicomDataService {
             return new DicomData(
                     builderChain.getInstanceBuilder().build(),
                     builderChain.getSeriesBuilder().build(),
-                    builderChain.getStudyBuilder().build()
+                    builderChain.getStudyBuilder().build(),
+                    builderChain.getModalityBuilder().build(),
+                    builderChain.getPatientBuilder().build()
             );
         } catch (IllegalArgumentException ex) {
             throw new DataExtractionException("could not create DicomData from read attributes!", ex);
@@ -57,15 +56,23 @@ public class DicomDataService {
         @Getter
         private final DicomObjectBuilder<DicomStudy> studyBuilder;
 
+        @Getter
+        private final DicomObjectBuilder<DicomModality> modalityBuilder;
+
+        @Getter
+        private final DicomObjectBuilder<DicomPatient> patientBuilder;
+
         private final List<DicomObjectBuilder> chain;
 
         DicomObjectBuildersChain() {
             instanceBuilder = DicomInstance.builder();
             seriesBuilder = DicomSeries.builder();
             studyBuilder = DicomStudy.builder();
+            modalityBuilder = DicomModality.builder();
+            patientBuilder = DicomPatient.builder();
 
-            chain = Stream.<DicomObjectBuilder>of(instanceBuilder, seriesBuilder, studyBuilder)
-                    .sorted()
+            chain = Stream.<DicomObjectBuilder>of(instanceBuilder, seriesBuilder, studyBuilder, modalityBuilder, patientBuilder)
+                    .sorted() // builders ordered according to their priority
                     .collect(Collectors.toList());
         }
 

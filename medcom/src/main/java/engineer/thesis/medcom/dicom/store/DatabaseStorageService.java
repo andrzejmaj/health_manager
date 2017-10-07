@@ -3,6 +3,7 @@ package engineer.thesis.medcom.dicom.store;
 
 import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.entity.medcom.Instance;
+import engineer.thesis.core.model.entity.medcom.Modality;
 import engineer.thesis.core.model.entity.medcom.Series;
 import engineer.thesis.core.model.entity.medcom.Study;
 import engineer.thesis.core.repository.PatientRepository;
@@ -12,24 +13,16 @@ import engineer.thesis.core.repository.medcom.SeriesRepository;
 import engineer.thesis.core.repository.medcom.StudyRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.medcom.model.DicomData;
-import engineer.thesis.medcom.model.DicomInstance;
-import engineer.thesis.medcom.model.DicomSeries;
-import engineer.thesis.medcom.model.DicomStudy;
-import engineer.thesis.medcom.model.error.DataExtractionException;
 import engineer.thesis.medcom.model.error.DatabaseStorageException;
 import engineer.thesis.medcom.services.DicomDataService;
 import org.apache.log4j.Logger;
-import org.dcm4che3.data.Attributes;
-import org.dcm4che3.data.Tag;
 import org.dcm4che3.io.DicomInputStream;
 import org.dcm4che3.net.Association;
-import org.dcm4che3.util.SafeClose;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -68,90 +61,57 @@ public class DatabaseStorageService {
     }
 
     @Transactional
-    void store(File dicomFile, Association association) {
-        Attributes attributes = parseFile(dicomFile); // TODO remove
-
-        /* TODO: make modality part of DicomData
-        // resolve modality
-        MedcomModality modality = new MedcomModality(
-                association.getCallingAET(),
-                association.getSocket().getInetAddress().toString(),
-                association.getSocket().getPort(),
-                attributes
-        );
-        Modality modalityEntity = Optional.ofNullable(modalityRepository.findOne(modality.getApplicationEntity()))
-                .orElse(objectMapper.convert(modality, Modality.class)); // TODO merge exsisting if present?
-        modalityRepository.save(modalityEntity);
-        */
-
+    void store(File dicomFile, Association association) { // TODO merge existing model attributes with received dicomData instead of ignoring if already present
         DicomData dicomData = getDicomData(dicomFile);
+        dicomData.setModalityMetadata(
+                association.getSocket().getInetAddress().toString(),
+                association.getSocket().getPort()
+        );
+        //dicomData.getModality().setApplicationEntity(association.getCallingAET()); // should be set from atts
 
-        String pesel = getPesel(attributes);
-        Patient patientEntity = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel))
+        // modality
+        Modality modalityEntity = Optional.ofNullable(modalityRepository.findOne(dicomData.getModality().getApplicationEntity()))
+                .orElse(objectMapper.convert(dicomData.getModality(), Modality.class));
+        modalityRepository.save(modalityEntity);
+
+        // patient
+        String pesel = dicomData.getPatient().getPesel();
+        Patient patientEntity = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel)) // ignoring dicomPatientData
                 .orElseThrow(() -> new DatabaseStorageException(String.format("could not find patient with PESEL: %s", pesel)));
 
-        // if corresponding entity already exists then ignores the received model
-        // TODO: if corresponding entity already exists merge and save?
-
-        DicomInstance instance = dicomData.getInstance();
-        if (instanceRepository.exists(instance.getInstanceUID())) {
-            logger.warn(String.format("instance '%s' already persisted", instance.getInstanceUID()));
-            return;
+        // instance
+        if (instanceRepository.exists(dicomData.getInstance().getInstanceUID())) {
+            logger.warn(String.format("instance '%s' already persisted", dicomData.getInstance().getInstanceUID()));
+            return; // TODO proceed anyway and merge
         }
-        Instance instanceEntity = objectMapper.convert(instance, Instance.class);
+        Instance instanceEntity = objectMapper.convert(dicomData.getInstance(), Instance.class);
 
-        DicomSeries series = dicomData.getSeries();
-        Series seriesEntity = Optional.ofNullable(seriesRepository.findOne(series.getInstanceUID()))
-                .orElse(objectMapper.convert(series, Series.class));
+        // series
+        Series seriesEntity = Optional.ofNullable(seriesRepository.findOne(dicomData.getSeries().getInstanceUID()))
+                .orElse(objectMapper.convert(dicomData.getSeries(), Series.class));
 
+        // study
+        Study studyEntity = Optional.ofNullable(studyRepository.findOne(dicomData.getStudy().getInstanceUID()))
+                .orElse(objectMapper.convert(dicomData.getStudy(), Study.class));
 
-        DicomStudy study = dicomData.getStudy();
-        Study studyEntity = Optional.ofNullable(studyRepository.findOne(study.getInstanceUID()))
-                .orElse(objectMapper.convert(study, Study.class));
-
-
+        // persisitng
         studyEntity.setPatient(patientEntity);
         seriesEntity.setStudy(studyEntity);
+        seriesEntity.setModality(modalityEntity);
         seriesEntity.addInstance(instanceEntity);
 
         studyRepository.save(studyEntity);
         seriesRepository.save(seriesEntity);
 
-        if (studyEntity.getCreationDate() != null &&
-                (patientEntity.getLastDicomStudyDate() == null || patientEntity.getLastDicomStudyDate().before(studyEntity.getCreationDate()))) {
-            patientEntity.setLastDicomStudyDate(studyEntity.getCreationDate());
-            patientRepository.save(patientEntity);
-        }
-
         logger.info("successfully persisted dicom instance in database");
-    }
-
-    private Attributes parseFile(File dicomFile) {
-        DicomInputStream in = null;
-        try {
-            in = new DicomInputStream(dicomFile);
-            in.setIncludeBulkData(DicomInputStream.IncludeBulkData.NO);
-            return in.readDataset(-1, Tag.PixelData);
-        } catch (IOException e) {
-            throw new DatabaseStorageException("failed to persist dicom - fatal error while reading file", e);
-        } finally {
-            if (in != null)
-                SafeClose.close(in);
-        }
     }
 
     private DicomData getDicomData(File dicomFile) {
         try {
             DicomInputStream in = new DicomInputStream(dicomFile);
-            return dicomDataService.extract(in);
+            return dicomDataService.create(in);
         } catch (Exception ex) {
             throw new DatabaseStorageException("failed to persist dicom", ex);
         }
     }
-
-    private String getPesel(Attributes attributes) {
-        return Optional.ofNullable(attributes.getString(Tag.PatientID))
-                .orElseThrow(() -> new DatabaseStorageException("could not extract patient`s PESEL"));
-    }
-
 }

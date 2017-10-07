@@ -22,7 +22,10 @@ import java.util.Set;
 public class DicomSeries extends DicomObject {
 
     public static final AttributeModule attributeModule = AttributeModule.combine(
-            AttributeModules.generalSeriesModule
+            AttributeModules.generalSeriesModule,
+            AttributeModules.clinicalTrialSeriesModule,
+            AttributeModules.crSeriesModule,
+            AttributeModules.petSeriesModule
     );
 
     private String instanceUID;
@@ -32,7 +35,7 @@ public class DicomSeries extends DicomObject {
         return new DicomSeries.Builder();
     }
 
-    public DicomSeries(Set<DicomAttribute> attributes) {
+    private DicomSeries(Set<DicomAttribute> attributes) {
         super(attributes);
         this.setRequiredField(Tag.SeriesInstanceUID, this::setInstanceUID);
         this.setDateTimeField(Tag.SeriesDate, Tag.SeriesTime, this::setCreationDate);

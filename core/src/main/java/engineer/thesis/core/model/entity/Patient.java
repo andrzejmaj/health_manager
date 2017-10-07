@@ -50,7 +50,4 @@ public class Patient {
     @Fetch(FetchMode.SELECT)
     @Cascade(CascadeType.ALL)
     private List<Study> dicomStudies;
-
-    @Column(name = "last_dicom_study_date")
-    private Date lastDicomStudyDate;
 }

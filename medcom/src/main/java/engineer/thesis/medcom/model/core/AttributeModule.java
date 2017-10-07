@@ -41,6 +41,17 @@ public class AttributeModule {
         return new AttributeModule(attributes);
     }
 
+    public AttributeModule subtract(AttributeModule... others) {
+        AttributeModule othersCombined = AttributeModule.combine(others);
+
+        Set<DicomAttributeTag> attributes = attributeTags.stream()
+                .filter(attribute ->
+                        !othersCombined.contains(attribute.getCode()))
+                .collect(Collectors.toSet());
+
+        return new AttributeModule(attributes);
+    }
+
     public boolean contains(int attributeCode) {
         return attributeTags.contains(DicomAttributeTag.of(attributeCode));
     }

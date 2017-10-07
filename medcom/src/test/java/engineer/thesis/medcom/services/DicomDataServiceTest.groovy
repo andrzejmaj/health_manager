@@ -1,6 +1,8 @@
 package engineer.thesis.medcom.services
 
 import engineer.thesis.medcom.model.AttributeModules
+import engineer.thesis.medcom.model.DicomModality
+import engineer.thesis.medcom.model.DicomPatient
 import engineer.thesis.medcom.model.DicomSeries
 import engineer.thesis.medcom.model.DicomStudy
 import engineer.thesis.medcom.model.core.AttributeModule
@@ -16,15 +18,28 @@ import java.util.stream.Collectors
 /**
  * @author MKlaman
  * @since 03.10.2017
+ * @link http://spockframework.org/spock/docs/1.1/all_in_one.html
  */
 class DicomDataServiceTest extends Specification {
 
+    private static final AttributeModule expectedPatientAttributes = DicomPatient.attributeModule
+
+    private static final AttributeModule expectedModalityAttributes = DicomModality.attributeModule
+            .subtract(expectedPatientAttributes)
+
     private static final AttributeModule expectedStudyAttributes = DicomStudy.attributeModule
+            .subtract(expectedPatientAttributes, expectedModalityAttributes)
+
     private static final AttributeModule expectedSeriesAttributes = DicomSeries.attributeModule
+            .subtract(expectedPatientAttributes, expectedModalityAttributes, expectedStudyAttributes)
+
     private static final AttributeModule expectedInstanceAttributes = AttributeModule.combine(
             AttributeModules.commonModule,
             AttributeModules.generalImageModule,
-    )
+    ).subtract(expectedPatientAttributes, expectedModalityAttributes, expectedStudyAttributes, expectedSeriesAttributes)
+
+    private static final String patientAttributeValue = 'patient attr'
+    private static final String modalityAttributeValue = 'modality attr'
     private static final String studyAttributeValue = 'study attr'
     private static final String seriesAttributeValue = 'series attr'
     private static final String instanceAttributeValue = 'instance attr'
@@ -38,7 +53,7 @@ class DicomDataServiceTest extends Specification {
         dicomDataService = new DicomDataService(dicomAttributesReaderMock)
     }
 
-    def '.extract should create dicom object with correctly distributed attributes'() {
+    def '.create should create dicom object with correctly distributed attributes'() {
         setup:
         def dicomInputStream = Mock(DicomInputStream)
         def mockAttributes = mockAttributes()
@@ -49,46 +64,62 @@ class DicomDataServiceTest extends Specification {
                 }
 
         when:
-        def result = dicomDataService.extract(dicomInputStream)
+        def dicomData = dicomDataService.create(dicomInputStream)
 
         then:
-        result != null
-        with(result.instance) {
+        dicomData != null
+        with(dicomData.instance) {
             instanceUID == instanceAttributeValue
             attributes.size() == expectedInstanceAttributes.attributeTags.size()
             attributes.every {
                 it.value == instanceAttributeValue
             }
         }
-        with(result.series) {
+        with(dicomData.series) {
             instanceUID == seriesAttributeValue
             attributes.size() == expectedSeriesAttributes.attributeTags.size()
             attributes.every {
                 it.value == seriesAttributeValue
             }
         }
-        with(result.study) {
+        with(dicomData.study) {
             instanceUID == studyAttributeValue
             attributes.size() == expectedStudyAttributes.attributeTags.size()
             attributes.every {
                 it.value == studyAttributeValue
             }
         }
+        with(dicomData.modality) {
+            applicationEntity == modalityAttributeValue
+            type == modalityAttributeValue
+            stationName == modalityAttributeValue
+            attributes.size() == expectedModalityAttributes.attributeTags.size()
+            attributes.every {
+                it.value == modalityAttributeValue
+            }
+        }
+        with(dicomData.patient) {
+            pesel == patientAttributeValue
+            attributes.size() == expectedPatientAttributes.attributeTags.size()
+            attributes.every {
+                it.value == patientAttributeValue
+            }
+        }
     }
 
-    def '.extract should fail on reader exception'() {
+    def '.create should fail on reader exception'() {
         setup:
         def dicomInputStream = Mock(DicomInputStream)
         dicomAttributesReaderMock.read(_, _) >> { throw new DataExtractionException('test exception') }
 
         when:
-        dicomDataService.extract(dicomInputStream)
+        dicomDataService.create(dicomInputStream)
 
         then:
         thrown(DataExtractionException)
     }
 
-    def '.extract should fail on dicom object creation exception when attributes are missing'() {
+    def '.create should fail on dicom object creation exception when attributes are missing'() {
         setup:
         def mockAttributes = mockAttributes()
         mockAttributes.removeIf({ (it.getValue() == seriesAttributeValue) })
@@ -99,7 +130,7 @@ class DicomDataServiceTest extends Specification {
                 }
 
         when:
-        dicomDataService.extract(dicomInputStream)
+        dicomDataService.create(dicomInputStream)
 
         then:
         DataExtractionException ex = thrown()
@@ -109,6 +140,8 @@ class DicomDataServiceTest extends Specification {
 
     List<DicomAttribute> mockAttributes() {
         def allAttributes = []
+        allAttributes.addAll createAttributes(expectedPatientAttributes.attributeTags, patientAttributeValue)
+        allAttributes.addAll createAttributes(expectedModalityAttributes.attributeTags, modalityAttributeValue)
         allAttributes.addAll createAttributes(expectedStudyAttributes.attributeTags, studyAttributeValue)
         allAttributes.addAll createAttributes(expectedSeriesAttributes.attributeTags, seriesAttributeValue)
         allAttributes.addAll createAttributes(expectedInstanceAttributes.attributeTags, instanceAttributeValue)

@@ -23,7 +23,9 @@ public class DicomStudy extends DicomObject {
 
     public static final AttributeModule attributeModule = AttributeModule.combine(
             AttributeModules.generalStudyModule,
-            AttributeModules.patientStudyModule
+            AttributeModules.patientStudyModule,
+            AttributeModules.clinicalTrialStudyModule
+
     );
 
     private String instanceUID;
@@ -33,10 +35,17 @@ public class DicomStudy extends DicomObject {
         return new DicomStudy.Builder();
     }
 
-    public DicomStudy(Set<DicomAttribute> attributes) {
+    private DicomStudy(Set<DicomAttribute> attributes) {
         super(attributes);
         this.setRequiredField(Tag.StudyInstanceUID, this::setInstanceUID);
         this.setDateTimeField(Tag.StudyDate, Tag.StudyTime, this::setCreationDate);
+    }
+
+    private void setCreationDate(Date creationDate) {
+        if (creationDate == null) {
+            creationDate = new Date();
+        }
+        this.creationDate = creationDate;
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

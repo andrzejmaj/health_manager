@@ -1,6 +1,8 @@
 package engineer.thesis.medcom.services;
 
 import engineer.thesis.core.model.dto.PatientDTO;
+import engineer.thesis.core.model.entity.Patient;
+import engineer.thesis.core.model.entity.medcom.Study;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.medcom.InstanceRepository;
 import engineer.thesis.core.repository.medcom.SeriesRepository;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,9 +52,17 @@ public class DicomArchiveService { // TODO generify
         return patientRepository.findAll()
                 .stream()
                 .filter(patientEntity -> !patientEntity.getDicomStudies().isEmpty())
+                .sorted(Comparator.comparing(this::findLastStudyDate).reversed())
                 .map(entity -> objectMapper.convert(entity, PatientDTO.class))
-                .sorted(Comparator.comparing(PatientDTO::getLastDicomStudyDate).reversed())
                 .collect(Collectors.toList());
+    }
+
+    private Date findLastStudyDate(Patient patient) {
+        return patient.getDicomStudies().stream()
+                .sorted(Comparator.comparing(Study::getCreationDate).reversed())
+                .map(Study::getCreationDate)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("no study date found"));
     }
 
     public List<DicomStudy> getPatientStudies(Long patientId) {

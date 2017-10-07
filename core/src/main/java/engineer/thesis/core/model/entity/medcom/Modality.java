@@ -4,8 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author MKlaman
@@ -23,17 +29,17 @@ public class Modality {
     @Column(name = "application_entity", nullable = false)
     private String applicationEntity;
 
+    @Column(name = "stationName")
+    private String stationName;
+
+    @Column(name = "type", length = 30)
+    private String type;
+
     @Column(name = "address", length = 40)
     private String address;
 
     @Column(name = "port")
     private int port;
-
-    @Column(name = "type", length = 30)
-    private String type;
-
-    @Column(name = "stationName")
-    private String stationName;
 
     @Column(name = "description", length = 512)
     private String description;
@@ -41,15 +47,12 @@ public class Modality {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "manufacturer")
-    private String manufacturer;
+    @OneToMany(mappedBy = "modality", fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<Attribute> attributes;
 
-    @Column(name = "manufacturerModelName")
-    private String manufacturerModelName;
-
-    @Column(name = "softwareVersions")
-    private String softwareVersions;
-
-    @Column(name = "serialNumber")
-    private String serialNumber;
+    @OneToMany(mappedBy = "modality", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
+    @Cascade(CascadeType.ALL)
+    private List<Series> series = new ArrayList<>();
 }

@@ -66,6 +66,7 @@ public abstract class DicomObject {
             setter.accept(Date.from(instant));
         } catch (Exception ex) {
             logger.error("could not set dicom DateTime filed", ex);
+            setter.accept(null);
         }
     }
 
