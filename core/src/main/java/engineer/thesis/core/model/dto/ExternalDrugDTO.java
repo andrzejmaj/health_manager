@@ -33,7 +33,7 @@ public class ExternalDrugDTO {
     @XmlAttribute(name = "waznoscPozwolenia")
     private String waznoscPozwolenia;
 
-    @XmlAttribute(name = "podmiotOdpowiedzialny")
+    @XmlAttribute(name = "podmiotOdpowiedzielny")
     private String podmiotOdpowiedzialny;
 
     @XmlAttribute(name = "postac")
