@@ -5,11 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
+import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -38,4 +36,8 @@ public class ExternalDrugDTO {
 
     @XmlAttribute(name = "postac")
     private String postac;
+
+    @XmlElementWrapper(name = "opakowania")
+    @XmlElement(name = "opakowanie", required = true, nillable = true)
+    public List<PackDTO> packs;
 }
