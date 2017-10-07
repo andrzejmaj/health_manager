@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class DrugDTO {
     private Long id;
     private String name;
-    private Integer refundRate;
 }
