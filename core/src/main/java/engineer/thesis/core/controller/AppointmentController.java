@@ -42,8 +42,12 @@ public class AppointmentController {
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/appointments/{appointmentId}")
     public ResponseEntity<?> removeAppointment(@PathVariable(name = "appointmentId") long appointmentId) {
+        AppointmentDTO appointmentDTO = appointmentService.find(appointmentId);
+        if (appointmentDTO == null) {
+            return new ResponseEntity<>("This appointment does not exists", HttpStatus.BAD_REQUEST);
+        }
         appointmentRepository.delete(appointmentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(appointmentDTO, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/patients/{patientId}/appointments")
@@ -57,8 +61,7 @@ public class AppointmentController {
             return new ResponseEntity<>("This appointment already exists", HttpStatus.BAD_REQUEST);
         }
 
-        appointmentService.save(appointmentDTO, patientId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(appointmentService.save(appointmentDTO, patientId), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/patients/{patientId}/appointments")
@@ -72,7 +75,6 @@ public class AppointmentController {
             return new ResponseEntity<>("This appointment does not exist", HttpStatus.BAD_REQUEST);
         }
 
-        appointmentService.save(appointmentDTO, patientId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(appointmentService.save(appointmentDTO, patientId), HttpStatus.OK);
     }
 }
