@@ -50,6 +50,12 @@ public class PatientService implements IPatientService {
     }
 
     @Override
+    public PatientDTO findByEmail(String email) throws NoSuchElementException {
+        Optional<Patient> patient = Optional.ofNullable(patientRepository.findByAccount_User_Email(email));
+        return objectMapper.convert(patient.orElseThrow(NoSuchElementException::new), PatientDTO.class);
+    }
+
+    @Override
     public List<PatientDTO> findPatientsByLastName(String lastName) {
         return patientRepository.findByAccount_PersonalDetails_LastNameIgnoreCase(lastName).stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
     }
