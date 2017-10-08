@@ -1,11 +1,9 @@
 package engineer.thesis.medcom.controllers;
 
-import engineer.thesis.medcom.model.MedcomModality;
+import engineer.thesis.medcom.model.DicomModality;
 import engineer.thesis.medcom.model.error.ErrorMessage;
-import engineer.thesis.medcom.model.error.InstanceNotFoundException;
 import engineer.thesis.medcom.model.error.ModalityNotFoundException;
 import engineer.thesis.medcom.services.ModalitiesService;
-import org.apache.catalina.valves.rewrite.RewriteMap;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,12 +30,12 @@ public class ModalitiesController {
 
 
     @GetMapping(RequestMappings.MODALITY.GET_ALL)
-    public List<MedcomModality> getAllModalities() {
+    public List<DicomModality> getAllModalities() {
         return modalitiesService.getAllModalities();
     }
 
     @PutMapping(RequestMappings.MODALITY.UPDATE)
-    public MedcomModality updateModality(@RequestBody MedcomModality modality) {
+    public DicomModality updateModality(@RequestBody DicomModality modality) {
         return modalitiesService.updateModality(modality);
     }
 

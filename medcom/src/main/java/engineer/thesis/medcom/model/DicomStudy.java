@@ -18,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonPropertyOrder({"instanceUID", "creationDate", "attributes"})
+@JsonPropertyOrder({"instanceUID", "patientPesel", "creationDate", "attributes"})
 public class DicomStudy extends DicomObject {
 
     public static final AttributeModule attributeModule = AttributeModule.combine(
@@ -30,6 +30,9 @@ public class DicomStudy extends DicomObject {
 
     private String instanceUID;
     private Date creationDate;
+
+    // non attribute
+    private String patientPesel;
 
     public static DicomStudy.Builder builder() {
         return new DicomStudy.Builder();

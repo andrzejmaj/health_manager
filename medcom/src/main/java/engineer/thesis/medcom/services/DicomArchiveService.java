@@ -67,9 +67,13 @@ public class DicomArchiveService { // TODO generify
 
     public List<DicomStudy> getPatientStudies(Long patientId) {
         return Optional.ofNullable(patientRepository.findOne(patientId))
-                .map(entity ->
-                        entity.getDicomStudies().stream()
-                                .map(studyEntity -> objectMapper.convert(studyEntity, DicomStudy.class))
+                .map(patientEntity ->
+                        patientEntity.getDicomStudies().stream()
+                                .map(studyEntity -> {
+                                    DicomStudy study = objectMapper.convert(studyEntity, DicomStudy.class);
+                                    study.setPatientPesel(patientEntity.getAccount().getPersonalDetails().getPesel()); // TODO objectMapper config
+                                    return study;
+                                })
                                 .collect(Collectors.toList()))
                 .orElseThrow(() -> new InstanceNotFoundException(
                         String.format("patient with id '%s' not found in the database!", patientId)
@@ -79,13 +83,21 @@ public class DicomArchiveService { // TODO generify
     public List<DicomStudy> getAllStudies() {
         return studyRepository.findAll()
                 .stream()
-                .map(entity -> objectMapper.convert(entity, DicomStudy.class))
+                .map(studyEntity -> {
+                    DicomStudy study = objectMapper.convert(studyEntity, DicomStudy.class);
+                    study.setPatientPesel(studyEntity.getPatient().getAccount().getPersonalDetails().getPesel()); // TODO objectMapper config
+                    return study;
+                })
                 .collect(Collectors.toList());
     }
 
     public DicomStudy getStudyDetails(String studyId) {
         return Optional.ofNullable(studyRepository.findOne(studyId))
-                .map(entity -> objectMapper.convert(entity, DicomStudy.class))
+                .map(studyEntity -> {
+                    DicomStudy study = objectMapper.convert(studyEntity, DicomStudy.class);
+                    study.setPatientPesel(studyEntity.getPatient().getAccount().getPersonalDetails().getPesel()); // TODO objectMapper config
+                    return study;
+                })
                 .orElseThrow(() -> new InstanceNotFoundException(
                         String.format("study with instanceUID '%s' not found in the database!", studyId)
                 ));
@@ -93,9 +105,14 @@ public class DicomArchiveService { // TODO generify
 
     public List<DicomSeries> getStudySeries(String studyId) {
         return Optional.ofNullable(studyRepository.findOne(studyId))
-                .map(entity ->
-                        entity.getSeries().stream()
-                                .map(seriesEntity -> objectMapper.convert(seriesEntity, DicomSeries.class))
+                .map(studyEntity ->
+                        studyEntity.getSeries().stream()
+                                .map(seriesEntity -> {
+                                    DicomSeries series = objectMapper.convert(seriesEntity, DicomSeries.class); // TODO objectMapper config
+                                    series.setStudyInstanceUID(studyEntity.getInstanceUID());
+                                    series.setModalityAET(seriesEntity.getModality().getApplicationEntity());
+                                    return series;
+                                })
                                 .collect(Collectors.toList()))
                 .orElseThrow(() -> new InstanceNotFoundException(
                         String.format("study with instanceUID '%s' not found in the database!", studyId)
@@ -104,7 +121,12 @@ public class DicomArchiveService { // TODO generify
 
     public DicomSeries getSeriesDetails(String seriesId) {
         return Optional.ofNullable(seriesRepository.findOne(seriesId))
-                .map(entity -> objectMapper.convert(entity, DicomSeries.class))
+                .map(seriesEntity -> {
+                    DicomSeries series = objectMapper.convert(seriesEntity, DicomSeries.class); // TODO objectMapper config
+                    series.setStudyInstanceUID(seriesEntity.getStudy().getInstanceUID());
+                    series.setModalityAET(seriesEntity.getModality().getApplicationEntity());
+                    return series;
+                })
                 .orElseThrow(() -> new InstanceNotFoundException(
                         String.format("series with instanceUID '%s' not found in the database!", seriesId)
                 ));
@@ -112,9 +134,13 @@ public class DicomArchiveService { // TODO generify
 
     public List<DicomInstance> getSeriesInstances(String seriesId) {
         return Optional.ofNullable(seriesRepository.findOne(seriesId))
-                .map(entity ->
-                        entity.getInstances().stream()
-                                .map(instanceEntity -> objectMapper.convert(instanceEntity, DicomInstance.class))
+                .map(seriesEntity ->
+                        seriesEntity.getInstances().stream()
+                                .map(instanceEntity -> {
+                                    DicomInstance instance = objectMapper.convert(instanceEntity, DicomInstance.class); // TODO objectMapper config
+                                    instance.setSeriesInstanceUID(seriesEntity.getInstanceUID());
+                                    return instance;
+                                })
                                 .collect(Collectors.toList()))
                 .orElseThrow(() -> new InstanceNotFoundException(
                         String.format("series with instanceUID '%s' not found in the database!", seriesId)
@@ -123,7 +149,11 @@ public class DicomArchiveService { // TODO generify
 
     public DicomInstance getInstanceDetails(String instanceId) {
         return Optional.ofNullable(instanceRepository.findOne(instanceId))
-                .map(entity -> objectMapper.convert(entity, DicomInstance.class))
+                .map(instanceEntity -> {
+                    DicomInstance instance = objectMapper.convert(instanceEntity, DicomInstance.class); // TODO objectMapper config
+                    instance.setSeriesInstanceUID(instanceEntity.getSeries().getInstanceUID());
+                    return instance;
+                })
                 .orElseThrow(() -> new InstanceNotFoundException(
                         String.format("instance with instanceUID '%s' not found in the database!", instanceId)
                 ));

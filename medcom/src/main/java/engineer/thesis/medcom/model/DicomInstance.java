@@ -18,12 +18,15 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonPropertyOrder({"instanceUID", "creationDate", "sopClassName", "attributes"})
+@JsonPropertyOrder({"instanceUID", "seriesInstanceUID", "creationDate", "sopClassName", "attributes"})
 public class DicomInstance extends DicomObject {
 
     private String instanceUID;
     private Date creationDate;
     private String sopClassName;
+
+    // non attribute
+    private String seriesInstanceUID;
 
     public static DicomInstance.Builder builder() {
         return new DicomInstance.Builder();

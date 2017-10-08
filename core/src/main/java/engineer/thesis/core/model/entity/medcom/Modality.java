@@ -55,4 +55,11 @@ public class Modality {
     @Fetch(FetchMode.SELECT)
     @Cascade(CascadeType.ALL)
     private List<Series> series = new ArrayList<>();
+
+
+    public void setAttributes(List<Attribute> attributes) {
+        attributes.forEach(attribute ->
+                attribute.setModality(this));
+        this.attributes = attributes;
+    }
 }

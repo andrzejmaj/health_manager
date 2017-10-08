@@ -3,7 +3,7 @@ package engineer.thesis.medcom.services;
 import engineer.thesis.core.model.entity.medcom.Modality;
 import engineer.thesis.core.repository.medcom.ModalityRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
-import engineer.thesis.medcom.model.MedcomModality;
+import engineer.thesis.medcom.model.DicomModality;
 import engineer.thesis.medcom.model.error.ModalityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,14 +30,14 @@ public class ModalitiesService {
         this.objectMapper = objectMapper;
     }
 
-    public List<MedcomModality> getAllModalities() {
+    public List<DicomModality> getAllModalities() {
         return modalityRepository.findAll()
                 .stream()
-                .map(entity -> objectMapper.convert(entity, MedcomModality.class))
+                .map(entity -> objectMapper.convert(entity, DicomModality.class))
                 .collect(Collectors.toList());
     }
 
-    public MedcomModality updateModality(MedcomModality newModality) {
+    public DicomModality updateModality(DicomModality newModality) {
         // TODO merge with exisiting entity and save and return current modality
         return null;
     }
@@ -45,7 +45,7 @@ public class ModalitiesService {
     public void deleteModality(String modalityAET) {
         Modality modality = Optional.ofNullable(modalityRepository.findOne(modalityAET))
                 .orElseThrow(() -> new ModalityNotFoundException(
-                        String.format("modality wiht AE title '%s' not found in the database!", modalityAET)
+                        String.format("modality with AE title '%s' not found in the database!", modalityAET)
                 ));
         modalityRepository.delete(modality);
     }

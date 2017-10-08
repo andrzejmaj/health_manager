@@ -44,7 +44,7 @@ public class DicomModality extends DicomObject {
         super(attributes);
         this.setRequiredField(Tag.SourceApplicationEntityTitle, this::setApplicationEntity);
         this.setRequiredField(Tag.Modality, this::setType);
-        this.setRequiredField(Tag.StationName, this::setStationName);
+        this.setOptionalField(Tag.StationName, this::setStationName);
     }
 
     public static DicomModality.Builder builder() {
