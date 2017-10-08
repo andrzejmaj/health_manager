@@ -7,7 +7,9 @@ import engineer.thesis.core.model.dto.AppointmentDTO;
 @Service
 public interface IAppointmentService {
 
-	void save(AppointmentDTO appointmentDTO, long patientId);
+	AppointmentDTO save(AppointmentDTO appointmentDTO, long patientId);
 
 	boolean exists(AppointmentDTO appointmentDTO);
+
+	AppointmentDTO find(long appointmentId);
 }
