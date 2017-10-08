@@ -47,7 +47,7 @@ public class Modality {
     @Column(name = "location")
     private String location;
 
-    @OneToMany(mappedBy = "modality", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "modality", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Attribute> attributes;
 

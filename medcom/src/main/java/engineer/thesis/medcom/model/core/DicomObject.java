@@ -3,11 +3,9 @@ package engineer.thesis.medcom.model.core;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import engineer.thesis.medcom.utils.DicomUtils;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Keyword;
 
 import java.time.Instant;
@@ -24,7 +22,6 @@ import org.apache.log4j.Logger;
  * @since 12.09.2017
  */
 @NoArgsConstructor
-@AllArgsConstructor
 public abstract class DicomObject {
 
     private final static Logger logger = Logger.getLogger(DicomObject.class);
@@ -34,12 +31,22 @@ public abstract class DicomObject {
     @JsonIgnore
     private Set<DicomAttribute> attributes;
 
+    public DicomObject(Set<DicomAttribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    /**
+     * merges without overriding existing values
+     * @param other source of new values
+     */
+    public abstract void lazyMerge(DicomObject other);
 
     public Optional<DicomAttribute> getAttribute(Integer code) {
         return attributes.stream()
                 .filter(attribute -> attribute.getCode().equals(code))
                 .findAny();
     }
+
 
     protected void setRequiredField(Integer tag, Consumer<String> setter) {
         String value = getAttribute(tag)
@@ -68,6 +75,15 @@ public abstract class DicomObject {
             logger.warn("could not set dicom DateTime field", ex);
             setter.accept(null);
         }
+    }
+
+    protected void lazyAttributesMerge(DicomObject other) {
+        other.getAttributes()
+                .stream()
+                .filter(otherAttribute ->
+                        !attributes.contains(otherAttribute))
+                .forEach(newAttribute ->
+                        attributes.add(newAttribute));
     }
 
     @JsonProperty("attributes")

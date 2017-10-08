@@ -36,7 +36,7 @@ public class Instance {
     @JoinColumn(name = "series_id")
     private Series series;
 
-    @OneToMany(mappedBy = "instance", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "instance", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Attribute> attributes;
 

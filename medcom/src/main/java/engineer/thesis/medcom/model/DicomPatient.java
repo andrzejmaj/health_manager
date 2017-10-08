@@ -32,6 +32,19 @@ public class DicomPatient extends DicomObject {
 
     private DicomPatient(Set<DicomAttribute> attributes) {
         super(attributes);
+        setFields();
+    }
+
+    @Override
+    public void lazyMerge(DicomObject other) {
+        if (!(other instanceof DicomPatient))
+            return;
+
+        super.lazyAttributesMerge(other);
+        setFields();
+    }
+
+    private void setFields() {
         this.setRequiredField(Tag.PatientID, this::setPesel);
     }
 

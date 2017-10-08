@@ -34,6 +34,22 @@ public class DicomInstance extends DicomObject {
 
     private DicomInstance(Set<DicomAttribute> attributes) {
         super(attributes);
+        setFields();
+    }
+
+    @Override
+    public void lazyMerge(DicomObject other) {
+        if (!(other instanceof DicomInstance))
+            return;
+
+        super.lazyAttributesMerge(other);
+        setFields();
+
+        if (seriesInstanceUID == null)
+            seriesInstanceUID = ((DicomInstance) other).getSeriesInstanceUID();
+    }
+
+    private void setFields() {
         this.setRequiredField(Tag.SOPInstanceUID, this::setInstanceUID);
         this.setRequiredField(Tag.SOPClassUID, this::setSopClassNameByCode);
         this.setDateTimeField(Tag.InstanceCreationDate, Tag.InstanceCreationTime, this::setCreationDate);
@@ -42,6 +58,7 @@ public class DicomInstance extends DicomObject {
     private void setSopClassNameByCode(String code) {
         sopClassName = UID.nameOf(code);
     }
+
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Builder extends DicomObjectBuilder<DicomInstance> {

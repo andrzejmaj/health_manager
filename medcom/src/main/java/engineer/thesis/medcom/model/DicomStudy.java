@@ -40,6 +40,22 @@ public class DicomStudy extends DicomObject {
 
     private DicomStudy(Set<DicomAttribute> attributes) {
         super(attributes);
+        setFields();
+    }
+
+    @Override
+    public void lazyMerge(DicomObject other) {
+        if (!(other instanceof DicomStudy))
+            return;
+
+        super.lazyAttributesMerge(other);
+        setFields();
+
+        if (patientPesel == null)
+            patientPesel = ((DicomStudy) other).getPatientPesel();
+    }
+
+    private void setFields() {
         this.setRequiredField(Tag.StudyInstanceUID, this::setInstanceUID);
         this.setDateTimeField(Tag.StudyDate, Tag.StudyTime, this::setCreationDate);
     }

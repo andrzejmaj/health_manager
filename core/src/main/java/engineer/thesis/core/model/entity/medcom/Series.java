@@ -41,7 +41,7 @@ public class Series {
     @JoinColumn(name = "study_id")
     private Study study;
 
-    @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "series", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Attribute> attributes;
 

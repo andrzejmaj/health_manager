@@ -38,7 +38,7 @@ public class Study {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
-    @OneToMany(mappedBy = "study", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "study", fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
     private List<Attribute> attributes;
 

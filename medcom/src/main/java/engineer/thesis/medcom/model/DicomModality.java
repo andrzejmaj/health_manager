@@ -36,12 +36,31 @@ public class DicomModality extends DicomObject {
 
     // non attribute fields
     private String address;
-    private int port;
+    private Integer port;
     private String description; // TODO add/mofify via rest
     private String location; // TODO add/mofify via rest
 
     private DicomModality(Set<DicomAttribute> attributes) {
         super(attributes);
+        setFields();
+    }
+
+    @Override
+    public void lazyMerge(DicomObject other) {
+        if (!(other instanceof DicomModality))
+            return;
+
+        super.lazyAttributesMerge(other);
+        setFields();
+
+        DicomModality otherModality = (DicomModality) other;
+        if (address == null) address = otherModality.getAddress();
+        if (port == null) port = otherModality.getPort();
+        if (description == null) description = otherModality.getDescription();
+        if (location == null) location = otherModality.getLocation();
+    }
+
+    private void setFields() {
         this.setRequiredField(Tag.SourceApplicationEntityTitle, this::setApplicationEntity);
         this.setRequiredField(Tag.Modality, this::setType);
         this.setOptionalField(Tag.StationName, this::setStationName);

@@ -41,6 +41,23 @@ public class DicomSeries extends DicomObject {
 
     private DicomSeries(Set<DicomAttribute> attributes) {
         super(attributes);
+        setFields();
+    }
+
+    @Override
+    public void lazyMerge(DicomObject other) {
+        if (!(other instanceof DicomSeries))
+            return;
+
+        super.lazyAttributesMerge(other);
+        setFields();
+
+        DicomSeries otherSeries = (DicomSeries) other;
+        if (studyInstanceUID == null) studyInstanceUID = otherSeries.getStudyInstanceUID();
+        if (modalityAET == null) modalityAET = otherSeries.getModalityAET();
+    }
+
+    private void setFields() {
         this.setRequiredField(Tag.SeriesInstanceUID, this::setInstanceUID);
         this.setDateTimeField(Tag.SeriesDate, Tag.SeriesTime, this::setCreationDate);
     }

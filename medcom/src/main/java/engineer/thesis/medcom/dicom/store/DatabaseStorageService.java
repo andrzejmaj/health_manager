@@ -12,7 +12,8 @@ import engineer.thesis.core.repository.medcom.ModalityRepository;
 import engineer.thesis.core.repository.medcom.SeriesRepository;
 import engineer.thesis.core.repository.medcom.StudyRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
-import engineer.thesis.medcom.model.DicomData;
+import engineer.thesis.medcom.model.*;
+import engineer.thesis.medcom.model.core.DicomObject;
 import engineer.thesis.medcom.model.error.DatabaseStorageException;
 import engineer.thesis.medcom.services.DicomDataService;
 import org.apache.log4j.Logger;
@@ -61,45 +62,51 @@ public class DatabaseStorageService {
     }
 
     @Transactional
-    void store(File dicomFile, Association association) { // TODO merge existing model attributes with received dicomData instead of ignoring if already present
+    void store(File dicomFile, Association association) {
+        // extract data
         DicomData dicomData = getDicomData(dicomFile);
         dicomData.setModalityMetadata(
                 association.getSocket().getInetAddress().toString(),
                 association.getSocket().getPort()
         );
-        //dicomData.getModality().setApplicationEntity(association.getCallingAET()); // should be set from atts
+
+        // TODO: fix lazy loading attributes not working
 
         // modality
-        Modality modalityEntity = Optional.ofNullable(modalityRepository.findOne(dicomData.getModality().getApplicationEntity()))
-                .orElse(objectMapper.convert(dicomData.getModality(), Modality.class));
-        modalityRepository.save(modalityEntity);
+        Modality modalityEntity = modalityRepository.findOne(dicomData.getModality().getApplicationEntity());
+        modalityEntity = mergeEntity(modalityEntity, Modality.class, dicomData.getModality(), DicomModality.class);
 
         // patient
         String pesel = dicomData.getPatient().getPesel();
-        Patient patientEntity = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel)) // ignoring dicomPatientData
+        Patient patientEntity = Optional.ofNullable(patientRepository.findByAccount_PersonalDetails_Pesel(pesel))
                 .orElseThrow(() -> new DatabaseStorageException(String.format("could not find patient with PESEL: %s", pesel)));
+        // ignoring dicomPatientData
+
 
         // instance
-        if (instanceRepository.exists(dicomData.getInstance().getInstanceUID())) {
+        Instance instanceEntity = instanceRepository.findOne(dicomData.getInstance().getInstanceUID());
+        if(instanceEntity == null)
             logger.warn(String.format("instance '%s' already persisted", dicomData.getInstance().getInstanceUID()));
-            return; // TODO proceed anyway and merge
-        }
-        Instance instanceEntity = objectMapper.convert(dicomData.getInstance(), Instance.class);
+        instanceEntity = mergeEntity(instanceEntity, Instance.class, dicomData.getInstance(), DicomInstance.class);
+
 
         // series
-        Series seriesEntity = Optional.ofNullable(seriesRepository.findOne(dicomData.getSeries().getInstanceUID()))
-                .orElse(objectMapper.convert(dicomData.getSeries(), Series.class));
+        Series seriesEntity = seriesRepository.findOne(dicomData.getSeries().getInstanceUID());
+        seriesEntity = mergeEntity(seriesEntity, Series.class, dicomData.getSeries(), DicomSeries.class);
+
 
         // study
-        Study studyEntity = Optional.ofNullable(studyRepository.findOne(dicomData.getStudy().getInstanceUID()))
-                .orElse(objectMapper.convert(dicomData.getStudy(), Study.class));
+        Study studyEntity = studyRepository.findOne(dicomData.getStudy().getInstanceUID());
+        studyEntity = mergeEntity(studyEntity, Study.class, dicomData.getStudy(), DicomStudy.class);
+
 
         // persisitng
         studyEntity.setPatient(patientEntity);
         seriesEntity.setStudy(studyEntity);
-        seriesEntity.setModality(modalityEntity);
         seriesEntity.addInstance(instanceEntity);
+        seriesEntity.setModality(modalityEntity);
 
+        modalityRepository.save(modalityEntity);
         studyRepository.save(studyEntity);
         seriesRepository.save(seriesEntity);
 
@@ -113,5 +120,17 @@ public class DatabaseStorageService {
         } catch (Exception ex) {
             throw new DatabaseStorageException("failed to persist dicom", ex);
         }
+    }
+
+    // java type parameters kinda suck
+    private <Entity, Model extends DicomObject> Entity mergeEntity(Entity currentEntity, Class<Entity> entityClass,
+                                                                   Model extracted, Class<Model> modelClass) {
+        if (currentEntity == null) { // not in DB
+            return objectMapper.convert(extracted, entityClass);
+        }
+
+        Model current = objectMapper.convert(currentEntity, modelClass);
+        current.lazyMerge(extracted);
+        return objectMapper.convert(current, entityClass);
     }
 }
