@@ -57,7 +57,6 @@ public class UserController {
      * @param authenticationRequest (email, password)
      * @return created user's token
      */
-
     @RequestMapping(path = RequestMappings.USERS.LOGIN, method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody AuthenticationRequest authenticationRequest) {

@@ -1,6 +1,6 @@
 package engineer.thesis.medcom.controllers;
 
-import engineer.thesis.core.model.dto.PatientDTO;
+import engineer.thesis.core.model.dto.MedcomPatientDTO;
 import engineer.thesis.medcom.dicom.repository.ArchiveRepository;
 import engineer.thesis.medcom.model.DicomInstance;
 import engineer.thesis.medcom.model.DicomSeries;
@@ -43,7 +43,7 @@ public class DicomArchiveController { // TODO: split into multiple controllers
     }
 
     @GetMapping(RequestMappings.PATIENT.GET_ALL)
-    public List<PatientDTO> getAllMedcomPatients() {
+    public List<MedcomPatientDTO> getAllMedcomPatients() {
         return dicomArchiveService.getAllMedcomPatients();
     }
 

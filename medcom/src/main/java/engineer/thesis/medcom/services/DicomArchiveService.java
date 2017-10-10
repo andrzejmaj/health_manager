@@ -1,5 +1,6 @@
 package engineer.thesis.medcom.services;
 
+import engineer.thesis.core.model.dto.MedcomPatientDTO;
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.entity.medcom.Study;
@@ -48,12 +49,17 @@ public class DicomArchiveService { // TODO generify
         this.objectMapper = objectMapper;
     }
 
-    public List<PatientDTO> getAllMedcomPatients() {
+    public List<MedcomPatientDTO> getAllMedcomPatients() {
         return patientRepository.findAll()
                 .stream()
                 .filter(patientEntity -> !patientEntity.getDicomStudies().isEmpty())
-                .sorted(Comparator.comparing(this::findLastStudyDate).reversed())
-                .map(entity -> objectMapper.convert(entity, PatientDTO.class))
+                .map(entity ->
+                        new MedcomPatientDTO(
+                                objectMapper.convert(entity, PatientDTO.class),
+                                entity.getDicomStudies().size(),
+                                findLastStudyDate(entity)
+                        ))
+                .sorted(Comparator.comparing(MedcomPatientDTO::getLastStudyDate).reversed())
                 .collect(Collectors.toList());
     }
 
