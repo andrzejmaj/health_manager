@@ -39,7 +39,6 @@ public class ExternalApiXmlBatchConfig {
     @Bean
     public ItemReader<ExternalDrugDTO> ExternalDrugXmlReader() {
         StaxEventItemReader<ExternalDrugDTO> xmlFileReader = new StaxEventItemReader<>();
-//        xmlFileReader.setResource(new ClassPathResource("test4.xml"));
 
         try {
             xmlFileReader.setResource(new UrlResource(external));
@@ -53,7 +52,6 @@ public class ExternalApiXmlBatchConfig {
         drugMarshaller.setClassesToBeBound(ExternalDrugDTO.class);
         xmlFileReader.setUnmarshaller(drugMarshaller);
 
-
         return xmlFileReader;
     }
 
@@ -65,7 +63,6 @@ public class ExternalApiXmlBatchConfig {
                 .flow(step1())
                 .end()
                 .build();
-
     }
 
     @Bean

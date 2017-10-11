@@ -92,7 +92,7 @@ public class DoctorController {
 
 	@RequestMapping(method = RequestMethod.GET, path = "/doctors/{docId}/slots/{slotId}")
 	public ResponseEntity<?> getTimeSlot(@PathVariable(name = "docId") long docId,
-			@PathVariable(name = "slotId") long slotId) {
+										 @PathVariable(name = "slotId") long slotId) {
 		if (!doctorRepository.exists(docId)) {
 			return new ResponseEntity<>("No doctor with id: " + docId, HttpStatus.NOT_FOUND);
 		}
@@ -102,6 +102,23 @@ public class DoctorController {
 			return new ResponseEntity<>("No time slot with id: " + slotId, HttpStatus.NOT_FOUND);
 		}
 
+		return new ResponseEntity<>(slot, HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE, path = "/doctors/{docId}/slots/{slotId}")
+	public ResponseEntity<?> removeTimeSlot(@PathVariable(name = "docId") long docId,
+										 @PathVariable(name = "slotId") long slotId) {
+		if (!doctorRepository.exists(docId)) {
+			return new ResponseEntity<>("No doctor with id: " + docId, HttpStatus.NOT_FOUND);
+		}
+
+		TimeSlot slot = timeSlotRepository.findOne(slotId);
+		if (slot == null) {
+			return new ResponseEntity<>("No time slot with id: " + slotId, HttpStatus.NOT_FOUND);
+		}else{
+			timeSlotRepository.delete(slotId);
+
+		}
 		return new ResponseEntity<>(slot, HttpStatus.OK);
 	}
 }

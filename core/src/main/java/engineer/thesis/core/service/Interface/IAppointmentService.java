@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IAppointmentService {
 
-	void save(AppointmentDTO appointmentDTO, long patientId);
+	AppointmentDTO save(AppointmentDTO appointmentDTO, long patientId);
 
 	boolean exists(AppointmentDTO appointmentDTO);
+
+	AppointmentDTO find(long appointmentId);
 }
