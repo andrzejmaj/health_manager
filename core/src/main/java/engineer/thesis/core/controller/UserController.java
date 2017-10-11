@@ -18,12 +18,10 @@ import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
@@ -31,24 +29,18 @@ import java.util.NoSuchElementException;
 @RestController
 public class UserController {
 
+    private static final String NOT_ALLOWED_MESSAGE = "You are not allowed to perform this operation";
+    private final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
-
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private MailService mailService;
-
     @Autowired
     private TokenUtils tokenUtil;
-
     @Autowired
     private UserDetailsService userDetailsService;
-
-    private final Logger log = LoggerFactory.getLogger(UserController.class);
-
-    private static final String NOT_ALLOWED_MESSAGE = "You are not allowed to perform this operation";
 
     //TODO:
     // 4. Add some loggers
@@ -100,7 +92,7 @@ public class UserController {
                 return false;
             }
         };
-        
+
         return new ResponseEntity<>(new AuthenticationResponse(tokenUtil.generateToken((SecurityUser) securityUser, myDevice)),
                 HttpStatus.OK);
     }

@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "hm_form", schema= "hmanager")
+@Table(name = "hm_form", schema = "hmanager")
 public class Form {
 
     @Id

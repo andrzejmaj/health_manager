@@ -88,7 +88,7 @@ public class MedicalHistoryService implements IMedicalHistoryService {
             throw new NoSuchElementExistsException("Medical record doesn't exists");
         }
 
-        if (disease != null && disease.getId().equals(medicalHistoryDTO.getDisease().getId())){
+        if (disease != null && disease.getId().equals(medicalHistoryDTO.getDisease().getId())) {
             medicalHistory.setDisease(disease);
             return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), MedicalHistoryDTO.class);
         } else if (disease == null && medicalHistoryDTO.getDisease().getId() == null) {

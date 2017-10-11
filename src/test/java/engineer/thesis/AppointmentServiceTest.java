@@ -13,21 +13,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @RunWith(SpringRunner.class)
 public class AppointmentServiceTest {
 
-	@TestConfiguration
-	static class AppointmentServiceTestContextConfiguration {
-		@Bean
-		public AppointmentService appointmentService() {
-			return new AppointmentService();
-		}
-	}
-
-	@Autowired
-	private AppointmentService appointmentService;
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+    @Autowired
+    private AppointmentService appointmentService;
 
 	@MockBean
 	private AppointmentRepository appointmentRepository;
@@ -38,8 +30,13 @@ public class AppointmentServiceTest {
 	@MockBean
 	private TimeSlotRepository timeSlotRepository;
 
-	@Rule
-	public final ExpectedException exception = ExpectedException.none();
+    @TestConfiguration
+    static class AppointmentServiceTestContextConfiguration {
+        @Bean
+        public AppointmentService appointmentService() {
+            return new AppointmentService();
+        }
+    }
 /*
     @Before
 	public void setUp() {

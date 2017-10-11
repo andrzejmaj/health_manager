@@ -70,7 +70,7 @@ public class PatientService implements IPatientService {
 
     @Override
     public PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException {
-        if (patientRepository.findOne(patientDTO.getId())==null) {
+        if (patientRepository.findOne(patientDTO.getId()) == null) {
             throw new NoSuchElementException("Patient does not exist");
         }
         return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);
