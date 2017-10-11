@@ -1,7 +1,6 @@
-package engineer.thesis.core.security.model;
+package engineer.thesis.core.model.dto;
 
 import engineer.thesis.core.model.UserRole;
-import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -26,7 +26,7 @@ public class Patient {
     @Cascade(CascadeType.ALL)
     private Account account;
 
-    @Column(name = "insurance_number", nullable = false)
+    @Column(name = "insurance_number")
     private String insuranceNumber;
 
     @OneToOne

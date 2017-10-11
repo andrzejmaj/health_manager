@@ -3,10 +3,13 @@ package engineer.thesis.core.controller;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.UserRole;
-import engineer.thesis.core.model.dto.ResetPasswordDTO;
-import engineer.thesis.core.model.dto.UserDTO;
+import engineer.thesis.core.model.dto.*;
 import engineer.thesis.core.security.TokenUtils;
-import engineer.thesis.core.security.model.*;
+import engineer.thesis.core.security.model.AuthenticationRequest;
+import engineer.thesis.core.security.model.AuthenticationResponse;
+import engineer.thesis.core.security.model.SecurityUser;
+import engineer.thesis.core.security.model.UpdatePasswordRequest;
+import engineer.thesis.core.service.Implementation.PatientService;
 import engineer.thesis.core.service.Implementation.UserService;
 import engineer.thesis.core.utils.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,8 @@ public class UserController {
     private TokenUtils tokenUtil;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private PatientService patientService;
 
     @RequestMapping(path = RequestMappings.USERS.LOGIN, method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
@@ -99,6 +104,17 @@ public class UserController {
             return new ResponseEntity<>(userService.registerNewUserOnBehalf(request), HttpStatus.OK);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>("", HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(path = RequestMappings.PATIENTS.REGISTER, method = RequestMethod.POST)
+    public ResponseEntity<?> registerUserless(@RequestBody @Valid PatientDetailsDTO patientDetails) {
+        try {
+            return new ResponseEntity<>(patientService.register(patientDetails), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 

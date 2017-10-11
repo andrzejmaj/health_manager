@@ -1,4 +1,4 @@
-package engineer.thesis.core.security.model;
+package engineer.thesis.core.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
