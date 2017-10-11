@@ -1,7 +1,6 @@
-package engineer.thesis.core.security.model;
+package engineer.thesis.core.model.dto;
 
 import engineer.thesis.core.model.UserRole;
-import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,9 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterOnBehalfRequest extends RegisterRequest {
+public class RegisterOnBehalfRequestDTO extends RegisterRequestDTO {
     @NotNull
     private UserRole role;
-    private PersonalDetailsDTO personalDetails;
-    private String insuranceNumber;
 }

@@ -29,7 +29,7 @@ public interface IAccountService {
 
     String saveProfilePicture(UUID uuid, MultipartFile userImage) throws NoSuchElementExistsException;
 
-    Account newAccount(PersonalDetails personalDetails, User user);
+    Account createAccount(PersonalDetails personalDetails, User user);
 
     boolean checkExitance(String pesel);
 }

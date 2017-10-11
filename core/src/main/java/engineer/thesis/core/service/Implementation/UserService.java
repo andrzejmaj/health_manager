@@ -10,10 +10,10 @@ import engineer.thesis.core.repository.PasswordResetTokenRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.PasswordResetToken;
-import engineer.thesis.core.security.model.RegisterOnBehalfRequest;
-import engineer.thesis.core.security.model.RegisterRequest;
+import engineer.thesis.core.model.dto.RegisterRequestDTO;
 import engineer.thesis.core.service.Interface.IUserService;
 import engineer.thesis.core.utils.CustomObjectMapper;
+import engineer.thesis.core.utils.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,21 +53,28 @@ public class UserService implements IUserService {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private MailService mailService;
+
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
 
+    // TODO: 11/10/2017
+    // Ask PRZEMEK about doctor save
+
     @Override
-    public String registerNewUserOnBehalf(RegisterOnBehalfRequest request) throws AlreadyExistsException {
-        User user = this.registerNewUser(request, request.getRole());
+    public void registerUserByRole(RegisterRequestDTO request, UserRole userRole, Boolean isOnBehalf) throws AlreadyExistsException {
 
-        Account account = accountService.newAccount(
-                request.getPersonalDetails() != null ?
-                        objectMapper.convert(request.getPersonalDetails(), PersonalDetails.class)
-                        : null,
-                user);
+        if (isOnBehalf) {
+            request.setPassword(generatePasswordForUser());
+        }
 
-        switch (request.getRole()) {
+        User user = registerNewUser(request, userRole, !isOnBehalf);
+
+        Account account = accountService.createAccount(objectMapper.convert(request.getPersonalDetails(), PersonalDetails.class), user);
+
+        switch (userRole) {
             case ROLE_PATIENT: {
                 Patient patient = new Patient();
                 patient.setInsuranceNumber(request.getInsuranceNumber());
@@ -78,7 +85,6 @@ public class UserService implements IUserService {
             case ROLE_DOCTOR: {
                 Doctor doctor = new Doctor();
                 doctor.setAccount(account);
-
                 doctorRepository.save(doctor);
                 break;
             }
@@ -87,25 +93,9 @@ public class UserService implements IUserService {
             }
         }
 
-        return "OK";
-    }
-
-    @Override
-    public UserDTO register(RegisterRequest registerRequest, UserRole role) throws AlreadyExistsException {
-        return objectMapper.convert(registerNewUser(registerRequest, role), UserDTO.class);
-    }
-
-    private User registerNewUser(RegisterRequest registerRequest, UserRole role) throws AlreadyExistsException {
-        if (userExists(registerRequest.getEmail())) {
-            throw new AlreadyExistsException("User with such mail already exists");
+        if (!user.getIsActive()) {
+            mailService.send(mailService.constuctUserCreationEmail(user.getEmail(), request.getPassword()));
         }
-
-        User user = new User();
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(role);
-
-        return userRepository.save(user);
     }
 
     @Override
@@ -188,12 +178,23 @@ public class UserService implements IUserService {
         return resetPassword;
     }
 
-    private boolean userExists(String email) {
-        return userRepository.findByEmail(email) != null;
+    private User registerNewUser(RegisterRequestDTO registerRequest, UserRole role, boolean isActive) throws AlreadyExistsException {
+
+        if (userExists(registerRequest.getEmail())) {
+            throw new AlreadyExistsException("User with such mail already exists");
+        }
+
+        User user = new User();
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setRole(role);
+        user.setIsActive(isActive);
+
+        return userRepository.save(user);
     }
 
-    private boolean userExists(Long id) {
-        return userRepository.findOne(id) != null;
+    private boolean userExists(String email) {
+        return userRepository.findByEmail(email) != null;
     }
 
     private Boolean isResetPasswordTokenValid(String email, String token) {
@@ -215,6 +216,10 @@ public class UserService implements IUserService {
     private void createPasswordResetTokenForUser(User user, String token) {
         PasswordResetToken resetToken = new PasswordResetToken(token, user);
         passwordTokenRepository.save(resetToken);
+    }
+
+    private String generatePasswordForUser() {
+        return UUID.randomUUID().toString();
     }
 
 }

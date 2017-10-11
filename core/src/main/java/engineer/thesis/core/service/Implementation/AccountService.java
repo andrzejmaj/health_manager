@@ -103,7 +103,10 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Account newAccount(PersonalDetails personalDetails, User user) {
+    public Account createAccount(PersonalDetails personalDetails, User user) {
+
+        personalDetails.setId(null);
+
         Account account = new Account();
         account.setCreatedDate(new Date());
         account.setUuid(UUID.randomUUID());

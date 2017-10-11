@@ -3,6 +3,8 @@ package engineer.thesis.core.controller;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.dto.RegisterOnBehalfRequestDTO;
+import engineer.thesis.core.model.dto.RegisterRequestDTO;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
 import engineer.thesis.core.model.dto.UserDTO;
 import engineer.thesis.core.security.TokenUtils;
@@ -84,9 +86,10 @@ public class UserController {
     }
 
     @RequestMapping(path = RequestMappings.USERS.REGISTER, method = RequestMethod.POST)
-    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequestDTO registerRequest) {
         try {
-            return new ResponseEntity<>(userService.register(registerRequest, UserRole.ROLE_PATIENT).getEmail(), HttpStatus.OK);
+            userService.registerUserByRole(registerRequest, UserRole.ROLE_PATIENT, false);
+            return new ResponseEntity<>("Registration successful", HttpStatus.OK);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
@@ -94,11 +97,12 @@ public class UserController {
 
 
     @RequestMapping(path = RequestMappings.USERS.REGISTER_ON_BEHALF, method = RequestMethod.POST)
-    public ResponseEntity<?> registerOnBehalf(@RequestBody @Valid RegisterOnBehalfRequest request) {
+    public ResponseEntity<?> registerOnBehalf(@RequestBody @Valid RegisterOnBehalfRequestDTO request) {
         try {
-            return new ResponseEntity<>(userService.registerNewUserOnBehalf(request), HttpStatus.OK);
+            userService.registerUserByRole(request, request.getRole(), true);
+            return new ResponseEntity<>("Registration successful", HttpStatus.OK);
         } catch (AlreadyExistsException e) {
-            return new ResponseEntity<>("", HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
@@ -168,6 +172,12 @@ public class UserController {
      * @param email - user's new email
      * @return - message if email was updated successfully
      */
+
+//    @RequestMapping(path = RequestMappings.USERS.ACTIVATE, method = RequestMethod.POST)
+//    public ResponseEntity<?> activateUser(@PathVariable Long id) {
+//        return new ResponseEntity<Object>(userService)
+//    }
+
 
     @RequestMapping(path = RequestMappings.USERS.UPDATE_EMAIL, method = RequestMethod.POST)
     public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @RequestBody String email) {

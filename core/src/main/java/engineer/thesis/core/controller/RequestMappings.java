@@ -18,6 +18,7 @@ final class RequestMappings {
         static final String UPDATE_PASSWORD = "/users/password";
         static final String UPDATE_EMAIL = "/users/{id}/email";
         static final String REGISTER_ON_BEHALF = "/users/registerOnBehalf";
+        static final String ACTIVATE = "/users/{id}/activate";
     }
 
     static final class ACCOUNTS {

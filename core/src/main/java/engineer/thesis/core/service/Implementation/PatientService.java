@@ -129,7 +129,7 @@ public class PatientService implements IPatientService {
         }
 
         Patient patient = new Patient();
-        patient.setAccount(accountService.newAccount(objectMapper.convert(patientDetails, PersonalDetails.class), null));
+        patient.setAccount(accountService.createAccount(objectMapper.convert(patientDetails, PersonalDetails.class), null));
         patient.setInsuranceNumber(patientDetails.getInsuranceNumber());
 
         return convertToDTO(patientRepository.save(patient));
