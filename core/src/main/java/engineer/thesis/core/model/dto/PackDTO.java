@@ -13,8 +13,9 @@ import javax.xml.bind.annotation.*;
 public class PackDTO {
 
     @XmlAttribute(name = "wielkosc")
-    private Float wielkosc;
+    private Float count;
 
     @XmlAttribute(name = "jednostkaWielkosci")
-    private String jednostkaWielkosci;
+    private String unit;
+
 }

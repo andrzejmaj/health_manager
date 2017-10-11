@@ -20,19 +20,19 @@ public class Drug {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 1000)
     private String name;
 
-    @Column(name = "commonName")
+    @Column(name = "commonName", length = 1000)
     private String commonName;
 
-    @Column(name = "strength")
+    @Column(name = "strength", length = 1000)
     private String strength;
 
-    @Column(name = "permitValidity")
+    @Column(name = "permitValidity", length = 1000)
     private String permitValidity;
 
-    @Column(name = "entityResponsible")
+    @Column(name = "entityResponsible", length = 1000)
     private String entityResponsible;
 
     @Column(name = "drugForm")

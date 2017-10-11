@@ -16,13 +16,14 @@ public class Pack {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "count", nullable = false)
+    @Column(name = "unit")
     private String unit;
 
-    @Column(name = "unit", nullable = false)
+    @Column(name = "count")
     private Float count;
 
-    @Column(name = "drug_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "drug_id")
     private Drug drug;
 
     public Pack(String unit, Float count, Drug drug) {

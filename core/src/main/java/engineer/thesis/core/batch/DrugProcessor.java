@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ public class DrugProcessor implements ItemProcessor<ExternalDrugDTO, Drug> {
         drug.setRefundRate(0);
 
         List<Pack> packs = item.getOpakowania().stream().map(
-                packDTO -> new Pack(packDTO.getJednostkaWielkosci(), packDTO.getWielkosc(), drug))
+                packDTO -> new Pack(packDTO.getUnit(), packDTO.getCount(), drug))
                 .collect(Collectors.toList());
 
         drug.setPacks(packs);
