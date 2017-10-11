@@ -1,8 +1,10 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
-import engineer.thesis.core.model.*;
-import engineer.thesis.core.model.dto.*;
+import engineer.thesis.core.model.Patient;
+import engineer.thesis.core.model.PersonalDetails;
+import engineer.thesis.core.model.dto.PatientDTO;
+import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.MedicalInfoRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.service.Interface.IPatientService;
@@ -10,7 +12,9 @@ import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +50,12 @@ public class PatientService implements IPatientService {
     }
 
     @Override
+    public PatientDTO findByEmail(String email) throws NoSuchElementException {
+        Optional<Patient> patient = Optional.ofNullable(patientRepository.findByAccount_User_Email(email));
+        return objectMapper.convert(patient.orElseThrow(NoSuchElementException::new), PatientDTO.class);
+    }
+
+    @Override
     public List<PatientDTO> findPatientsByLastName(String lastName) {
         return patientRepository.findByAccount_PersonalDetails_LastNameIgnoreCase(lastName).stream().map(p -> objectMapper.convert(p, PatientDTO.class)).collect(Collectors.toList());
     }
@@ -60,7 +70,7 @@ public class PatientService implements IPatientService {
 
     @Override
     public PatientDTO updatePatient(PatientDTO patientDTO) throws NoSuchElementException {
-        if (patientRepository.findOne(patientDTO.getId())==null) {
+        if (patientRepository.findOne(patientDTO.getId()) == null) {
             throw new NoSuchElementException("Patient does not exist");
         }
         return objectMapper.convert(patientRepository.save(objectMapper.convert(patientDTO, Patient.class)), PatientDTO.class);

@@ -21,7 +21,7 @@ import java.util.Map;
 public class JsonbPostgreType implements UserType {
 
     @Override
-    public int[] sqlTypes(){
+    public int[] sqlTypes() {
         return new int[]{Types.JAVA_OBJECT};
     }
 
