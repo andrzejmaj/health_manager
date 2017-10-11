@@ -60,7 +60,7 @@ public class DicomStudy extends DicomObject {
         this.setDateTimeField(Tag.StudyDate, Tag.StudyTime, this::setCreationDate);
     }
 
-    private void setCreationDate(Date creationDate) {
+    public void setCreationDate(Date creationDate) {
         if (creationDate == null) {
             creationDate = new Date();
         }
