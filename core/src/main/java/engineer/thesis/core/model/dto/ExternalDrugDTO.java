@@ -37,7 +37,7 @@ public class ExternalDrugDTO {
     @XmlAttribute(name = "postac")
     private String postac;
 
-    @XmlElementWrapper(name = "opakowania")
-    @XmlElement(name = "opakowanie", required = true, nillable = true)
+    @XmlElementWrapper(name="opakowania", namespace = "http://rejestrymedyczne.csioz.gov.pl/rpl/eksport-danych-v1.0")
+    @XmlElement(name="opakowanie", namespace ="http://rejestrymedyczne.csioz.gov.pl/rpl/eksport-danych-v1.0")
     public List<PackDTO> opakowania;
 }
