@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PersonalDetailsRepository extends JpaRepository<PersonalDetails, Long> {
-
-
+    PersonalDetails findByPesel(String pesel);
 }

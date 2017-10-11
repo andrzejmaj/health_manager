@@ -1,5 +1,7 @@
 package engineer.thesis.core.service;
 
+import engineer.thesis.core.exception.DataIntegrityException;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.FormDTO;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +22,5 @@ public interface IFormService {
 
     FormDTO saveForm(FormDTO formDTO);
 
+    FormDTO updateForm(Long id, FormDTO form) throws DataIntegrityException, NoSuchElementExistsException;
 }

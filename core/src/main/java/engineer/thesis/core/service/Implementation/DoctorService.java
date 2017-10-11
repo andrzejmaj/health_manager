@@ -33,7 +33,7 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public DoctorDTO saveDoctor(DoctorDTO doctorDTO) throws AlreadyExistsException {
-        if (accountService.doesAccountExist(doctorDTO.getAccount().getPersonalDetails().getPesel())) {
+        if (accountService.checkExitance(doctorDTO.getAccount().getPersonalDetails().getPesel())) {
             throw new AlreadyExistsException("Account with such pesel number already exists");
         }
         SpecializationDTO specialization = specializationService.findExistingOrSaveNewByDescription(doctorDTO.getSpecialization().getDescription());

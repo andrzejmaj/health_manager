@@ -1,9 +1,10 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.Account;
 import engineer.thesis.core.model.PersonalDetails;
-import engineer.thesis.core.model.dto.AccountDTO;
+import engineer.thesis.core.model.User;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.AccountRepository;
 import engineer.thesis.core.service.Interface.IAccountService;
@@ -13,8 +14,10 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AccountService implements IAccountService {
@@ -29,67 +32,68 @@ public class AccountService implements IAccountService {
     private CustomObjectMapper objectMapper;
 
     @Override
-    public PersonalDetailsDTO savePersonalDetails(Long accountId, PersonalDetailsDTO personalDetailsDTO) {
+    public String deleteAccount(UUID uuid) throws NoSuchElementExistsException {
+        Account account = checkExistence(uuid);
+        accountRepository.delete(account);
+        return "Account " + uuid + " deleted successfully";
+    }
 
-        Optional<Account> personalAccount = Optional.ofNullable(accountRepository.findOne(accountId));
+    @Override
+    public PersonalDetailsDTO getPersonalDetails(UUID uuid) throws NoSuchElementExistsException {
+        Account account = checkExistence(uuid);
+        return objectMapper.convert(account.getPersonalDetails(), PersonalDetailsDTO.class);
+    }
+
+    @Override
+    public PersonalDetailsDTO getMyPersonalDetails(Long id) throws NoSuchElementExistsException {
+        Account account = accountRepository.findByUser_Id(id);
+        if (account == null) {
+            throw new NoSuchElementExistsException("Account doesn't exist");
+        }
+        return objectMapper.convert(account.getPersonalDetails(), PersonalDetailsDTO.class);
+    }
+
+    @Override
+    public PersonalDetailsDTO savePersonalDetails(UUID uuid, PersonalDetailsDTO personalDetailsDTO) {
+
+        Optional<Account> personalAccount = Optional.ofNullable(accountRepository.findByUuid(uuid));
 
         if (!personalAccount.isPresent()) {
             throw new NoSuchElementException("Account not found");
         }
 
+        personalDetailsDTO.setId(null);
         personalAccount.get().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
 
         return objectMapper.convert(accountRepository.save(personalAccount.get()).getPersonalDetails(), PersonalDetailsDTO.class);
     }
 
     @Override
-    public PersonalDetailsDTO getPersonalDetails(Long accountId) {
+    public PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException, AlreadyExistsException {
+        Account account = accountRepository.findByUser_Id(id);
 
-        Optional<Account> personalAccount = Optional.ofNullable(accountRepository.findOne(accountId));
-
-        if (!personalAccount.isPresent()) {
-            throw new NoSuchElementException("Account not found");
+        if (account.getPersonalDetails() != null) {
+            throw new AlreadyExistsException("Personal Details already exist");
         }
 
-        return objectMapper.convert(personalAccount.get().getPersonalDetails(), PersonalDetailsDTO.class);
+        personalDetails.setId(null);
+        account.setPersonalDetails(objectMapper.convert(personalDetails, PersonalDetails.class));
+
+        return objectMapper.convert(accountRepository.save(account), PersonalDetailsDTO.class);
     }
 
     @Override
-    public AccountDTO saveNewAccount(AccountDTO accountDTO) throws AlreadyExistsException {
-        if (doesAccountExist(accountDTO.getPersonalDetails().getPesel())) {
-            throw new AlreadyExistsException("Account already exists");
-        }
-        return objectMapper.convert(accountRepository.save(objectMapper.convert(accountDTO, Account.class)), AccountDTO.class);
+    public FileSystemResource getProfilePicture(UUID uuid) throws NoSuchElementExistsException {
+        Account a = checkExistence(uuid);
+        return fileService.findProfilePicture(a.getId());
     }
 
     @Override
-    public String deleteAccount(Long id) {
-        if (!doesAccountExist(id)) {
-            throw new NoSuchElementException("Account not found");
-        }
-        accountRepository.delete(id);
-        return "Account " + id + " deleted successfully";
-    }
+    public String saveProfilePicture(UUID uuid, MultipartFile userImage) throws NoSuchElementExistsException {
 
-    @Override
-    public Long getAccountIdByUserId(Long id) {
-        Optional<Account> account = Optional.ofNullable(accountRepository.findByUser_Id(id));
-        if (!account.isPresent()) {
-            throw new NoSuchElementException("Account not found");
-        }
-        return account.get().getId();
-    }
+        Account account = checkExistence(uuid);
 
-    @Override
-    public String saveProfilePicture(Long id, MultipartFile userImage) {
-
-        Account account = accountRepository.findOne(id);
-
-        if (account == null) {
-            throw new NoSuchElementException("Account not found");
-        }
-
-        String imagePath = fileService.saveProfilePicture(id, userImage);
+        String imagePath = fileService.saveProfilePicture(account.getId(), userImage);
 
         account.setImageUrl(imagePath);
 
@@ -99,22 +103,23 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public FileSystemResource getProfilePicture(Long id) {
-
-        if (!accountRepository.exists(id)) {
-            throw new NoSuchElementException("Account not found");
-        }
-
-        return fileService.findProfilePicture(id);
-
+    public Account newAccount(PersonalDetails personalDetails, User user) {
+        Account account = new Account();
+        account.setCreatedDate(new Date());
+        account.setUuid(UUID.randomUUID());
+        account.setPersonalDetails(personalDetails);
+        account.setUser(user);
+        return account;
     }
 
-    protected Boolean doesAccountExist(Long id) {
-        return Optional.ofNullable(accountRepository.findOne(id)).isPresent();
+    @Override
+    public boolean checkExitance(String pesel) {
+        Account account = accountRepository.findByPersonalDetails_Pesel(pesel);
+        return account != null;
     }
 
-    protected Boolean doesAccountExist(String pesel) {
-        return Optional.ofNullable(accountRepository.findByPersonalDetails_Pesel(pesel)).isPresent();
+    private Account checkExistence(UUID uuid) throws NoSuchElementExistsException {
+        return Optional.ofNullable(accountRepository.findByUuid(uuid)).orElseThrow(() -> new NoSuchElementExistsException("Account doesn't exist"));
     }
 
 }

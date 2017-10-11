@@ -18,12 +18,12 @@ public class PatientControllerTest extends AbstractTest {
 
         mockAuthenticatedUser(buildTestUserWithRole(UserRole.PATIENT));
 
-        PatientDTO patient = new PatientDTO();
+        PatientDTO2 patient = new PatientDTO2();
         patient.setInsuranceNumber("696969");
 
-        List<PatientDTO> allPatients = Collections.singletonList(patient);
+        List<PatientDTO2> allPatients = Collections.singletonList(patient);
 
-        given(service.getAllPatients()).willReturn(allPatients);
+        given(service.findAllPatientsShort()).willReturn(allPatients);
 
         try {
             Boolean doesContain = mvc.perform(MockMvcRequestBuilders.get("/patients")

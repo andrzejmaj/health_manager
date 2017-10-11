@@ -13,7 +13,9 @@ public interface IMedicalHistoryService {
 
     List<MedicalHistoryDTO> getAllByPatientIdFromPeriod(Long id, Date start, Date end) throws NoSuchElementExistsException;
 
-    void delete(Long patientId, Long id) throws NoSuchElementExistsException;
+    MedicalHistoryDTO save(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException;
 
-    MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO, boolean save) throws NoSuchElementExistsException, DataIntegrityException;
+    MedicalHistoryDTO update(Long patientId, MedicalHistoryDTO medicalHistoryDTO, Long id) throws NoSuchElementExistsException, DataIntegrityException;
+
+    void delete(Long patientId, Long id) throws NoSuchElementExistsException;
 }

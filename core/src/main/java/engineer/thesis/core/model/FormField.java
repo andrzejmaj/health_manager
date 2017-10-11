@@ -25,7 +25,8 @@ public class FormField {
 
     @OneToOne
     @JoinColumn(name = "form_field_type_id")
-    private FormFieldType fieldType;
+    @Cascade(CascadeType.ALL)
+    private FormFieldType type;
 
     @ManyToOne
     @JoinColumn(name = "form_id")

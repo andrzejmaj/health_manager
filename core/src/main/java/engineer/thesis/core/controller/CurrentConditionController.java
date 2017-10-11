@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 public class CurrentConditionController {
 
@@ -25,7 +27,7 @@ public class CurrentConditionController {
     }
 
     @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody CurrentConditionDTO currentConditionDTO) {
+    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Valid CurrentConditionDTO currentConditionDTO) {
         try {
             return new ResponseEntity<>(currentConditionService.savePatientCondition(patientId, currentConditionDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
@@ -35,10 +37,10 @@ public class CurrentConditionController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION, method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@PathVariable Long patientId, @RequestBody CurrentConditionDTO currentConditionDTO) {
+    @RequestMapping(path = RequestMappings.CURRENT_CONDITION.CURRENT_CONDITION_ID, method = RequestMethod.PUT)
+    public ResponseEntity<?> update(@PathVariable Long patientId, @PathVariable Long id, @RequestBody @Valid CurrentConditionDTO currentConditionDTO) {
         try {
-            return new ResponseEntity<>(currentConditionService.updatePatientCondition(patientId, currentConditionDTO), HttpStatus.OK);
+            return new ResponseEntity<>(currentConditionService.updatePatientCondition(patientId, id, currentConditionDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (DataIntegrityException e) {

@@ -83,7 +83,7 @@ public class PatientServiceTest {
 
     @Test
     public void findAllPatients_Test() {
-        List<PatientDTO> patients = patientService.getAllPatients();
+        List<PatientDTO2> patients = patientService.findAllPatientsShort();
         assertThat(patients.size()).isEqualTo(1);
     }
 
@@ -93,7 +93,7 @@ public class PatientServiceTest {
 
         String EXPECTED_NAME = "John";
 
-        PatientDTO patient = patientService.findById(ID);
+        PatientDTO2 patient = patientService.findById(ID);
         assertThat(patient.getPersonalDetails().getFirstName()).isEqualTo(EXPECTED_NAME);
     }
 
@@ -111,7 +111,7 @@ public class PatientServiceTest {
 
         String EXPECTED_NAME = "John";
 
-        PatientDTO patient = patientService.findByPesel(PESEL);
+        PatientDTO2 patient = patientService.findByPesel(PESEL);
         assertThat(patient.getPersonalDetails().getFirstName()).isEqualTo(EXPECTED_NAME);
     }
 
@@ -127,7 +127,7 @@ public class PatientServiceTest {
     public void findByLastName_Test() {
         String LAST_NAME = "Smith";
 
-        List<PatientDTO> patient = patientService.findPatientsByLastName(LAST_NAME);
+        List<PatientDTO2> patient = patientService.findPatientsByLastName(LAST_NAME);
         assertThat(patient.size()).isEqualTo(1);
     }
 
@@ -135,13 +135,13 @@ public class PatientServiceTest {
     public void saveNewPatient_Test() {
         String LAST_NAME = "Smith";
 
-        PatientDTO expectedPatientDTO = new PatientDTO();
+        PatientDTO2 expectedPatientDTO = new PatientDTO2();
         PersonalDetailDTO expectedPersonalDetailDTO = new PersonalDetailDTO();
         expectedPatientDTO.setEmergencyContact(new PersonalDetailDTO());
         expectedPersonalDetailDTO.setLastName(LAST_NAME);
         expectedPatientDTO.setPersonalDetails(expectedPersonalDetailDTO);
 
-        PatientDTO patient = patientService.saveNewPatient(expectedPatientDTO, "mail@mail.pl");
+        PatientDTO2 patient = patientService.saveNewPatient(expectedPatientDTO, "mail@mail.pl");
         assertThat(patient.getPersonalDetails().getLastName()).isEqualTo(expectedPersonalDetailDTO.getLastName());
     }
 */

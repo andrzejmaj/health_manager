@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class FormFieldTypeDTO {
+public class ShortPatientDTO {
     private Long id;
-    @NotNull
-    private String type;
+    private String firstName;
+    private String lastName;
+    private Date birthdate;
 }

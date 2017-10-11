@@ -16,8 +16,8 @@ import java.util.Date;
 public class TimeSlot {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 	
 	@Column(nullable = false)
 	private Date startDateTime;

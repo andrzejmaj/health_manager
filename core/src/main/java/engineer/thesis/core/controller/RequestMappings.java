@@ -7,6 +7,7 @@ final class RequestMappings {
         static final String PATIENTS_EMAIL = "/patientByMail/{email}";
         static final String PATIENTS_ID = "/patients/{id}";
         static final String EMERGENCY = "/patients/{id}/emergency";
+        static final String REGISTER = "/patients/register";
     }
 
     static final class USERS {
@@ -16,14 +17,13 @@ final class RequestMappings {
         static final String UPDATE_PASSWORD_WITH_TOKEN = "/users/password_token";
         static final String UPDATE_PASSWORD = "/users/password";
         static final String UPDATE_EMAIL = "/users/{id}/email";
+        static final String REGISTER_ON_BEHALF = "/users/registerOnBehalf";
     }
 
     static final class ACCOUNTS {
-        static final String ACCOUNTS = "/accounts";
-        static final String ACCOUNTS_ID = "/accounts/{id}";
-        static final String PERS_DETAILS = "/accounts/{id}/personaldetails";
+        static final String PERS_DETAILS = "/accounts/{uuid}/personaldetails";
         static final String MY_PERS_DETAILLS = "/accounts/personaldetails";
-        static final String ACCOUNTS_PICTURE = "/accounts/{id}/picture";
+        static final String ACCOUNTS_PICTURE = "/accounts/{uuid}/picture";
     }
 
     static final class FORMS {

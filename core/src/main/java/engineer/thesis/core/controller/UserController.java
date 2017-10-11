@@ -9,8 +9,6 @@ import engineer.thesis.core.security.TokenUtils;
 import engineer.thesis.core.security.model.*;
 import engineer.thesis.core.service.Implementation.UserService;
 import engineer.thesis.core.utils.MailService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +22,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
 @RestController
 public class UserController {
 
     private static final String NOT_ALLOWED_MESSAGE = "You are not allowed to perform this operation";
-    private final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
     @Autowired
@@ -41,16 +39,6 @@ public class UserController {
     private TokenUtils tokenUtil;
     @Autowired
     private UserDetailsService userDetailsService;
-
-    //TODO:
-    // 4. Add some loggers
-
-    /**
-     * Login user into application
-     *
-     * @param authenticationRequest (email, password)
-     * @return created user's token
-     */
 
     @RequestMapping(path = RequestMappings.USERS.LOGIN, method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
@@ -73,9 +61,7 @@ public class UserController {
                 authenticationRequest.getEmail()
         );
 
-        //TODO:
-        // change this later
-        // find out how to use this device thing
+
         Device myDevice = new Device() {
             @Override
             public boolean isNormal() {
@@ -97,19 +83,22 @@ public class UserController {
                 HttpStatus.OK);
     }
 
-    /**
-     * Register new users in system
-     *
-     * @param registerRequest - data of new user
-     * @return - message if user was registered successfully
-     */
-
     @RequestMapping(path = RequestMappings.USERS.REGISTER, method = RequestMethod.POST)
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
         try {
-            return new ResponseEntity<>(userService.registerNewUser(registerRequest), HttpStatus.OK);
+            return new ResponseEntity<>(userService.register(registerRequest, UserRole.ROLE_PATIENT).getEmail(), HttpStatus.OK);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
+
+    @RequestMapping(path = RequestMappings.USERS.REGISTER_ON_BEHALF, method = RequestMethod.POST)
+    public ResponseEntity<?> registerOnBehalf(@RequestBody @Valid RegisterOnBehalfRequest request) {
+        try {
+            return new ResponseEntity<>(userService.registerNewUserOnBehalf(request), HttpStatus.OK);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>("", HttpStatus.OK);
         }
     }
 
@@ -146,12 +135,6 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody String newPassword,
                                             @RequestParam("email") String email,
                                             @RequestParam("token") String token) {
-
-        //TODO:
-        // inside changeUserPassword there should be some
-        // validator methods (check if user can change password,
-        // is new password same as old one etc.) to
-        // return proper response (not only operation successful)
         try {
             return new ResponseEntity<>(userService.changeUserPasswordWithToken(email, token, newPassword), HttpStatus.OK);
         } catch (TokenExpiredException e) {
