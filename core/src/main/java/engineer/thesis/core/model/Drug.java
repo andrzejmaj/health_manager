@@ -2,8 +2,12 @@ package engineer.thesis.core.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.List;
 
 @Data
 @Entity
@@ -36,5 +40,10 @@ public class Drug {
 
     @Column(name = "refund_rate")
     private Integer refundRate;
+
+    @OneToMany(mappedBy = "drug", fetch = FetchType.LAZY)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<Pack> packs;
 
 }

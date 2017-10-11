@@ -39,5 +39,5 @@ public class ExternalDrugDTO {
 
     @XmlElementWrapper(name = "opakowania")
     @XmlElement(name = "opakowanie", required = true, nillable = true)
-    public List<PackDTO> packs;
+    public List<PackDTO> opakowania;
 }
