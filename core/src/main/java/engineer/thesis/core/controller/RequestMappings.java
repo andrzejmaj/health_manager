@@ -46,9 +46,9 @@ final class RequestMappings {
     }
 
     static final class CHECKUP {
-        static final String PATIENT_CHECKUP = "/patients/{patientId}/checkups";
-        static final String CHECKUP = "/checkups";
+        static final String PATIENT_CHECKUPS = "/patients/{patientId}/checkups";
         static final String CHECKUP_ID = "/checkups/{id}";
+        static final String PATIENT_CHECKUPS_BY_NAME = "/patients/{patientId}/checkups?name=";
     }
 
     static final class MEDICAL {
