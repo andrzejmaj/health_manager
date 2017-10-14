@@ -127,27 +127,39 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public String changeUserPasswordWithToken(String email, String token, String password) throws TokenExpiredException, NoSuchElementException {
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+    public String changeUserPasswordWithToken(Long id, String token, String password) throws TokenExpiredException, NoSuchElementException {
+
+        Optional<PasswordResetToken> passwordResetToken = Optional.ofNullable(passwordTokenRepository.findByToken(token));
+
+        if (!passwordResetToken.isPresent()) {
+            throw new NoSuchElementException("Token does not exist");
+        }
+
+        Optional<User> user = Optional.ofNullable(userRepository.findOne(id));
 
         if (!user.isPresent()) {
             throw new NoSuchElementException("User not found");
         }
 
-        if (isResetPasswordTokenValid(email, token)) {
-            throw new TokenExpiredException("Token is not valid");
+        if (isResetPasswordTokenValid(id, passwordResetToken.get())) {
+            throw new TokenExpiredException("Token is not valid or has already expired");
         }
 
+        // update user's password
         user.get().setPassword(passwordEncoder.encode(password));
         userRepository.save(user.get());
+
+        // mark token as inActive
+        passwordResetToken.get().setIsActive(false);
+        passwordTokenRepository.save(passwordResetToken.get());
 
         return "Password has been changed successfully";
     }
 
     @Override
     public String updateUserEmail(Long id, String newEmail) {
-        Optional<User> user = Optional.ofNullable(userRepository.findOne(id));
 
+        Optional<User> user = Optional.ofNullable(userRepository.findOne(id));
         if (!user.isPresent()) {
             throw new NoSuchElementException("User not found");
         }
@@ -166,9 +178,6 @@ public class UserService implements IUserService {
         }
 
         String token = UUID.randomUUID().toString();
-        //TODO:
-        // add to reset password token table isActive
-        // property and disable it after used
         createPasswordResetTokenForUser(user.get(), token);
         ResetPasswordDTO resetPassword = new ResetPasswordDTO();
         resetPassword.setEmail(user.get().getEmail());
@@ -197,18 +206,29 @@ public class UserService implements IUserService {
         return userRepository.findByEmail(email) != null;
     }
 
-    private Boolean isResetPasswordTokenValid(String email, String token) {
-        System.out.println(email);
-        PasswordResetToken passwordToken =
-                passwordTokenRepository.findByToken(token);
-        System.out.println(passwordToken.getUser().getEmail());
-        if (!Objects.equals(passwordToken.getUser().getEmail(), email)) {
-            System.out.println("Email does not match");
+    /*
+     *  method validates if reset password token
+     *  1) is valid for specific user
+     *  2) is active
+     *  3) is not expired
+     */
+    private Boolean isResetPasswordTokenValid(Long id, PasswordResetToken token) {
+
+        System.out.println("isResetPasswordTokenValid for userId: " + id);
+        System.out.println(token.getUser().getEmail());
+
+        if (!Objects.equals(token.getUser().getId(), id)) {
+            System.out.println("Token is not valid for this user ");
+            return false;
+        }
+
+        if (!token.getIsActive()) {
+            System.out.println("Token is not active");
             return false;
         }
 
         Calendar cal = Calendar.getInstance();
-        return (passwordToken.getExpiryDate()
+        return (token.getExpiryDate()
                 .getTime() - cal.getTime()
                 .getTime()) > 0;
     }

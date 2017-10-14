@@ -3,12 +3,10 @@ package engineer.thesis.core.controller;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.UserRole;
-import engineer.thesis.core.model.dto.RegisterOnBehalfRequestDTO;
-import engineer.thesis.core.model.dto.RegisterRequestDTO;
-import engineer.thesis.core.model.dto.ResetPasswordDTO;
-import engineer.thesis.core.model.dto.UserDTO;
+import engineer.thesis.core.model.dto.*;
 import engineer.thesis.core.security.TokenUtils;
 import engineer.thesis.core.security.model.*;
+import engineer.thesis.core.service.Implementation.PatientService;
 import engineer.thesis.core.service.Implementation.UserService;
 import engineer.thesis.core.utils.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +39,8 @@ public class UserController {
     private TokenUtils tokenUtil;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private PatientService patientService;
 
     @RequestMapping(path = RequestMappings.USERS.LOGIN, method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
@@ -106,6 +106,17 @@ public class UserController {
         }
     }
 
+    @RequestMapping(path = RequestMappings.PATIENTS.REGISTER, method = RequestMethod.POST)
+    public ResponseEntity<?> registerUserless(@RequestBody @Valid PatientDetailsDTO patientDetails) {
+        try {
+            return new ResponseEntity<>(patientService.register(patientDetails), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
     /**
      * Reset user's password
      *
@@ -130,17 +141,17 @@ public class UserController {
      * Update user's password using token which was sent to user after reset
      *
      * @param newPassword - new password provided by user
-     * @param email       - user's email
+     * @param id          - user's id
      * @param token       - token which user received
      * @return - message if password was updated successfully
      */
 
     @RequestMapping(path = RequestMappings.USERS.UPDATE_PASSWORD_WITH_TOKEN, method = RequestMethod.POST)
     public ResponseEntity<?> changePassword(@RequestBody String newPassword,
-                                            @RequestParam("email") String email,
+                                            @RequestParam("id") Long id,
                                             @RequestParam("token") String token) {
         try {
-            return new ResponseEntity<>(userService.changeUserPasswordWithToken(email, token, newPassword), HttpStatus.OK);
+            return new ResponseEntity<>(userService.changeUserPasswordWithToken(id, token, newPassword), HttpStatus.OK);
         } catch (TokenExpiredException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }

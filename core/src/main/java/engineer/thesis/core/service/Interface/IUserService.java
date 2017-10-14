@@ -19,7 +19,7 @@ public interface IUserService {
 
     String changeUserPassword(String email, String password);
 
-    String changeUserPasswordWithToken(String email, String token, String password) throws TokenExpiredException;
+    String changeUserPasswordWithToken(Long id, String token, String password) throws TokenExpiredException;
 
     String updateUserEmail(Long id, String newEmail);
 
