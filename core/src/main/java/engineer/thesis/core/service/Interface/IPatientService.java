@@ -2,9 +2,9 @@ package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
+import engineer.thesis.core.model.dto.EmergencyContactDTO;
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.dto.PatientDetailsDTO;
-import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +27,11 @@ public interface IPatientService {
 
     List<PatientDTO> findPatientsByLastName(String lastName);
 
-    PatientDTO savePatient(PatientDTO personalDetailDTO) throws AlreadyExistsException;
+    EmergencyContactDTO findEmergencyById(Long id) throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO findEmergencyById(Long id) throws NoSuchElementExistsException;
+    EmergencyContactDTO saveEmergency(Long id, EmergencyContactDTO emergencyContact) throws AlreadyExistsException, NoSuchElementExistsException;
 
-    PersonalDetailsDTO saveEmergency(Long id, PersonalDetailsDTO emergencyContact) throws AlreadyExistsException, NoSuchElementExistsException;
-
-    PersonalDetailsDTO updateEmergency(Long id, PersonalDetailsDTO emergencyContact) throws NoSuchElementExistsException;
+    EmergencyContactDTO updateEmergency(Long id, EmergencyContactDTO emergencyContact) throws NoSuchElementExistsException;
 
     PatientDTO register(PatientDetailsDTO patientDetails) throws AlreadyExistsException;
 }

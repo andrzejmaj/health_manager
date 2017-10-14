@@ -30,8 +30,9 @@ public class Patient {
     private String insuranceNumber;
 
     @OneToOne
+    @Cascade(CascadeType.ALL)
     @JoinColumn(name = "emergency_contact_id")
-    private PersonalDetails emergencyContact;
+    private EmergencyContact emergencyContact;
 
     @OneToOne
     @JoinColumn(name = "medical_information_id")
