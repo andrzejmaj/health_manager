@@ -26,7 +26,7 @@ public class Patient {
     @Cascade(CascadeType.ALL)
     private Account account;
 
-    @Column(name = "insurance_number", nullable = false)
+    @Column(name = "insurance_number")
     private String insuranceNumber;
 
     @OneToOne
@@ -35,7 +35,7 @@ public class Patient {
 
     @OneToOne
     @JoinColumn(name = "medical_information_id")
-    @Cascade(CascadeType.ALL)
+    @Cascade({CascadeType.PERSIST, CascadeType.MERGE})
     private MedicalInformation medicalInformation;
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
