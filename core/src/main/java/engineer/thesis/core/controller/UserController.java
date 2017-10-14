@@ -5,7 +5,10 @@ import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.UserRole;
 import engineer.thesis.core.model.dto.*;
 import engineer.thesis.core.security.TokenUtils;
-import engineer.thesis.core.security.model.*;
+import engineer.thesis.core.security.model.AuthenticationRequest;
+import engineer.thesis.core.security.model.AuthenticationResponse;
+import engineer.thesis.core.security.model.SecurityUser;
+import engineer.thesis.core.security.model.UpdatePasswordRequest;
 import engineer.thesis.core.service.Implementation.PatientService;
 import engineer.thesis.core.service.Implementation.UserService;
 import engineer.thesis.core.utils.MailService;
@@ -43,7 +46,7 @@ public class UserController {
     private PatientService patientService;
 
     @RequestMapping(path = RequestMappings.USERS.LOGIN, method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(
+    public ResponseEntity<?> login(
             @RequestBody AuthenticationRequest authenticationRequest) {
 
         if (!userService.findByEmail(authenticationRequest.getEmail()).isPresent()) {

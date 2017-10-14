@@ -73,7 +73,7 @@ public class PatientService implements IPatientService {
 
     @Override
     public PatientDTO savePatient(PatientDTO patientDTO) throws AlreadyExistsException {
-        if (accountService.checkExitance(patientDTO.getPesel())) {
+        if (accountService.checkExistence(patientDTO.getPesel())) {
             throw new AlreadyExistsException("Patient with such pesel number already exists");
         }
         patientDTO.setId(null);

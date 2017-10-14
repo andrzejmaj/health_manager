@@ -1,8 +1,10 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.PasswordNotValidException;
 import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.*;
+import engineer.thesis.core.model.dto.RegisterRequestDTO;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
 import engineer.thesis.core.model.dto.UserDTO;
 import engineer.thesis.core.repository.DoctorRepository;
@@ -10,7 +12,6 @@ import engineer.thesis.core.repository.PasswordResetTokenRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.PasswordResetToken;
-import engineer.thesis.core.model.dto.RegisterRequestDTO;
 import engineer.thesis.core.service.Interface.IUserService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.core.utils.MailService;
@@ -68,6 +69,10 @@ public class UserService implements IUserService {
 
         if (isOnBehalf) {
             request.setPassword(generatePasswordForUser());
+        } else {
+            if (request.getPassword() == null) {
+                throw new PasswordNotValidException("password may not be null");
+            }
         }
 
         User user = registerNewUser(request, userRole, !isOnBehalf);
