@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 public class MedicalInfoDTO {
 
     private Long id;
-    @NotNull
     private String allergies;
     @NotNull
     private Integer weight;

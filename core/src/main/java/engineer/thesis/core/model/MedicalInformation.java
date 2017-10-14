@@ -3,10 +3,11 @@ package engineer.thesis.core.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "hm_patient_medical_information", schema = "hmanager")
+@Table(name = "hm_medical_information", schema = "hmanager")
 public class MedicalInformation {
 
     @Id
@@ -26,4 +27,6 @@ public class MedicalInformation {
     @Column(name = "other_notes")
     private String otherNotes;
 
+    @Column(name = "last_measurement")
+    private Date lastMeasurement;
 }
