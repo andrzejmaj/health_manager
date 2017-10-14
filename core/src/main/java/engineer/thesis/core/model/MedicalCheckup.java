@@ -22,9 +22,8 @@ public class MedicalCheckup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "form_id")
-    private Form form;
+    @Column(name = "form_id")
+    private Long formId;
 
     @OneToOne
     @JoinColumn(name = "patient_id")
