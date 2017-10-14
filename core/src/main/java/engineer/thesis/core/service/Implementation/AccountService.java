@@ -104,7 +104,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public Account createAccount(PersonalDetails personalDetails, User user) throws AlreadyExistsException {
-        if (!checkExistence(personalDetails.getPesel())) {
+        if (checkExistence(personalDetails.getPesel())) {
             throw new AlreadyExistsException("Patient with such pesel already exists");
         }
 
