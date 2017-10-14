@@ -16,7 +16,6 @@ public class RegisterRequestDTO {
     @NotNull
     @Email
     private String email;
-    @NotNull
     private String password;
     @Valid
     private PersonalDetailsDTO personalDetails;

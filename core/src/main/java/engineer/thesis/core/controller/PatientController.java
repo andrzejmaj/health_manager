@@ -3,7 +3,6 @@ package engineer.thesis.core.controller;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.PatientDTO;
-import engineer.thesis.core.model.dto.PatientDetailsDTO;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.service.Interface.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 public class PatientController {
@@ -102,17 +100,6 @@ public class PatientController {
             return new ResponseEntity<>(patientService.updateEmergency(id, emergencyContact), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(path = RequestMappings.PATIENTS.REGISTER, method = RequestMethod.POST)
-    public ResponseEntity<?> registerUserless(@RequestBody @Valid PatientDetailsDTO patientDetails) {
-        try {
-            return new ResponseEntity<>(patientService.register(patientDetails), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (AlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 

@@ -141,7 +141,7 @@ public class UserService implements IUserService {
             throw new NoSuchElementException("User not found");
         }
 
-        if (isResetPasswordTokenValid(id, passwordResetToken.get())) {
+        if (!isResetPasswordTokenValid(id, passwordResetToken.get())) {
             throw new TokenExpiredException("Token is not valid or has already expired");
         }
 
