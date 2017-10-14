@@ -104,17 +104,5 @@ public class PatientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
-    @RequestMapping(path = RequestMappings.PATIENTS.REGISTER, method = RequestMethod.POST)
-    public ResponseEntity<?> registerUserless(@RequestBody @Valid PatientDetailsDTO patientDetails) {
-        try {
-            return new ResponseEntity<>(patientService.register(patientDetails), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (AlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
-    }
-
 }
 
