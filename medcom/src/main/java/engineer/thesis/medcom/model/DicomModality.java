@@ -76,7 +76,7 @@ public class DicomModality extends DicomObject {
 
         @Override
         public DicomModality build() {
-            return new DicomModality(attributes.build());
+            return new DicomModality(attributes);
         }
 
         @Override

@@ -13,7 +13,7 @@ import org.dcm4che3.data.Keyword;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"name", "value"}) // TODO just not use Set in DicomObject
+@EqualsAndHashCode(of = "code")
 public class DicomAttribute{
 
     public DicomAttribute(Integer code, String value) {

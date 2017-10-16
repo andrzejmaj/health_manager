@@ -65,6 +65,11 @@ public abstract class DicomObject {
     }
 
     protected void setDateTimeField(Integer dateTag, Integer timeTag, Consumer<Date> setter) {
+        if (!getAttribute(dateTag).isPresent()) {
+            setter.accept(null);
+            return;
+        }
+
         try {
             Instant instant = DicomUtils.parseDateTime(
                     getAttribute(dateTag).map(DicomAttribute::getValue).orElse(null),
@@ -78,12 +83,8 @@ public abstract class DicomObject {
     }
 
     protected void lazyAttributesMerge(DicomObject other) {
-        other.getAttributes()
-                .stream()
-                .filter(otherAttribute ->
-                        !attributes.contains(otherAttribute))
-                .forEach(newAttribute ->
-                        attributes.add(newAttribute));
+        // does not add if attribute already present
+        attributes.addAll(other.getAttributes());
     }
 
     @JsonProperty("attributes")

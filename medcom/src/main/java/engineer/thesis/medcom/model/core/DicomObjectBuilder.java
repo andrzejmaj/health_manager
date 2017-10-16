@@ -1,12 +1,8 @@
 package engineer.thesis.medcom.model.core;
 
-import com.google.common.collect.ImmutableSet;
-import engineer.thesis.medcom.model.DicomInstance;
-import engineer.thesis.medcom.model.DicomSeries;
-import engineer.thesis.medcom.model.DicomStudy;
-
 import java.util.Comparator;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author MKlaman
@@ -17,18 +13,19 @@ public abstract class DicomObjectBuilder<T extends DicomObject> implements Compa
     private static final Comparator<DicomObjectBuilder> priorityComparator =
             Comparator.<DicomObjectBuilder>comparingInt(DicomObjectBuilder::getPriority).reversed();
 
-    protected ImmutableSet.Builder<DicomAttribute> attributes = new ImmutableSet.Builder<>();
+    protected Set<DicomAttribute> attributes = new HashSet<>();
 
 
     public abstract T build();
 
     public abstract boolean accepts(DicomAttribute attribute);
 
-    public void attribute(DicomAttribute attribute){
+    public DicomObjectBuilder<T> attribute(DicomAttribute attribute){
         if(!accepts(attribute))
             throw new IllegalStateException("illegal attribute passed into builder: " + attribute.getName());
 
         attributes.add(attribute);
+        return this;
     }
 
     protected abstract int getPriority();

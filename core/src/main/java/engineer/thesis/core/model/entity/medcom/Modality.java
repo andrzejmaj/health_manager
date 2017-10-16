@@ -1,17 +1,17 @@
 package engineer.thesis.core.model.entity.medcom;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author MKlaman
@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "dcm_modality", schema = "hmanager")
 @Data
-@Builder
+@EqualsAndHashCode(of = "applicationEntity")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Modality {
@@ -47,19 +47,24 @@ public class Modality {
     @Column(name = "location")
     private String location;
 
-    @OneToMany(mappedBy = "modality", fetch = FetchType.EAGER)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Attribute> attributes;
+    @OneToMany(mappedBy = "key.modality", fetch = FetchType.EAGER)
+    @Cascade(CascadeType.ALL)
+    private Set<ModalityAttribute> attributes;
 
     @OneToMany(mappedBy = "modality", fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     @Cascade(CascadeType.ALL)
-    private List<Series> series = new ArrayList<>();
+    private Set<Series> series = new HashSet<>();
 
 
-    public void setAttributes(List<Attribute> attributes) {
+    public void setAttributes(Set<ModalityAttribute> attributes) {
         attributes.forEach(attribute ->
-                attribute.setModality(this));
+                attribute.getKey().setModality(this));
         this.attributes = attributes;
+    }
+
+    @Override
+    public String toString() {
+        return applicationEntity;
     }
 }

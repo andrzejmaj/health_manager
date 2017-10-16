@@ -72,7 +72,7 @@ public class DicomStudy extends DicomObject {
 
         @Override
         public DicomStudy build() {
-            return new DicomStudy(attributes.build());
+            return new DicomStudy(attributes);
         }
 
         @Override

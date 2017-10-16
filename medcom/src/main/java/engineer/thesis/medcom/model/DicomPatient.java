@@ -58,7 +58,7 @@ public class DicomPatient extends DicomObject {
 
         @Override
         public DicomPatient build() {
-            return new DicomPatient(attributes.build());
+            return new DicomPatient(attributes);
         }
 
         @Override

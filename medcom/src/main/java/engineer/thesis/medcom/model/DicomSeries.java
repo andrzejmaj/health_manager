@@ -67,7 +67,7 @@ public class DicomSeries extends DicomObject {
 
         @Override
         public DicomSeries build() {
-            return new DicomSeries(attributes.build());
+            return new DicomSeries(attributes);
         }
 
         @Override

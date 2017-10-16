@@ -1,8 +1,8 @@
 package engineer.thesis.core.model.entity.medcom;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -10,9 +10,9 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author MKlaman
@@ -21,7 +21,7 @@ import java.util.List;
 @Entity
 @Table(name = "dcm_series", schema = "hmanager")
 @Data
-@Builder
+@EqualsAndHashCode(of = "instanceUID")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Series {
@@ -41,24 +41,29 @@ public class Series {
     @JoinColumn(name = "study_id")
     private Study study;
 
-    @OneToMany(mappedBy = "series", fetch = FetchType.EAGER)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Attribute> attributes;
+    @OneToMany(mappedBy = "key.series", fetch = FetchType.EAGER)
+    @Cascade(CascadeType.ALL)
+    private Set<SeriesAttribute> attributes;
 
     @OneToMany(mappedBy = "series", fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     @Cascade(CascadeType.ALL)
-    private List<Instance> instances = new ArrayList<>();
+    private Set<Instance> instances = new HashSet<>();
 
 
-    public void setAttributes(List<Attribute> attributes) {
+    public void setAttributes(Set<SeriesAttribute> attributes) {
         attributes.forEach(attribute ->
-                attribute.setSeries(this));
+                attribute.getKey().setSeries(this));
         this.attributes = attributes;
     }
 
     public void addInstance(Instance instance) {
         instance.setSeries(this);
         this.instances.add(instance);
+    }
+
+    @Override
+    public String toString() {
+        return instanceUID;
     }
 }

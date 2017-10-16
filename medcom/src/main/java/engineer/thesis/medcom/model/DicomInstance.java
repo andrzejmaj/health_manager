@@ -65,7 +65,7 @@ public class DicomInstance extends DicomObject {
 
         @Override
         public DicomInstance build() {
-            return new DicomInstance(attributes.build());
+            return new DicomInstance(attributes);
         }
 
         @Override

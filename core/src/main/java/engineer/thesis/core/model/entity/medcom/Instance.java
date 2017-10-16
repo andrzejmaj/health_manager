@@ -1,14 +1,14 @@
 package engineer.thesis.core.model.entity.medcom;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author MKlaman
@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "dcm_instance", schema = "hmanager")
 @Data
-@Builder
+@EqualsAndHashCode(of = "instanceUID")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Instance {
@@ -36,14 +36,19 @@ public class Instance {
     @JoinColumn(name = "series_id")
     private Series series;
 
-    @OneToMany(mappedBy = "instance", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "key.instance", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Attribute> attributes;
+    private Set<InstanceAttribute> attributes;
 
 
-    public void setAttributes(List<Attribute> attributes) {
+    public void setAttributes(Set<InstanceAttribute> attributes) {
         attributes.forEach(attribute ->
-                attribute.setInstance(this));
+                attribute.getKey().setInstance(this));
         this.attributes = attributes;
+    }
+
+    @Override
+    public String toString() {
+        return instanceUID;
     }
 }
