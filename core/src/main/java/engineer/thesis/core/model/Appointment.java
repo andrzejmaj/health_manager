@@ -1,16 +1,20 @@
 package engineer.thesis.core.model;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.List;
 
+@Data
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "hm_appointment", schema = "hmanager")
 public class Appointment {
 
 	@Id
@@ -25,36 +29,18 @@ public class Appointment {
 	@JoinColumn(name = "time_slot_id")
 	private TimeSlot timeSlot;
 
-	@Column(nullable = true)
+	@Column(name = "office_number")
 	private Integer officeNumber;
 	
 	@Column(nullable = false)
 	private boolean tookPlace;
-	
-	@Column(nullable = true)
-	private String data;
-	
-	public Appointment(Patient patient, TimeSlot timeSlot, Integer officeNumber, boolean tookPlace, String data) {
-		this.patient = patient;
-		this.timeSlot = timeSlot;
-		this.officeNumber = officeNumber;
-		this.tookPlace = tookPlace;
-		this.data = data;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Appointment) {
-			Appointment a = (Appointment) obj;
-			
-			return Objects.equals(a.timeSlot, this.timeSlot);
-		}
-		
-		return false;
-	}
+	@Column(nullable = false)
+    private String priority = "low";
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(timeSlot);
-	}
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<AppointmentComment> comments;
+
 }

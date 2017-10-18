@@ -1,18 +1,15 @@
 package engineer.thesis.core.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@Data
 @Entity
-@Getter
-@Setter
-@EqualsAndHashCode(of = {"startDateTime", "endDateTime", "doctor"})
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "hm_time_slot", schema = "hmanager")
 public class TimeSlot {
 
 	@Id
@@ -31,11 +28,5 @@ public class TimeSlot {
 	@Column(nullable = false)
 	private boolean availableForSelfSign;
 
-	public TimeSlot(Date startDateTime, Date endDateTime, Doctor doctor, boolean availableForSelfSign) {
-		this.startDateTime = startDateTime;
-		this.endDateTime = endDateTime;
-		this.doctor = doctor;
-		this.availableForSelfSign = availableForSelfSign;
-	}
 }
 
