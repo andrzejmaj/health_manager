@@ -3,6 +3,7 @@ package engineer.thesis.core.service.Implementation;
 import engineer.thesis.core.model.Appointment;
 import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.TimeSlot;
+import engineer.thesis.core.model.VisitPriority;
 import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;
@@ -46,7 +47,8 @@ public class AppointmentService implements IAppointmentService {
         Integer officeNumber = appointmentDTO.getOfficeNumber();
         boolean tookPlace = appointmentDTO.getTookPlace();
         String data = appointmentDTO.getData();
-        Appointment newAppointment = new Appointment(patient, timeSlot, officeNumber, tookPlace, data);
+        VisitPriority priority = appointmentDTO.getPriority();
+        Appointment newAppointment = new Appointment(patient, timeSlot, officeNumber, tookPlace, data, priority);
 
         return objectMapper.convert(appointmentRepository.save(newAppointment), AppointmentDTO.class);
     }
