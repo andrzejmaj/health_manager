@@ -8,10 +8,9 @@ import engineer.thesis.core.model.dto.MedicalCheckupDTO;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.repository.MedicalCheckupRepository;
 import engineer.thesis.core.repository.PatientRepository;
-import engineer.thesis.core.service.FormService;
 import engineer.thesis.core.service.Interface.IMedicalCheckupService;
 import engineer.thesis.core.utils.CustomObjectMapper;
-import engineer.thesis.core.validator.MedicalCheckupValidator;
+import engineer.thesis.core.validator.FormDataValidator;
 import org.springframework.batch.item.validator.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class MedicalCheckupService implements IMedicalCheckupService {
     private CustomObjectMapper objectMapper;
 
     @Autowired
-    private MedicalCheckupValidator medicalCheckupValidator;
+    private FormDataValidator formDataValidator;
 
     @Autowired
     private FormRepository formRepository;
@@ -44,14 +43,16 @@ public class MedicalCheckupService implements IMedicalCheckupService {
         if (!patientRepository.exists(patientId)) {
             throw new NoSuchElementExistsException("Patient doesn't exists");
         }
-        return medicalCheckupRepository.findAllByPatientIdOrderByLastModifiedDateDesc(patientId).stream().map(medicalCheckup -> objectMapper.convert(medicalCheckup, MedicalCheckupDTO.class)).collect(Collectors.toList());
+        return medicalCheckupRepository.findAllByPatientIdOrderByLastModifiedDateDesc(patientId).stream()
+                .map(medicalCheckup -> objectMapper.convert(medicalCheckup, MedicalCheckupDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     public MedicalCheckupDTO saveMedicalCheckup(Long patientId, MedicalCheckupDTO medicalCheckupDTO) throws NoSuchElementExistsException {
 
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(patientId));
-        Optional<Form> form = Optional.of(formRepository.getOne(medicalCheckupDTO.getFormId()));
+        Optional<Form> form = Optional.ofNullable(formRepository.getOne(medicalCheckupDTO.getFormId()));
 
         if (!patient.isPresent()) {
             throw new NoSuchElementExistsException("Patient does not exist");
@@ -62,8 +63,8 @@ public class MedicalCheckupService implements IMedicalCheckupService {
         }
 
         MedicalCheckup medicalCheckup = objectMapper.convert(medicalCheckupDTO, MedicalCheckup.class);
-        if (!medicalCheckupValidator.isMedicalCheckupValid(medicalCheckup, form.get())) {
-            throw new ValidationException(medicalCheckupValidator.getErrorMessage());
+        if (!formDataValidator.isDataValid(medicalCheckup.getMedicalCheckupValues(), form.get())) {
+            throw new ValidationException(formDataValidator.getErrorMessage());
         }
 
         if (medicalCheckup.getId() != null) {

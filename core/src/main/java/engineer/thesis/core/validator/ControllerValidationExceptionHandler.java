@@ -1,4 +1,4 @@
-package engineer.thesis.core.handler;
+package engineer.thesis.core.validator;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
