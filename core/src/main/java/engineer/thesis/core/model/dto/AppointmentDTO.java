@@ -1,5 +1,6 @@
 package engineer.thesis.core.model.dto;
 
+import engineer.thesis.core.model.VisitPriority;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +14,5 @@ public class AppointmentDTO {
     Boolean tookPlace;
     Integer officeNumber;
     String data;
+    VisitPriority priority;
 }

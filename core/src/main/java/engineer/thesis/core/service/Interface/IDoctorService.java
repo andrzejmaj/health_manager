@@ -1,6 +1,7 @@
 package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.DoctorDTO;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ public interface IDoctorService {
     List<DoctorDTO> getAllDoctors();
 
     DoctorDTO updateDoctor(DoctorDTO doctorDTO) throws NoSuchElementException;
+
+    DoctorDTO findByEmail(String email) throws NoSuchElementExistsException;
+
 
     DoctorDTO saveDoctor(DoctorDTO personalDetailDTO) throws AlreadyExistsException;
 

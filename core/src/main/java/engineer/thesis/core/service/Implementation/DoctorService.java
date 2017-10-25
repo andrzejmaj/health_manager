@@ -1,6 +1,7 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.Doctor;
 import engineer.thesis.core.model.dto.DoctorDTO;
 import engineer.thesis.core.model.dto.SpecializationDTO;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,6 +66,12 @@ public class DoctorService implements IDoctorService {
             throw new NoSuchElementException("Doctor does not exists");
         }
         return objectMapper.convert(doctorRepository.save(objectMapper.convert(doctorDTO, Doctor.class)), DoctorDTO.class);
+    }
+
+    @Override
+    public DoctorDTO findByEmail(String email) throws NoSuchElementExistsException {
+        Optional<Doctor> doctor = Optional.ofNullable(doctorRepository.findByAccount_User_Email(email));
+        return objectMapper.convert(doctor.orElseThrow(() -> new NoSuchElementExistsException("Doctor not found")), DoctorDTO.class);
     }
 
 }
