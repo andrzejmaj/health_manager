@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,5 +77,40 @@ public class TimeSlotService implements ITimeSlotService {
 
     private boolean isOwner(long doctorId, long timeSlotId) {
         return timeSlotRepository.findOne(timeSlotId).getDoctor().getId() == doctorId;
+    }
+
+    @Override
+    public TimeSlotDTO moveTimeSlot(long timeSlotId, long doctorId, Date startDate, Date endDate) {
+        if (!doctorRepository.exists(doctorId)) {
+            throw new NoSuchDoctorException(doctorId);
+        }
+        List<TimeSlotDTO> interleaving = getInIntervalForDoctor(doctorId, startDate, endDate);
+        if (!interleaving.isEmpty()) {
+            //it still can work - if we're moving the slot over itself
+            boolean itsOkay = interleaving.size() == 1
+                    && interleaving.get(0).getId() == timeSlotId;
+            if (!itsOkay) {
+                throw new IllegalArgumentException("There is another timeslot interleaving!");
+            }
+        }
+        TimeSlot timeSlot = timeSlotRepository.getOne(timeSlotId);
+        if (timeSlot == null) {
+            throw new NoSuchTimeSlotException(timeSlotId);
+        }
+        timeSlot.setStartDateTime(startDate);
+        timeSlot.setEndDateTime(endDate);
+        return mapToDTO(timeSlotRepository.save(timeSlot));
+    }
+
+    public static class NoSuchDoctorException extends NoSuchElementException {
+        NoSuchDoctorException(long doctorId) {
+            super("Doctor with ID " + doctorId + " does not exist!");
+        }
+    }
+
+    public static class NoSuchTimeSlotException extends NoSuchElementException {
+        NoSuchTimeSlotException(long timeSlotId) {
+            super("Timeslot with ID " + timeSlotId + " does not exist!");
+        }
     }
 }

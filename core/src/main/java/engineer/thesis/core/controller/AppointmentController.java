@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 public class AppointmentController {
 
@@ -76,5 +78,21 @@ public class AppointmentController {
         }
 
         return new ResponseEntity<>(appointmentService.save(appointmentDTO, patientId), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/appointmentsForDoc/{doctorId}/{start}/{end}")
+    public ResponseEntity<?> getForDoctor(
+            @PathVariable(name = "doctorId") long doctorId,
+            @PathVariable(name = "start") long start,
+            @PathVariable(name = "end") long end) {
+        return new ResponseEntity<>(appointmentService.getInIntervalForDoctor(doctorId, new Date(start), new Date(end)), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/appointmentsForPatient/{patientId}/{start}/{end}")
+    public ResponseEntity<?> getForPatient(
+            @PathVariable(name = "patientId") long patientId,
+            @PathVariable(name = "start") long start,
+            @PathVariable(name = "end") long end) {
+        return new ResponseEntity<>(appointmentService.getInIntervalForPatient(patientId, new Date(start), new Date(end)), HttpStatus.OK);
     }
 }

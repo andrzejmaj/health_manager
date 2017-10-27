@@ -12,4 +12,6 @@ public interface ITimeSlotService {
     TimeSlotDTO saveTimeSlot(TimeSlotDTO timeSlotDTO, long doctorId) throws IllegalArgumentException;
 
     List<TimeSlotDTO> getInIntervalForDoctor(long doctorId, Date startDate, Date endDate) throws IllegalArgumentException;
+
+    TimeSlotDTO moveTimeSlot(long timeSlotId, long doctorId, Date startDate, Date endDate);
 }
