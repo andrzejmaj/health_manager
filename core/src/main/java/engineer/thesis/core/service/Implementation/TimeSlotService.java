@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +28,12 @@ public class TimeSlotService implements ITimeSlotService {
     private DoctorRepository doctorRepository;
 
     private static TimeSlotDTO mapToDTO(TimeSlot timeSlot) {
-        return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime(), timeSlot.isAvailableForSelfSign());
+        return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime(), timeSlot.getDoctor().getId(), timeSlot.isAvailableForSelfSign());
+    }
+
+    @Override
+    public TimeSlotDTO getById(long id) {
+        return mapToDTO(Optional.ofNullable(timeSlotRepository.getOne(id)).orElseThrow(() -> new NoSuchElementException("No timeslot with id " + id)));
     }
 
     @Override

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class AppointmentDTO {
     Long id;
+    Long patientId;
     Long timeSlotId;
     Boolean tookPlace;
     Integer officeNumber;

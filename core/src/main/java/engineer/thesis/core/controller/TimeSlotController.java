@@ -19,6 +19,18 @@ public class TimeSlotController {
     @Autowired
     private ITimeSlotService timeSlotService;
 
+
+    @RequestMapping(method = RequestMethod.GET, path = "/timeSlot/{id}")
+    public ResponseEntity<?> getById(
+            @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(timeSlotService.getById(id), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
     @RequestMapping(method = RequestMethod.GET, path = "/timeSlots/{doctorId}/{start}/{end}")
     public ResponseEntity<?> getDoctor(
 //            @PathVariable(name = "startDate") @DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME) Date startDate,
