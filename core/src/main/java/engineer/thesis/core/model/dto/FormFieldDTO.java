@@ -1,5 +1,6 @@
 package engineer.thesis.core.model.dto;
 
+import engineer.thesis.core.model.enums.FieldType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,9 +15,10 @@ public class FormFieldDTO {
 
     private Long id;
     @NotNull
-    private String type;
+    private FieldType type;
     @NotNull
     private String name;
+    @NotNull
     private Boolean isRequired;
     private Boolean isEditable;
     private String label;

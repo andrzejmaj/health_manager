@@ -80,7 +80,7 @@ public class FormController {
     }
 
     @RequestMapping(path = RequestMappings.FORMS.FORM_DEFAULTS, method = RequestMethod.POST)
-    public ResponseEntity<?> saveDefaultValues(@PathVariable Long id, @RequestBody DefaultValuesSetDTO defaultValuesSetDTO) {
+    public ResponseEntity<?> saveDefaultValues(@PathVariable Long id, @RequestBody @Valid DefaultValuesSetDTO defaultValuesSetDTO) {
         try {
             return new ResponseEntity<Object>(formService.saveDefaultValues(id, defaultValuesSetDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
@@ -91,7 +91,7 @@ public class FormController {
     }
 
     @RequestMapping(path = RequestMappings.FORMS.FORMS_DEFAULTS_ID, method = RequestMethod.PUT)
-    public ResponseEntity<?> updateDefaultValues(@PathVariable Long id, @RequestBody DefaultValuesSetDTO defaultValuesSetDTO) {
+    public ResponseEntity<?> updateDefaultValues(@PathVariable Long id, @RequestBody @Valid DefaultValuesSetDTO defaultValuesSetDTO) {
         try {
             return new ResponseEntity<Object>(formService.updateDefaultValues(id, defaultValuesSetDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {

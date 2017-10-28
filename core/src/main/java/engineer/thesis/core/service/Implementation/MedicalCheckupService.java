@@ -1,5 +1,6 @@
 package engineer.thesis.core.service.Implementation;
 
+import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.Form;
 import engineer.thesis.core.model.MedicalCheckup;
@@ -8,6 +9,8 @@ import engineer.thesis.core.model.dto.MedicalCheckupDTO;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.repository.MedicalCheckupRepository;
 import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.service.FormService;
+import engineer.thesis.core.service.Interface.BasePatientService;
 import engineer.thesis.core.service.Interface.IMedicalCheckupService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.core.validator.FormDataValidator;
@@ -17,11 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class MedicalCheckupService implements IMedicalCheckupService {
+public class MedicalCheckupService implements BasePatientService, IMedicalCheckupService {
 
     @Autowired
     private MedicalCheckupRepository medicalCheckupRepository;
@@ -38,6 +40,9 @@ public class MedicalCheckupService implements IMedicalCheckupService {
     @Autowired
     private FormRepository formRepository;
 
+    @Autowired
+    private FormService formService;
+
     @Override
     public List<MedicalCheckupDTO> getPatientCheckups(Long patientId) throws NoSuchElementExistsException {
         if (!patientRepository.exists(patientId)) {
@@ -51,28 +56,49 @@ public class MedicalCheckupService implements IMedicalCheckupService {
     @Override
     public MedicalCheckupDTO saveMedicalCheckup(Long patientId, MedicalCheckupDTO medicalCheckupDTO) throws NoSuchElementExistsException {
 
-        Optional<Patient> patient = Optional.ofNullable(patientRepository.findOne(patientId));
-        Optional<Form> form = Optional.ofNullable(formRepository.getOne(medicalCheckupDTO.getFormId()));
-
-        if (!patient.isPresent()) {
-            throw new NoSuchElementExistsException("Patient does not exist");
-        }
-
-        if (!form.isPresent()) {
-            throw new NoSuchElementExistsException("Form does not exist");
-        }
+        Patient patient = findPatient(patientId, patientRepository);
+        Form form = findForm(medicalCheckupDTO.getFormId());
 
         MedicalCheckup medicalCheckup = objectMapper.convert(medicalCheckupDTO, MedicalCheckup.class);
-        if (!formDataValidator.isDataValid(medicalCheckup.getMedicalCheckupValues(), form.get())) {
+
+        if (!formDataValidator.isDataValid(medicalCheckup.getMedicalCheckupValues(), form)) {
             throw new ValidationException(formDataValidator.getErrorMessage());
         }
+        //set creator
+        medicalCheckupDTO.setId(null);
+        medicalCheckup.setCreatedDate(new Date());
+        medicalCheckup.setLastModifiedDate(new Date());
+        medicalCheckup.setPatient(patient);
 
-        if (medicalCheckup.getId() != null) {
-            medicalCheckup.setPatient(patient.get());
-            medicalCheckup.setCreatedDate(new Date());
+        medicalCheckup.getMedicalCheckupValues().forEach(val -> val.setMedicalCheckup(medicalCheckup));
+
+        return objectMapper.convert(medicalCheckupRepository.save(medicalCheckup), MedicalCheckupDTO.class);
+    }
+
+    @Override
+    public MedicalCheckupDTO updateMedicalCheckup(Long patientId, MedicalCheckupDTO medicalCheckupDTO) throws NoSuchElementExistsException, DataIntegrityException {
+        MedicalCheckup medicalCheckup = medicalCheckupRepository.findOne(medicalCheckupDTO.getId());
+        if (medicalCheckup == null) {
+            throw new NoSuchElementExistsException("Medical Checkup doesn't exist");
+        }
+        if (!medicalCheckup.getPatient().getId().equals(patientId)) {
+            throw new DataIntegrityException("Medical Checkup doesn't belong to patient");
         }
 
+        Form form = findForm(medicalCheckupDTO.getFormId());
+
+        MedicalCheckup updatedMedicalCheckup = objectMapper.convert(medicalCheckupDTO, MedicalCheckup.class);
+
+        if (!formDataValidator.isDataValid(updatedMedicalCheckup.getMedicalCheckupValues(), form)) {
+            throw new DataIntegrityException(formDataValidator.getErrorMessage());
+        }
+
+        medicalCheckup.getMedicalCheckupValues().clear();
+        medicalCheckup.getMedicalCheckupValues().addAll(updatedMedicalCheckup.getMedicalCheckupValues());
+        medicalCheckup.setForm(form);
+
         medicalCheckup.setLastModifiedDate(new Date());
+        medicalCheckup.getMedicalCheckupValues().forEach(val -> val.setMedicalCheckup(medicalCheckup));
 
         return objectMapper.convert(medicalCheckupRepository.save(medicalCheckup), MedicalCheckupDTO.class);
     }
@@ -83,5 +109,14 @@ public class MedicalCheckupService implements IMedicalCheckupService {
             throw new NoSuchElementExistsException("Checkup doesn't exists");
         }
         medicalCheckupRepository.delete(id);
+    }
+
+    private Form findForm(Long id) throws NoSuchElementExistsException {
+        Form form = formRepository.findOne(id);
+
+        if (form == null) {
+            throw new NoSuchElementExistsException("Form does not exist");
+        }
+        return form;
     }
 }

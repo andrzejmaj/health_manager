@@ -1,6 +1,7 @@
 package engineer.thesis.core.validator;
 
 import engineer.thesis.core.model.Form;
+import engineer.thesis.core.model.FormAvailableValue;
 import engineer.thesis.core.model.FormField;
 import engineer.thesis.core.model.FormFieldData;
 import lombok.Getter;
@@ -40,6 +41,12 @@ public class FormDataValidator {
             return false;
         }
 
+        List<FormAvailableValue> fieldAvailableValues = field.getFieldAvailableValues();
+
+        if (fieldAvailableValues != null && !fieldAvailableValues.isEmpty()) {
+            return fieldAvailableValues.stream().noneMatch(formAvailableValue -> formAvailableValue.getValue().equals(value));
+        }
+
         switch (field.getType().getType()) {
             case NUMERIC:
                 isValid = isNumericFieldValid(value, field);
@@ -60,6 +67,7 @@ public class FormDataValidator {
                 isValid = isSelectFieldValid(value, field);
                 break;
         }
+
 
         if (!isValid) {
             setErrorMessage("Field " + field.getName() + " of type " + field.getType() + " with value " + value + " is not valid");

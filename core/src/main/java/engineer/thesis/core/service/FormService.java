@@ -2,7 +2,10 @@ package engineer.thesis.core.service;
 
 import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.*;
+import engineer.thesis.core.model.DefaultValuesSet;
+import engineer.thesis.core.model.Doctor;
+import engineer.thesis.core.model.Form;
+import engineer.thesis.core.model.FormFieldDefaultValue;
 import engineer.thesis.core.model.dto.DefaultValuesSetDTO;
 import engineer.thesis.core.model.dto.FormDTO;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
@@ -69,7 +72,6 @@ public class FormService implements IFormService {
 
         Form form = convertFromDTO(formDTO);
         form.setOwner(doctor);
-        form.setActive(true);
         return objectMapper.convert(formRepository.save(form), FormDTO.class);
     }
 
@@ -113,7 +115,7 @@ public class FormService implements IFormService {
             throw new NoSuchElementExistsException("Form doesn't exist");
         }
         defaultValuesSetDTO.setId(null);
-
+        defaultValuesSetDTO.setFormId(id);
         DefaultValuesSet defaultValuesSet = objectMapper.convert(defaultValuesSetDTO, DefaultValuesSet.class);
 
         if (!formDataValidator.isDataValid(defaultValuesSet.getDefaultValues(), form)) {
@@ -131,6 +133,10 @@ public class FormService implements IFormService {
         DefaultValuesSet defaultValuesSet = defaultValuesSetRepository.findOne(id);
         if (defaultValuesSet == null) {
             throw new NoSuchElementExistsException("Values set doesn't exist");
+        }
+
+        if (!defaultValuesSet.getForm().getId().equals(id)) {
+            throw new DataIntegrityException("Form id in set and path doesn't match");
         }
 
         List<FormFieldDefaultValue> formFieldDefaultValues = defaultValuesSetDTO.getDefaultValues().stream()
@@ -158,13 +164,12 @@ public class FormService implements IFormService {
     }
 
     private Form convertFromDTO(FormDTO formDTO) {
-        formDTO.getFormFields().forEach(field -> field.setType(field.getType().toUpperCase()));
         Form form = objectMapper.convert(formDTO, Form.class);
         form.getFormFields().forEach(field -> {
                     if (field.getFieldAvailableValues() != null) {
-                        field.getFieldAvailableValues().forEach(option -> {
-                            option.setFormField(field);
-                            option.setId(null);
+                        field.getFieldAvailableValues().forEach(value -> {
+                            value.setFormField(field);
+                            value.setId(null);
                         });
                     }
                     field.setForm(form);
@@ -174,15 +179,6 @@ public class FormService implements IFormService {
         form.setActive(true);
 
         return form;
-    }
-
-    private void checkFormFieldsIdsIntegrity(Form form, DefaultValuesSetDTO defaultValuesSetDTO) throws DataIntegrityException {
-
-        List<Long> fieldsIds = form.getFormFields().stream().map(FormField::getId).collect(Collectors.toList());
-
-        if (defaultValuesSetDTO.getDefaultValues().stream().anyMatch(value -> !fieldsIds.contains(value.getFormFieldId()))) {
-            throw new DataIntegrityException("Field doesn't belong to the form");
-        }
     }
 
     private Boolean doesFormExist(Long id) {
