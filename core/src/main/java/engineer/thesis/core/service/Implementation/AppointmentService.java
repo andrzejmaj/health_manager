@@ -14,6 +14,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AppointmentService implements IAppointmentService {
     private final static Logger logger = Logger.getLogger(AppointmentService.class);
@@ -61,5 +65,25 @@ public class AppointmentService implements IAppointmentService {
     @Override
     public AppointmentDTO find(long appointmentId) {
         return objectMapper.convert(appointmentRepository.findOne(appointmentId), AppointmentDTO.class);
+    }
+
+    @Override
+    public List<AppointmentDTO> getInIntervalForDoctor(long doctorId, Date startDate, Date endDate) throws IllegalArgumentException {
+        if (startDate.after(endDate)) {
+            throw new IllegalArgumentException("Dates went full retard. startDate is after endDate [" + startDate + ", " + endDate + "]");
+        }
+
+        return appointmentRepository.findInIntervalForDoctor(doctorId, startDate, endDate).stream()
+                .map(appointment -> objectMapper.convert(appointment, AppointmentDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AppointmentDTO> getInIntervalForPatient(long patientId, Date startDate, Date endDate) throws IllegalArgumentException {
+        if (startDate.after(endDate)) {
+            throw new IllegalArgumentException("Dates went full retard. startDate is after endDate [" + startDate + ", " + endDate + "]");
+        }
+
+        return appointmentRepository.findInIntervalForPatient(patientId, startDate, endDate).stream()
+                .map(appointment -> objectMapper.convert(appointment, AppointmentDTO.class)).collect(Collectors.toList());
     }
 }

@@ -9,7 +9,11 @@ import java.util.List;
 @Service
 public interface ITimeSlotService {
 
+    TimeSlotDTO getById(long id);
+
     TimeSlotDTO saveTimeSlot(TimeSlotDTO timeSlotDTO, long doctorId) throws IllegalArgumentException;
 
     List<TimeSlotDTO> getInIntervalForDoctor(long doctorId, Date startDate, Date endDate) throws IllegalArgumentException;
+
+    TimeSlotDTO moveTimeSlot(long timeSlotId, long doctorId, Date startDate, Date endDate);
 }
