@@ -113,13 +113,13 @@ public class PatientService implements IPatientService {
         if (patient == null) {
             throw new NoSuchElementExistsException("Patient doesn't exist");
         }
-        if (patient.getEmergencyContact() != null) {
+        if (patient.getEmergencyContact() == null) {
             throw new NoSuchElementExistsException("Patient haven't set emergency contact");
         }
 
         emergencyContact.setId(patient.getEmergencyContact().getId());
         patient.setEmergencyContact(objectMapper.convert(emergencyContact, PersonalDetails.class));
-        return objectMapper.convert(patientRepository.save(patient), PersonalDetailsDTO.class);
+        return objectMapper.convert(patientRepository.save(patient).getEmergencyContact(), PersonalDetailsDTO.class);
     }
 
     @Override
