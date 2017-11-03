@@ -4,8 +4,8 @@ import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.User;
 import engineer.thesis.core.model.UserRole;
-import engineer.thesis.core.model.dto.UserDTO;
 import engineer.thesis.core.model.dto.RegisterRequestDTO;
+import engineer.thesis.core.model.dto.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

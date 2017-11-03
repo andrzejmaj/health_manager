@@ -26,7 +26,7 @@ public class ControllerValidationExceptionHandler {
     @ExceptionHandler(PasswordNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    String processValidation(PasswordNotValidException ex) {
+    String processPasswordException(PasswordNotValidException ex) {
         return ex.getMessage();
     }
 }

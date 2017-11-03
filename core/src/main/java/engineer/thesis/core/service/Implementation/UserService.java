@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Path;
 import java.util.*;
 
 @Service
@@ -32,18 +31,10 @@ public class UserService implements IUserService {
     private PasswordResetTokenRepository passwordTokenRepository;
 
     @Autowired
-    private FileService fileService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private CustomObjectMapper objectMapper;
-
-    //@Value("${files.rootDirectory}")
-    private String rootDirectory = "/Users/andrzejmaj123/Documents/health_manager/core/src/main/resources/images/";
-
-    private Path path;
 
     @Autowired
     private PatientRepository patientRepository;
@@ -61,17 +52,14 @@ public class UserService implements IUserService {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
 
-    // TODO: 11/10/2017
-    // Ask PRZEMEK about doctor save
-
     @Override
     public void registerUserByRole(RegisterRequestDTO request, UserRole userRole, Boolean isOnBehalf) throws AlreadyExistsException {
 
         if (isOnBehalf) {
-            request.setPassword(generatePasswordForUser());
+            request.setPassword(generatePasswordForUser().replaceAll("-", "").substring(0, 16));
         } else {
             if (request.getPassword() == null) {
-                throw new PasswordNotValidException("password may not be null");
+                throw new PasswordNotValidException("Password may not be null");
             }
         }
 

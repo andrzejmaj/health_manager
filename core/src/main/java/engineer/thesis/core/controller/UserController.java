@@ -191,8 +191,6 @@ public class UserController {
 //    public ResponseEntity<?> activateUser(@PathVariable Long id) {
 //        return new ResponseEntity<Object>(userService)
 //    }
-
-
     @RequestMapping(path = RequestMappings.USERS.UPDATE_EMAIL, method = RequestMethod.POST)
     public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @RequestBody String email) {
         if (!canPerformUserAction(id, getCurrentUser())) {

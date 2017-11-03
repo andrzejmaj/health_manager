@@ -12,13 +12,12 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequestDTO {
-
     @NotNull
     @Email
     private String email;
     private String password;
+    @NotNull
     @Valid
     private PersonalDetailsDTO personalDetails;
     private String insuranceNumber;
-
 }
