@@ -11,4 +11,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     Doctor save(Doctor doctor);
 
     List<Doctor> findBySpecialization(Specialization specialization);
+
+    Doctor findByAccount_User_Email(String email); // У тебе моя машина
 }
