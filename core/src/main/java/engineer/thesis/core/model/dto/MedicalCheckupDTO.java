@@ -11,11 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class MedicalCheckupDTO {
-
     private Long id;
+    private Long formId;
     private List<MedicalCheckupValueDTO> medicalCheckupValues;
-    private PatientDTO2 patient;
-    private UserDTO creator;
     private Date createdDate;
     private Date lastModifiedDate;
 }

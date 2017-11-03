@@ -7,11 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-
 public class MedicalCheckupValueDTO {
-
     private Long id;
     private String value;
-    private FormFieldDTO fomField;
-
+    private Long fieldId;
 }

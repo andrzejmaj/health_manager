@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MedicalCheckupRepository extends JpaRepository<MedicalCheckup, Long> {
 
-    List<MedicalCheckup> findAllByPatientId_Id(Long id);
+    List<MedicalCheckup> findAllByPatientIdOrderByLastModifiedDateDesc(Long id);
 }
