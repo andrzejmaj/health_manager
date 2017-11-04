@@ -1,7 +1,7 @@
 package engineer.thesis.medcom.services;
 
 import engineer.thesis.core.model.dto.MedcomPatientDTO;
-import engineer.thesis.core.model.dto.PatientDTO;
+import engineer.thesis.core.model.dto.PatientDTO2;
 import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.entity.medcom.Study;
 import engineer.thesis.core.repository.PatientRepository;
@@ -55,7 +55,7 @@ public class DicomArchiveService { // TODO generify
                 .filter(patientEntity -> !patientEntity.getDicomStudies().isEmpty())
                 .map(entity ->
                         new MedcomPatientDTO(
-                                objectMapper.convert(entity, PatientDTO.class),
+                                objectMapper.convert(entity, PatientDTO2.class),
                                 entity.getDicomStudies().size(),
                                 findLastStudyDate(entity)
                         ))

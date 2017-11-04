@@ -9,24 +9,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class MedcomPatientDTO extends PatientDTO {
+public class MedcomPatientDTO extends PatientDTO2 {
 
-    public MedcomPatientDTO(PatientDTO patient, int studyCount, Date lastStudyDate) {
-        super(
-                patient.getId(),
-                patient.getFirstName(),
-                patient.getLastName(),
-                patient.getGender(),
-                patient.getPesel(),
-                patient.getBirthdate(),
-                patient.getPhoneNumber(),
-                patient.getCountry(),
-                patient.getStreet(),
-                patient.getCity(),
-                patient.getBuildingNumber(),
-                patient.getFlatNumber(),
-                patient.getInsuranceNumber()
-        );
+    public MedcomPatientDTO(PatientDTO2 patient, int studyCount, Date lastStudyDate) {
+        super(patient.getId(), patient.getAccount(), patient.getInsuranceNumber());
         this.studyCount = studyCount;
         this.lastStudyDate = lastStudyDate;
     }
