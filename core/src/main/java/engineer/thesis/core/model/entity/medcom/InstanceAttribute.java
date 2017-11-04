@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "dcm_instance_attribute", schema = "hmanager")
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 public class InstanceAttribute extends Attribute {

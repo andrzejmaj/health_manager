@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "dcm_study_attribute", schema = "hmanager")
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudyAttribute extends Attribute {

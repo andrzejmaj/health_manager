@@ -12,10 +12,10 @@ import java.io.Serializable;
 @Entity
 @Table(name = "dcm_modality_attribute", schema = "hmanager")
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ModalityAttribute extends Attribute {
-
     @EmbeddedId
     private AttributeKey key = new AttributeKey();
 
