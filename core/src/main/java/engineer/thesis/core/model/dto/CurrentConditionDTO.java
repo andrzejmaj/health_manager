@@ -19,6 +19,7 @@ public class CurrentConditionDTO {
     private String diseaseName;
     @NotNull
     private String symptoms;
+    @NotNull
     private List<DrugDTO> takenDrugs;
 
 }

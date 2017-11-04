@@ -12,6 +12,7 @@ import engineer.thesis.core.security.model.UpdatePasswordRequest;
 import engineer.thesis.core.service.Implementation.PatientService;
 import engineer.thesis.core.service.Implementation.UserService;
 import engineer.thesis.core.utils.MailService;
+import engineer.thesis.core.validator.RegisterUserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,7 +91,7 @@ public class UserController {
     }
 
     @RequestMapping(path = RequestMappings.USERS.REGISTER, method = RequestMethod.POST)
-    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequestDTO registerRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody @Validated(RegisterUserGroup.class) RegisterRequestDTO registerRequest) {
         try {
             userService.registerUserByRole(registerRequest, UserRole.ROLE_PATIENT, false);
             return new ResponseEntity<>("Registration successful", HttpStatus.OK);

@@ -56,14 +56,10 @@ public class TokenUtils {
                 .compact();
     }
 
-    public String getUsername(String token) {
-        try {
-            final Claims claims = this.getClaims(token);
-            System.out.println(claims);
-            return (String) claims.get("sub");
-        } catch (Exception e) {
-            return null;
-        }
+    String getUsername(String token) {
+        final Claims claims = this.getClaims(token);
+        System.out.println(claims);
+        return (String) claims.get("sub");
     }
 
     private String getAudience(String token) {
@@ -94,16 +90,10 @@ public class TokenUtils {
     }
 
     private Claims getClaims(String token) {
-        try {
-            return Jwts.parser()
-                    .setSigningKey("secret_super_secret")
-                    .parseClaimsJws(token)
-                    .getBody();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return Jwts.parser()
+                .setSigningKey("secret_super_secret")
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private String generateAudience(Device device) {

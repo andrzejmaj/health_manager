@@ -1,5 +1,6 @@
 package engineer.thesis.core.model.dto;
 
+import engineer.thesis.core.validator.RegisterUserGroup;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ public class RegisterRequestDTO {
     @NotNull
     @Email
     private String email;
+    @NotNull(groups = RegisterUserGroup.class)
     private String password;
     @NotNull
     @Valid
