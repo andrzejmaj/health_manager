@@ -1,12 +1,17 @@
 package engineer.thesis.core.controller;
 
+import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.MedicalCheckupDTO;
 import engineer.thesis.core.service.Interface.IMedicalCheckupService;
+import engineer.thesis.core.validator.PutValidationGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 public class MedicalCheckupController {
@@ -23,21 +28,33 @@ public class MedicalCheckupController {
         }
     }
 
-    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS_BY_NAME, method = RequestMethod.GET)
-    public ResponseEntity<?> getByName(@PathVariable Long patientId) {
+//    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS_BY_NAME, method = RequestMethod.GET)
+//    public ResponseEntity<?> getByName(@PathVariable Long patientId) {
+//        try {
+//            return new ResponseEntity<>(medicalCheckupService.getPatientCheckups(patientId), HttpStatus.OK);
+//        } catch (NoSuchElementExistsException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS, method = RequestMethod.POST)
+    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Valid MedicalCheckupDTO medicalCheckupDTO) {
         try {
-            return new ResponseEntity<>(medicalCheckupService.getPatientCheckups(patientId), HttpStatus.OK);
+            return new ResponseEntity<>(medicalCheckupService.saveMedicalCheckup(patientId, medicalCheckupDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
-    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody MedicalCheckupDTO medicalCheckupDTO) {
+
+    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS, method = RequestMethod.PUT)
+    public ResponseEntity<?> update(@PathVariable Long patientId, @Validated(PutValidationGroup.class) @RequestBody MedicalCheckupDTO medicalCheckupDTO) {
         try {
-            return new ResponseEntity<>(medicalCheckupService.saveMedicalCheckup(patientId, medicalCheckupDTO), HttpStatus.OK);
+            return new ResponseEntity<>(medicalCheckupService.updateMedicalCheckup(patientId, medicalCheckupDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (DataIntegrityException e) {
+            return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

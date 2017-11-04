@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hm_medical_checkups_values", schema = "hmanager")
-public class MedicalCheckupValue {
+public class MedicalCheckupValue implements FormFieldData {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -23,7 +23,7 @@ public class MedicalCheckupValue {
     private MedicalCheckup medicalCheckup;
 
     @Column(name = "form_field_id", nullable = false)
-    private Long fieldId;
+    private Long formFieldId;
 
     @Column(name = "value")
     private String value;

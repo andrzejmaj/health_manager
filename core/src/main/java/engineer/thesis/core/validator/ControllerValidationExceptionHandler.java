@@ -1,4 +1,4 @@
-package engineer.thesis.core.handler;
+package engineer.thesis.core.validator;
 
 import engineer.thesis.core.exception.PasswordNotValidException;
 import org.springframework.http.HttpStatus;

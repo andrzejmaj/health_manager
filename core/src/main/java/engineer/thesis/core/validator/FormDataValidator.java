@@ -1,22 +1,28 @@
 package engineer.thesis.core.validator;
 
 import engineer.thesis.core.model.Form;
+import engineer.thesis.core.model.FormAvailableValue;
 import engineer.thesis.core.model.FormField;
-import engineer.thesis.core.model.MedicalCheckup;
+import engineer.thesis.core.model.FormFieldData;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Getter
+@Setter
 @Component
-public class MedicalCheckupValidator {
+public class FormDataValidator {
 
     private String errorMessage;
 
-    public Boolean isMedicalCheckupValid(MedicalCheckup medicalCheckup, Form form) {
-        return !medicalCheckup.getMedicalCheckupValues().stream().anyMatch(entry -> isEntryValid(entry.getValue(), getFormField(entry.getFieldId(), form)).equals(false));
+    public Boolean isDataValid(List<? extends FormFieldData> dataList, Form form) {
+        return dataList.stream().noneMatch(entry -> isEntryValid(entry.getValue(), getFormField(entry.getFormFieldId(), form)).equals(false));
     }
 
     private Boolean isEntryValid(String value, Optional<FormField> formField) {
@@ -35,6 +41,12 @@ public class MedicalCheckupValidator {
             return false;
         }
 
+        List<FormAvailableValue> fieldAvailableValues = field.getFieldAvailableValues();
+
+        if (fieldAvailableValues != null && !fieldAvailableValues.isEmpty()) {
+            return fieldAvailableValues.stream().noneMatch(formAvailableValue -> formAvailableValue.getValue().equals(value));
+        }
+
         switch (field.getType().getType()) {
             case NUMERIC:
                 isValid = isNumericFieldValid(value, field);
@@ -46,32 +58,30 @@ public class MedicalCheckupValidator {
                 isValid = isTextFieldValid(value, field);
                 break;
             case CHECKBOX:
+                isValid = isCheckboxValid(value, field);
                 break;
             case EMAIL:
                 isValid = isEmailValid(value);
                 break;
             case SELECT:
-                isSelectFieldValid(value, field);
+                isValid = isSelectFieldValid(value, field);
                 break;
         }
+
 
         if (!isValid) {
             setErrorMessage("Field " + field.getName() + " of type " + field.getType() + " with value " + value + " is not valid");
         }
 
-        return true;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    private void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+        return isValid;
     }
 
     private Optional<FormField> getFormField(Long fieldId, Form form) {
-        return form.getFormFields().stream().findFirst().filter(field -> Objects.equals(field.getId(), fieldId));
+        return form.getFormFields().stream().filter(field -> Objects.equals(field.getId(), fieldId)).findFirst();
+    }
+
+    private Boolean isCheckboxValid(String value, FormField field) {
+        return "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value);
     }
 
     private Boolean isTextFieldValid(String value, FormField field) {

@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-public class MedicalCheckupValueDTO {
-    @NotNull
-    private String value;
+@NoArgsConstructor
+@AllArgsConstructor
+public class FormFieldDefaultValueDTO {
     @NotNull
     private Long formFieldId;
+    @NotNull
+    private String value;
 }
