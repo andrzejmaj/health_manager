@@ -1,9 +1,11 @@
 package engineer.thesis;
 
 import engineer.thesis.core.security.TokenUtils;
+import org.junit.Ignore;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Ignore
 public class TokenHelperTest {
 
     private TokenUtils tokenHelper;

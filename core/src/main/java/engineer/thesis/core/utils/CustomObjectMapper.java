@@ -1,8 +1,8 @@
 package engineer.thesis.core.utils;
 
 
-import engineer.thesis.core.model.FormFieldType;
-import engineer.thesis.core.model.Patient;
+import engineer.thesis.core.model.entity.FormFieldType;
+import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
 import engineer.thesis.core.model.enums.FieldType;
 import org.modelmapper.ModelMapper;

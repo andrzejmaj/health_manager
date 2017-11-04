@@ -1,7 +1,7 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.Drug;
+import engineer.thesis.core.model.entity.Drug;
 import engineer.thesis.core.model.dto.DrugDTO;
 import engineer.thesis.core.model.dto.ExtendedDrugDTO;
 import engineer.thesis.core.repository.DrugRepository;

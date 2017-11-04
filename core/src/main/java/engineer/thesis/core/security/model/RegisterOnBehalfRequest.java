@@ -1,6 +1,6 @@
 package engineer.thesis.core.security.model;
 
-import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.entity.UserRole;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;

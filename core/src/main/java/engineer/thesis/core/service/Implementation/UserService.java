@@ -21,9 +21,6 @@ import org.springframework.stereotype.Service;
 import java.nio.file.Path;
 import java.util.*;
 
-import static engineer.thesis.core.model.entity.UserRole.ROLE_ADMIN;
-import static engineer.thesis.core.model.entity.UserRole.ROLE_DOCTOR;
-import static engineer.thesis.core.model.entity.UserRole.ROLE_PATIENT;
 
 @Service
 public class UserService implements IUserService {
