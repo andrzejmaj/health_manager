@@ -23,9 +23,6 @@ public class FormAvailableValue {
     @JoinColumn(name = "form_field_id")
     private FormField formField;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "value")
     private String value;
 

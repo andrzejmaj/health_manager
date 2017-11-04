@@ -2,13 +2,15 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
-import engineer.thesis.core.model.entity.User;
-import engineer.thesis.core.model.entity.UserRole;
+import engineer.thesis.core.model.entity.*;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
 import engineer.thesis.core.model.dto.UserDTO;
+import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.PasswordResetTokenRepository;
+import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.PasswordResetToken;
+import engineer.thesis.core.security.model.RegisterOnBehalfRequest;
 import engineer.thesis.core.security.model.RegisterRequest;
 import engineer.thesis.core.service.Interface.IUserService;
 import engineer.thesis.core.utils.CustomObjectMapper;
@@ -18,6 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
 import java.util.*;
+
+import static engineer.thesis.core.model.entity.UserRole.ROLE_ADMIN;
+import static engineer.thesis.core.model.entity.UserRole.ROLE_DOCTOR;
+import static engineer.thesis.core.model.entity.UserRole.ROLE_PATIENT;
 
 @Service
 public class UserService implements IUserService {
@@ -42,13 +48,58 @@ public class UserService implements IUserService {
 
     private Path path;
 
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
+    private AccountService accountService;
+
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
 
     @Override
-    public String registerNewUser(RegisterRequest registerRequest) throws AlreadyExistsException {
+    public String registerNewUserOnBehalf(RegisterOnBehalfRequest request) throws AlreadyExistsException {
+        User user = this.registerNewUser(request, request.getRole());
 
+        Account account = accountService.newAccount(
+                request.getPersonalDetails() != null ?
+                        objectMapper.convert(request.getPersonalDetails(), PersonalDetails.class)
+                        : null,
+                user);
+
+        switch (request.getRole()) {
+            case ROLE_PATIENT: {
+                Patient patient = new Patient();
+                patient.setInsuranceNumber(request.getInsuranceNumber());
+                patient.setAccount(account);
+                patientRepository.save(patient);
+                break;
+            }
+            case ROLE_DOCTOR: {
+                Doctor doctor = new Doctor();
+                doctor.setAccount(account);
+
+                doctorRepository.save(doctor);
+                break;
+            }
+            case ROLE_ADMIN: {
+                break;
+            }
+        }
+
+        return "OK";
+    }
+
+    @Override
+    public UserDTO register(RegisterRequest registerRequest, UserRole role) throws AlreadyExistsException {
+        return objectMapper.convert(registerNewUser(registerRequest, role), UserDTO.class);
+    }
+
+    private User registerNewUser(RegisterRequest registerRequest, UserRole role) throws AlreadyExistsException {
         if (userExists(registerRequest.getEmail())) {
             throw new AlreadyExistsException("User with such mail already exists");
         }
@@ -56,11 +107,9 @@ public class UserService implements IUserService {
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(UserRole.ROLE_PATIENT);
+        user.setRole(role);
 
-        userRepository.save(user);
-
-        return "User successfully registered";
+        return userRepository.save(user);
     }
 
     @Override

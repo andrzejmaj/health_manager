@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -12,10 +13,13 @@ import java.util.Date;
 public class MedicalHistoryDTO {
 
     private Long id;
-    private String name;
+    @NotNull
     private String symptoms;
+    @NotNull
     private Long patientId;
-    private DiseaseDTO disease;
+    @NotNull
+    private String diseaseName;
+    @NotNull
     private Date detectionDate;
     private Date cureDate;
 

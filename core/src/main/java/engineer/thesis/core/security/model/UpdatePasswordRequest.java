@@ -3,12 +3,17 @@ package engineer.thesis.core.security.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 public class UpdatePasswordRequest {
 
+    @NotNull
     private String passwordCurrent;
+    @NotNull
     private String password;
+    @NotNull
     private String passwordConfirmation;
 
     public UpdatePasswordRequest(String passwordCurrent, String password, String passwordConfirmation) {

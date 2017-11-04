@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @AllArgsConstructor
@@ -12,7 +13,9 @@ import java.util.List;
 public class FormFieldDTO {
 
     private Long id;
-    private FormFieldTypeDTO fieldType;
+    @NotNull
+    private String type;
+    @NotNull
     private String name;
     private Boolean isRequired;
     private Boolean isEditable;

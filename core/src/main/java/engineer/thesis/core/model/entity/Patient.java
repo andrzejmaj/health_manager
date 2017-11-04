@@ -8,7 +8,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -35,6 +34,7 @@ public class Patient {
 
     @OneToOne
     @JoinColumn(name = "emergency_contact_id")
+    @Cascade(CascadeType.ALL)
     private PersonalDetails emergencyContact;
 
     @OneToOne

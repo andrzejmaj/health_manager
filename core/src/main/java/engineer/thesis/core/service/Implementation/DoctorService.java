@@ -1,18 +1,21 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.entity.Doctor;
 import engineer.thesis.core.model.dto.DoctorDTO;
+import engineer.thesis.core.model.dto.SpecializationDTO;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.service.Interface.IDoctorService;
 import engineer.thesis.core.utils.CustomObjectMapper;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import engineer.thesis.core.model.dto.SpecializationDTO;
-import org.apache.log4j.Logger;
 
 @Service
 public class DoctorService implements IDoctorService {
@@ -32,7 +35,7 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public DoctorDTO saveDoctor(DoctorDTO doctorDTO) throws AlreadyExistsException {
-        if (accountService.doesAccountExist(doctorDTO.getAccount().getPersonalDetails().getPesel())) {
+        if (accountService.checkExitance(doctorDTO.getAccount().getPersonalDetails().getPesel())) {
             throw new AlreadyExistsException("Account with such pesel number already exists");
         }
         SpecializationDTO specialization = specializationService.findExistingOrSaveNewByDescription(doctorDTO.getSpecialization().getDescription());
@@ -53,7 +56,7 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public List<DoctorDTO> getAllDoctors() {
-        return doctorRepository.findAll().stream().map(d -> objectMapper.convert(d,DoctorDTO.class)).collect(Collectors.toList());
+        return doctorRepository.findAll().stream().map(d -> objectMapper.convert(d, DoctorDTO.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -63,6 +66,12 @@ public class DoctorService implements IDoctorService {
             throw new NoSuchElementException("Doctor does not exists");
         }
         return objectMapper.convert(doctorRepository.save(objectMapper.convert(doctorDTO, Doctor.class)), DoctorDTO.class);
+    }
+
+    @Override
+    public DoctorDTO findByEmail(String email) throws NoSuchElementExistsException {
+        Optional<Doctor> doctor = Optional.ofNullable(doctorRepository.findByAccount_User_Email(email));
+        return objectMapper.convert(doctor.orElseThrow(() -> new NoSuchElementExistsException("Doctor not found")), DoctorDTO.class);
     }
 
 }

@@ -7,6 +7,7 @@ final class RequestMappings {
         static final String PATIENTS_EMAIL = "/patientByMail/{email}";
         static final String PATIENTS_ID = "/patients/{id}";
         static final String EMERGENCY = "/patients/{id}/emergency";
+        static final String REGISTER = "/patients/register";
     }
 
     static final class USERS {
@@ -16,14 +17,13 @@ final class RequestMappings {
         static final String UPDATE_PASSWORD_WITH_TOKEN = "/users/password_token";
         static final String UPDATE_PASSWORD = "/users/password";
         static final String UPDATE_EMAIL = "/users/{id}/email";
+        static final String REGISTER_ON_BEHALF = "/users/registerOnBehalf";
     }
 
     static final class ACCOUNTS {
-        static final String ACCOUNTS = "/accounts";
-        static final String ACCOUNTS_ID = "/accounts/{id}";
-        static final String PERS_DETAILS = "/accounts/{id}/personaldetails";
+        static final String PERS_DETAILS = "/accounts/{uuid}/personaldetails";
         static final String MY_PERS_DETAILLS = "/accounts/personaldetails";
-        static final String ACCOUNTS_PICTURE = "/accounts/{id}/picture";
+        static final String ACCOUNTS_PICTURE = "/accounts/{uuid}/picture";
     }
 
     static final class FORMS {
@@ -32,7 +32,7 @@ final class RequestMappings {
         static final String FORMS_OWNER_ID = "/forms/owner/{id}";
         static final String FORMS_NAME = "/forms/name/{name}";
     }
-  
+
     static final class HISTORY {
         static final String PATIENT_HISTORY = "/patients/{patientId}/history";
         static final String PATIENT_HISTORY_ID = "/patients/{patientId}/history/{id}";
@@ -53,6 +53,11 @@ final class RequestMappings {
     static final class MEDICAL {
         static final String PATIENT_MEDICAL = "/patients/{patientId}/medicalInformations";
         static final String PATIENT_MEDICAL_ID = "/patients/{patientId}/medicalInformations/{id}";
+    }
+
+    static final class DRUGS {
+        static final String DRUGS = "/drugs";
+        static final String DRUGS_ID = "/drugs/{id}";
     }
 }
 

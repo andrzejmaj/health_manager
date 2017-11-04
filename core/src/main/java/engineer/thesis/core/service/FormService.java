@@ -1,5 +1,7 @@
 package engineer.thesis.core.service;
 
+import engineer.thesis.core.exception.DataIntegrityException;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.entity.Form;
 import engineer.thesis.core.model.dto.FormDTO;
 import engineer.thesis.core.repository.FormRepository;
@@ -56,16 +58,29 @@ public class FormService implements IFormService {
 
     @Override
     public FormDTO saveForm(FormDTO formDTO) {
+        formDTO.getFormFields().forEach(field -> field.setType(field.getType().toUpperCase()));
         Form form = objectMapper.convert(formDTO, Form.class);
         form.getFormFields().forEach(field -> {
-                    field.getFieldAvailableValues().forEach(option -> option.setFormField(field));
+            if (field.getFieldAvailableValues() != null) {
+                field.getFieldAvailableValues().forEach(option -> option.setFormField(field));
+            }
                     field.setForm(form);
                 }
         );
         return objectMapper.convert(formRepository.save(form), FormDTO.class);
     }
 
-    protected Boolean doesFormExist(Long id) {
+    @Override
+    public FormDTO updateForm(Long id, FormDTO formDTO) throws DataIntegrityException, NoSuchElementExistsException {
+        Form form = formRepository.findOne(id);
+        if (form == null) {
+            throw new NoSuchElementExistsException("Form doesn't exist");
+        }
+
+        return null;
+    }
+
+    private Boolean doesFormExist(Long id) {
         return Optional.ofNullable(formRepository.findOne(id)).isPresent();
     }
 }

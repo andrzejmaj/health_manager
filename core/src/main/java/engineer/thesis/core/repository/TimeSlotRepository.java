@@ -21,9 +21,9 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 
 	@Query("from TimeSlot t where t.doctor = :doctor and ((t.startDateTime <= :startDateTime and :startDateTime < t.endDateTime) or (t.startDateTime < :endDateTime and :endDateTime <= t.endDateTime))")
 	List<TimeSlot> findInterleaving(@Param("doctor") Doctor doctor, @Param("startDateTime") Date startDateTime,
-			@Param("endDateTime") Date endDateTime);
+                                    @Param("endDateTime") Date endDateTime);
 
-	@Query("from TimeSlot t where t.doctor.id = :doctorId and (t.startDateTime >= :startDateTime and t.endDateTime <= :endDateTime)")
+	@Query("from TimeSlot t where t.doctor.id = :doctorId and (t.endDateTime >= :startDateTime and t.startDateTime <= :endDateTime)")
 	List<TimeSlot> findInInterval(@Param("doctorId") long doctorId, @Param("startDateTime") Date startDateTime, @Param("endDateTime") Date endDateTime);
 
 }

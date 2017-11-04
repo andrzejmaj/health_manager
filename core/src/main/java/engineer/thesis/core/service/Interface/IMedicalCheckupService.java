@@ -1,11 +1,6 @@
 package engineer.thesis.core.service.Interface;
 
-import engineer.thesis.core.exception.DataIntegrityException;
-import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.dto.MedicalCheckupDTO;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public interface IMedicalCheckupService {

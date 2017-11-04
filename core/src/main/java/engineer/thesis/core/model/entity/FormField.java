@@ -3,7 +3,6 @@ package engineer.thesis.core.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Fetch;
@@ -26,7 +25,8 @@ public class FormField {
 
     @OneToOne
     @JoinColumn(name = "form_field_type_id")
-    private FormFieldType fieldType;
+    @Cascade(CascadeType.ALL)
+    private FormFieldType type;
 
     @ManyToOne
     @JoinColumn(name = "form_id")

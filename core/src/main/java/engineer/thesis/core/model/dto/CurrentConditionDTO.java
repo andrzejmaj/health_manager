@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @NoArgsConstructor
@@ -12,8 +13,11 @@ import java.util.List;
 public class CurrentConditionDTO {
 
     private Long Id;
+    @NotNull
     private Long patientId;
-    private String conditionName;
+    @NotNull
+    private String diseaseName;
+    @NotNull
     private String symptoms;
     private List<DrugDTO> takenDrugs;
 

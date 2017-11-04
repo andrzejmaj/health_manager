@@ -13,68 +13,110 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class TimeSlotService implements ITimeSlotService {
-	private final static Logger logger = Logger.getLogger(TimeSlotController.class);
+    private final static Logger logger = Logger.getLogger(TimeSlotController.class);
 
-	@Autowired
-	private TimeSlotRepository timeSlotRepository;
+    @Autowired
+    private TimeSlotRepository timeSlotRepository;
 
-	@Autowired
-	private DoctorRepository doctorRepository;
+    @Autowired
+    private DoctorRepository doctorRepository;
 
-	@Override
-	public TimeSlotDTO saveTimeSlot(TimeSlotDTO timeSlotDTO, long doctorId) throws IllegalArgumentException {
-		if (timeSlotRepository.exists(timeSlotDTO.getId()) && !isOwner(doctorId, timeSlotDTO.getId())) {
-			throw new IllegalArgumentException("Bad id (the slot is owned by another doctor)");
-		}
+    private static TimeSlotDTO mapToDTO(TimeSlot timeSlot) {
+        return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime(), timeSlot.getDoctor().getId(), timeSlot.isAvailableForSelfSign());
+    }
 
-		TimeSlot timeSlot = mapFromDTO(timeSlotDTO, doctorId);
-		if (isValid(timeSlot)) {
-			timeSlot = timeSlotRepository.save(timeSlot);
-		} else {
-			throw new IllegalArgumentException("The slot is not valid (probably interleaving)");
-		}
+    @Override
+    public TimeSlotDTO getById(long id) {
+        return mapToDTO(Optional.ofNullable(timeSlotRepository.getOne(id)).orElseThrow(() -> new NoSuchElementException("No timeslot with id " + id)));
+    }
 
-		return mapToDTO(timeSlot);
-	}
+    @Override
+    public TimeSlotDTO saveTimeSlot(TimeSlotDTO timeSlotDTO, long doctorId) throws IllegalArgumentException {
+        if (timeSlotRepository.exists(timeSlotDTO.getId()) && !isOwner(doctorId, timeSlotDTO.getId())) {
+            throw new IllegalArgumentException("Bad id (the slot is owned by another doctor)");
+        }
 
-	@Override
-	public List<TimeSlotDTO> getInIntervalForDoctor(long doctorId, Date startDate, Date endDate) throws IllegalArgumentException {
-		logger.info("Getting timeslots between: " + startDate + ", " + endDate);
-		if (startDate.after(endDate)) {
-			throw new IllegalArgumentException("Dates went full retard. startDate is after endDate [" + startDate + ", " + endDate + "]");
-		}
+        TimeSlot timeSlot = mapFromDTO(timeSlotDTO, doctorId);
+        if (isValid(timeSlot)) {
+            timeSlot = timeSlotRepository.save(timeSlot);
+        } else {
+            throw new IllegalArgumentException("The slot is not valid (probably interleaving)");
+        }
 
-		return timeSlotRepository.findInInterval(doctorId, startDate, endDate).stream()
-				.map(TimeSlotService::mapToDTO).collect(Collectors.toList());
-	}
+        return mapToDTO(timeSlot);
+    }
 
-	private boolean isValid(TimeSlot timeSlot) {
-		List<TimeSlot> interleavingSlots = timeSlotRepository.findInterleaving(timeSlot.getDoctor(),
-				timeSlot.getStartDateTime(), timeSlot.getEndDateTime());
+    @Override
+    public List<TimeSlotDTO> getInIntervalForDoctor(long doctorId, Date startDate, Date endDate) throws IllegalArgumentException {
+        logger.info("Getting timeslots between: " + startDate + ", " + endDate);
+        if (startDate.after(endDate)) {
+            throw new IllegalArgumentException("Dates went full retard. startDate is after endDate [" + startDate + ", " + endDate + "]");
+        }
 
-		return interleavingSlots.isEmpty()
-				|| (interleavingSlots.size() == 1 && interleavingSlots.get(0).getId() == timeSlot.getId());
-	}
+        return timeSlotRepository.findInInterval(doctorId, startDate, endDate).stream()
+                .map(TimeSlotService::mapToDTO).collect(Collectors.toList());
+    }
 
-	private TimeSlot mapFromDTO(TimeSlotDTO timeSlotDTO, long doctorId) {
-		Doctor doctor = doctorRepository.findOne(doctorId);
-		TimeSlot timeSlot = new TimeSlot(timeSlotDTO.getStartDateTime(), timeSlotDTO.getEndDateTime(), doctor, timeSlotDTO.isAvailableForSelfSign());
-		if (timeSlotDTO.getId() != null) {
-			timeSlot.setId(timeSlotDTO.getId());
-		}
+    private boolean isValid(TimeSlot timeSlot) {
+        List<TimeSlot> interleavingSlots = timeSlotRepository.findInterleaving(timeSlot.getDoctor(),
+                timeSlot.getStartDateTime(), timeSlot.getEndDateTime());
 
-		return timeSlot;
-	}
+        return interleavingSlots.isEmpty()
+                || (interleavingSlots.size() == 1 && interleavingSlots.get(0).getId() == timeSlot.getId());
+    }
 
-	private static TimeSlotDTO mapToDTO(TimeSlot timeSlot) {
-		return new TimeSlotDTO(timeSlot.getId(), timeSlot.getStartDateTime(), timeSlot.getEndDateTime(), timeSlot.isAvailableForSelfSign());
-	}
+    private TimeSlot mapFromDTO(TimeSlotDTO timeSlotDTO, long doctorId) {
+        Doctor doctor = doctorRepository.findOne(doctorId);
+        TimeSlot timeSlot = new TimeSlot(timeSlotDTO.getStartDateTime(), timeSlotDTO.getEndDateTime(), doctor, timeSlotDTO.isAvailableForSelfSign());
+        if (timeSlotDTO.getId() != null) {
+            timeSlot.setId(timeSlotDTO.getId());
+        }
 
-	private boolean isOwner(long doctorId, long timeSlotId) {
-		return timeSlotRepository.findOne(timeSlotId).getDoctor().getId() == doctorId;
-	}
+        return timeSlot;
+    }
+
+    private boolean isOwner(long doctorId, long timeSlotId) {
+        return timeSlotRepository.findOne(timeSlotId).getDoctor().getId() == doctorId;
+    }
+
+    @Override
+    public TimeSlotDTO moveTimeSlot(long timeSlotId, long doctorId, Date startDate, Date endDate) {
+        if (!doctorRepository.exists(doctorId)) {
+            throw new NoSuchDoctorException(doctorId);
+        }
+        List<TimeSlotDTO> interleaving = getInIntervalForDoctor(doctorId, startDate, endDate);
+        if (!interleaving.isEmpty()) {
+            //it still can work - if we're moving the slot over itself
+            boolean itsOkay = interleaving.size() == 1
+                    && interleaving.get(0).getId() == timeSlotId;
+            if (!itsOkay) {
+                throw new IllegalArgumentException("There is another timeslot interleaving!");
+            }
+        }
+        TimeSlot timeSlot = timeSlotRepository.getOne(timeSlotId);
+        if (timeSlot == null) {
+            throw new NoSuchTimeSlotException(timeSlotId);
+        }
+        timeSlot.setStartDateTime(startDate);
+        timeSlot.setEndDateTime(endDate);
+        return mapToDTO(timeSlotRepository.save(timeSlot));
+    }
+
+    public static class NoSuchDoctorException extends NoSuchElementException {
+        NoSuchDoctorException(long doctorId) {
+            super("Doctor with ID " + doctorId + " does not exist!");
+        }
+    }
+
+    public static class NoSuchTimeSlotException extends NoSuchElementException {
+        NoSuchTimeSlotException(long timeSlotId) {
+            super("Timeslot with ID " + timeSlotId + " does not exist!");
+        }
+    }
 }
