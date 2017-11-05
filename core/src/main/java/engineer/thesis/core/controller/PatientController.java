@@ -63,8 +63,8 @@ public class PatientController {
         return new ResponseEntity<Object>(patientService.findAllPatientsShort(pageable), HttpStatus.OK);
     }
 
-    @RequestMapping(path = RequestMappings.PATIENTS.PATIENTS, method = RequestMethod.GET)
-    public ResponseEntity<?> getPatientPersonalDetails(@RequestParam Long id) {
+    @RequestMapping(path = RequestMappings.PATIENTS.PERS_DETAILS, method = RequestMethod.GET)
+    public ResponseEntity<?> getPatientPersonalDetails(@PathVariable Long id) {
         try {
             return new ResponseEntity<Object>(patientService.getPersonalDetails(id), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
@@ -72,7 +72,7 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(value = {RequestMappings.ACCOUNTS.PERS_DETAILS, RequestMappings.ACCOUNTS.PERS_DETAILS}, method = RequestMethod.POST)
+    @RequestMapping(value = RequestMappings.PATIENTS.PERS_DETAILS, method = RequestMethod.POST)
     public ResponseEntity<?> savePersonalDetails(@PathVariable Long id,
                                                  @RequestBody @Valid PersonalDetailsDTO personalDetails) {
         try {
@@ -84,7 +84,7 @@ public class PatientController {
         }
     }
 
-    @RequestMapping(value = RequestMappings.PATIENTS.PERS_DETAILS, method = RequestMethod.POST)
+    @RequestMapping(value = RequestMappings.PATIENTS.PERS_DETAILS, method = RequestMethod.PUT)
     public ResponseEntity<?> editPersonalDetails(@PathVariable Long id,
                                                  @RequestBody @Valid PersonalDetailsDTO personalDetails) {
         try {

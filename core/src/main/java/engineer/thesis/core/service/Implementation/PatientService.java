@@ -90,6 +90,9 @@ public class PatientService implements BasePatientService, IPatientService {
     @Override
     public PersonalDetailsDTO getPersonalDetails(Long id) throws NoSuchElementExistsException {
         Patient patient = findPatient(id, patientRepository);
+        if (patient.getAccount().getPersonalDetails() == null) {
+            throw new NoSuchElementExistsException("Personal details don't exist");
+        }
         return objectMapper.convert(patient.getAccount().getPersonalDetails(), PersonalDetailsDTO.class);
     }
 
@@ -99,7 +102,7 @@ public class PatientService implements BasePatientService, IPatientService {
         Patient patient = findPatient(id, patientRepository);
 
         if (patient.getAccount().getPersonalDetails() != null) {
-            throw new AlreadyExistsException("PersonalDetails already exists");
+            throw new AlreadyExistsException("Personal details already exist");
         }
 
         personalDetailsDTO.setId(null);
