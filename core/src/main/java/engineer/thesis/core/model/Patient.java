@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Entity
 @Builder
-@EqualsAndHashCode(exclude = {"medicalInformation","medicalHistories"})
+@EqualsAndHashCode(exclude = {"medicalInformation", "medicalHistories"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hm_patient", schema = "hmanager")

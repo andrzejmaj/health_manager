@@ -8,6 +8,7 @@ final class RequestMappings {
         static final String PATIENTS_ID = "/patients/{id}";
         static final String EMERGENCY = "/patients/{id}/emergency";
         static final String REGISTER = "/patients/register";
+        static final String PERS_DETAILS = "/patients/{id}/personalDetails";
     }
 
     static final class USERS {

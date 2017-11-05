@@ -21,29 +21,10 @@ public class AccountController {
     @Autowired
     private IAccountService accountService;
 
-    @RequestMapping(path = RequestMappings.ACCOUNTS.PERS_DETAILS, method = RequestMethod.GET)
-    public ResponseEntity<?> getPersonalDetails(@PathVariable UUID uuid) {
-        try {
-            return new ResponseEntity<>(accountService.getPersonalDetails(uuid), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
     @RequestMapping(path = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.GET)
     public ResponseEntity<?> getMyPersonalDetails() {
         try {
             return new ResponseEntity<>(accountService.getMyPersonalDetails(getCurrentUser().getId()), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(value = {RequestMappings.ACCOUNTS.PERS_DETAILS, RequestMappings.ACCOUNTS.PERS_DETAILS}, method = RequestMethod.POST)
-    public ResponseEntity<?> savePersonalDetails(@PathVariable UUID uuid,
-                                                 @RequestBody PersonalDetailsDTO personalDetails) {
-        try {
-            return new ResponseEntity<>(accountService.savePersonalDetails(uuid, personalDetails), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

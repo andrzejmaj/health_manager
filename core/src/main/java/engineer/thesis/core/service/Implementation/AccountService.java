@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,33 +38,12 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public PersonalDetailsDTO getPersonalDetails(UUID uuid) throws NoSuchElementExistsException {
-        Account account = checkExistence(uuid);
-        return objectMapper.convert(account.getPersonalDetails(), PersonalDetailsDTO.class);
-    }
-
-    @Override
     public PersonalDetailsDTO getMyPersonalDetails(Long id) throws NoSuchElementExistsException {
         Account account = accountRepository.findByUser_Id(id);
         if (account == null) {
             throw new NoSuchElementExistsException("Account doesn't exist");
         }
         return objectMapper.convert(account.getPersonalDetails(), PersonalDetailsDTO.class);
-    }
-
-    @Override
-    public PersonalDetailsDTO savePersonalDetails(UUID uuid, PersonalDetailsDTO personalDetailsDTO) {
-
-        Optional<Account> personalAccount = Optional.ofNullable(accountRepository.findByUuid(uuid));
-
-        if (!personalAccount.isPresent()) {
-            throw new NoSuchElementException("Account not found");
-        }
-
-        personalDetailsDTO.setId(null);
-        personalAccount.get().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
-
-        return objectMapper.convert(accountRepository.save(personalAccount.get()).getPersonalDetails(), PersonalDetailsDTO.class);
     }
 
     @Override

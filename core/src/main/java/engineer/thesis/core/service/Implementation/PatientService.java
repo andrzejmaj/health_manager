@@ -6,10 +6,7 @@ import engineer.thesis.core.model.Account;
 import engineer.thesis.core.model.EmergencyContact;
 import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.PersonalDetails;
-import engineer.thesis.core.model.dto.EmergencyContactDTO;
-import engineer.thesis.core.model.dto.PatientDTO;
-import engineer.thesis.core.model.dto.PatientDetailsDTO;
-import engineer.thesis.core.model.dto.ShortPatientDTO;
+import engineer.thesis.core.model.dto.*;
 import engineer.thesis.core.repository.EmergencyContactRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.PersonalDetailsRepository;
@@ -88,6 +85,42 @@ public class PatientService implements BasePatientService, IPatientService {
         patient.setInsuranceNumber(patientDetails.getInsuranceNumber());
 
         return convertToDTO(patientRepository.save(patient));
+    }
+
+    @Override
+    public PersonalDetailsDTO getPersonalDetails(Long id) throws NoSuchElementExistsException {
+        Patient patient = findPatient(id, patientRepository);
+        return objectMapper.convert(patient.getAccount().getPersonalDetails(), PersonalDetailsDTO.class);
+    }
+
+    @Override
+    public PersonalDetailsDTO savePersonalDetails(Long id, PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementExistsException, AlreadyExistsException {
+
+        Patient patient = findPatient(id, patientRepository);
+
+        if (patient.getAccount().getPersonalDetails() != null) {
+            throw new AlreadyExistsException("PersonalDetails already exists");
+        }
+
+        personalDetailsDTO.setId(null);
+        patient.getAccount().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
+
+        return objectMapper.convert(patientRepository.save(patient).getAccount().getPersonalDetails(), PersonalDetailsDTO.class);
+    }
+
+    @Override
+    public PersonalDetailsDTO updatePersonalDetails(Long id, PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementExistsException {
+
+        Patient patient = findPatient(id, patientRepository);
+
+        if (patient.getAccount().getPersonalDetails() == null) {
+            throw new NoSuchElementExistsException("PersonalDetails don't exist");
+        }
+
+        personalDetailsDTO.setId(patient.getAccount().getPersonalDetails().getId());
+        patient.getAccount().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
+
+        return objectMapper.convert(patientRepository.save(patient).getAccount().getPersonalDetails(), PersonalDetailsDTO.class);
     }
 
     @Override

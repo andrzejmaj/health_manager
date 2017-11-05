@@ -17,11 +17,7 @@ public interface IAccountService {
 
     String deleteAccount(UUID uuid) throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO getPersonalDetails(UUID uuid) throws NoSuchElementExistsException;
-
     PersonalDetailsDTO getMyPersonalDetails(Long id) throws NoSuchElementExistsException;
-
-    PersonalDetailsDTO savePersonalDetails(UUID uuid, PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementExistsException;
 
     PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException, AlreadyExistsException;
 
