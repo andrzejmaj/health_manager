@@ -1,21 +1,17 @@
-package engineer.thesis.core.security.model;
+package engineer.thesis.core.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
-
+public class FormFieldDefaultValueDTO {
     @NotNull
-    @Email
-    String email;
+    private Long formFieldId;
     @NotNull
-    String password;
-
+    private String value;
 }

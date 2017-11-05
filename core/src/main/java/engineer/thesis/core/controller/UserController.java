@@ -3,12 +3,16 @@ package engineer.thesis.core.controller;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.UserRole;
-import engineer.thesis.core.model.dto.ResetPasswordDTO;
-import engineer.thesis.core.model.dto.UserDTO;
+import engineer.thesis.core.model.dto.*;
 import engineer.thesis.core.security.TokenUtils;
-import engineer.thesis.core.security.model.*;
+import engineer.thesis.core.security.model.AuthenticationRequest;
+import engineer.thesis.core.security.model.AuthenticationResponse;
+import engineer.thesis.core.security.model.SecurityUser;
+import engineer.thesis.core.security.model.UpdatePasswordRequest;
+import engineer.thesis.core.service.Implementation.PatientService;
 import engineer.thesis.core.service.Implementation.UserService;
 import engineer.thesis.core.utils.MailService;
+import engineer.thesis.core.validator.RegisterUserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +44,11 @@ public class UserController {
     private TokenUtils tokenUtil;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private PatientService patientService;
 
     @RequestMapping(path = RequestMappings.USERS.LOGIN, method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(
+    public ResponseEntity<?> login(
             @RequestBody AuthenticationRequest authenticationRequest) {
 
         if (!userService.findByEmail(authenticationRequest.getEmail()).isPresent()) {
@@ -84,9 +91,10 @@ public class UserController {
     }
 
     @RequestMapping(path = RequestMappings.USERS.REGISTER, method = RequestMethod.POST)
-    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody @Validated(RegisterUserGroup.class) RegisterRequestDTO registerRequest) {
         try {
-            return new ResponseEntity<>(userService.register(registerRequest, UserRole.ROLE_PATIENT).getEmail(), HttpStatus.OK);
+            userService.registerUserByRole(registerRequest, UserRole.ROLE_PATIENT, false);
+            return new ResponseEntity<>("Registration successful", HttpStatus.OK);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
@@ -94,11 +102,23 @@ public class UserController {
 
 
     @RequestMapping(path = RequestMappings.USERS.REGISTER_ON_BEHALF, method = RequestMethod.POST)
-    public ResponseEntity<?> registerOnBehalf(@RequestBody @Valid RegisterOnBehalfRequest request) {
+    public ResponseEntity<?> registerOnBehalf(@RequestBody @Valid RegisterOnBehalfRequestDTO request) {
         try {
-            return new ResponseEntity<>(userService.registerNewUserOnBehalf(request), HttpStatus.OK);
+            userService.registerUserByRole(request, request.getRole(), true);
+            return new ResponseEntity<>("Registration successful", HttpStatus.OK);
         } catch (AlreadyExistsException e) {
-            return new ResponseEntity<>("", HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
+    @RequestMapping(path = RequestMappings.PATIENTS.REGISTER, method = RequestMethod.POST)
+    public ResponseEntity<?> registerUserless(@RequestBody @Valid PatientDetailsDTO patientDetails) {
+        try {
+            return new ResponseEntity<>(patientService.register(patientDetails), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
@@ -126,17 +146,17 @@ public class UserController {
      * Update user's password using token which was sent to user after reset
      *
      * @param newPassword - new password provided by user
-     * @param email       - user's email
+     * @param id          - user's id
      * @param token       - token which user received
      * @return - message if password was updated successfully
      */
 
     @RequestMapping(path = RequestMappings.USERS.UPDATE_PASSWORD_WITH_TOKEN, method = RequestMethod.POST)
     public ResponseEntity<?> changePassword(@RequestBody String newPassword,
-                                            @RequestParam("email") String email,
+                                            @RequestParam("id") Long id,
                                             @RequestParam("token") String token) {
         try {
-            return new ResponseEntity<>(userService.changeUserPasswordWithToken(email, token, newPassword), HttpStatus.OK);
+            return new ResponseEntity<>(userService.changeUserPasswordWithToken(id, token, newPassword), HttpStatus.OK);
         } catch (TokenExpiredException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
@@ -169,6 +189,10 @@ public class UserController {
      * @return - message if email was updated successfully
      */
 
+//    @RequestMapping(path = RequestMappings.USERS.ACTIVATE, method = RequestMethod.POST)
+//    public ResponseEntity<?> activateUser(@PathVariable Long id) {
+//        return new ResponseEntity<Object>(userService)
+//    }
     @RequestMapping(path = RequestMappings.USERS.UPDATE_EMAIL, method = RequestMethod.POST)
     public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @RequestBody String email) {
         if (!canPerformUserAction(id, getCurrentUser())) {

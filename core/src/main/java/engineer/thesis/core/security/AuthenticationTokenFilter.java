@@ -4,11 +4,9 @@ import engineer.thesis.core.model.User;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.SecurityUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -37,9 +35,14 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
         if (token != null) {
             token = token.replace(tokenPrefix, "");
-            String email = tokenUtils.getUsername(token);
 
-            logger.info("Email in token: " + email);
+            String email;
+            try {
+                email = tokenUtils.getUsername(token);
+            } catch (Exception e) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = userRepository.findByEmail(email);
@@ -50,7 +53,6 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
                     UserDetails userDetails = SecurityUserFactory.create(user);
                     if (tokenUtils.validateToken(token, userDetails)) {
 
-                        logger.info("Token validated successfully.");
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authentication.setDetails(userDetails);
                         SecurityContextHolder.getContext().setAuthentication(authentication);

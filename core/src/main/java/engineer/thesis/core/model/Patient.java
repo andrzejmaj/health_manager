@@ -26,13 +26,13 @@ public class Patient {
     @Cascade(CascadeType.ALL)
     private Account account;
 
-    @Column(name = "insurance_number", nullable = false)
+    @Column(name = "insurance_number")
     private String insuranceNumber;
 
     @OneToOne
-    @JoinColumn(name = "emergency_contact_id")
     @Cascade(CascadeType.ALL)
-    private PersonalDetails emergencyContact;
+    @JoinColumn(name = "emergency_contact_id")
+    private EmergencyContact emergencyContact;
 
     @OneToOne
     @JoinColumn(name = "medical_information_id")
