@@ -84,7 +84,6 @@ public class MedicalHistoryService implements IMedicalHistoryService {
                 throw new DataIntegrityException("Medical record doesn't belong to this patient");
             }
             medicalHistoryDTO.setId(id);
-
         }
 
         medicalHistory = objectMapper.convert(medicalHistoryDTO, MedicalHistory.class);

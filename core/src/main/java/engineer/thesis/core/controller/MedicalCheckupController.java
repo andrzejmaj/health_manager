@@ -28,15 +28,6 @@ public class MedicalCheckupController {
         }
     }
 
-//    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS_BY_NAME, method = RequestMethod.GET)
-//    public ResponseEntity<?> getByName(@PathVariable Long patientId) {
-//        try {
-//            return new ResponseEntity<>(medicalCheckupService.getPatientCheckups(patientId), HttpStatus.OK);
-//        } catch (NoSuchElementExistsException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
-//    }
-
     @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS, method = RequestMethod.POST)
     public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Valid MedicalCheckupDTO medicalCheckupDTO) {
         try {
