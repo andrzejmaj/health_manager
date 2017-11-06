@@ -2,8 +2,6 @@ package engineer.thesis.core.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,10 +27,8 @@ public class MedicalHistory {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
-    @ManyToOne
-    @JoinColumn(name = "disease_id")
-    @Cascade(CascadeType.ALL)
-    private Disease disease;
+    @Column(name = "diseases")
+    private String diseaseName;
 
     @Column(name = "detection_date")
     private Date detectionDate;

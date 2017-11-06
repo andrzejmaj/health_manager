@@ -4,10 +4,12 @@ import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.MedicalHistoryDTO;
 import engineer.thesis.core.service.Interface.IMedicalHistoryService;
+import engineer.thesis.core.validator.PostValidationGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,7 +33,7 @@ public class MedicalHistoryController {
     }
 
     @RequestMapping(path = RequestMappings.HISTORY.PATIENT_HISTORY, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Valid MedicalHistoryDTO medicalHistoryDTO) {
+    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Validated(PostValidationGroup.class) MedicalHistoryDTO medicalHistoryDTO) {
         try {
             return new ResponseEntity<>(medicalHistoryService.save(patientId, medicalHistoryDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {

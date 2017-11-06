@@ -2,7 +2,6 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.Disease;
 import engineer.thesis.core.model.MedicalHistory;
 import engineer.thesis.core.model.dto.MedicalHistoryDTO;
 import engineer.thesis.core.repository.DiseaseRepository;
@@ -53,15 +52,12 @@ public class MedicalHistoryService implements IMedicalHistoryService {
     @Override
     public MedicalHistoryDTO save(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException {
         medicalHistoryDTO.setId(null);
-        return saveOrUpdate(patientId, medicalHistoryDTO, false);
+        return saveOrUpdate(patientId, medicalHistoryDTO, false, null);
     }
 
     @Override
     public MedicalHistoryDTO update(Long patientId, MedicalHistoryDTO medicalHistoryDTO, Long id) throws NoSuchElementExistsException, DataIntegrityException {
-        if (!id.equals(medicalHistoryDTO.getId())) {
-            throw new DataIntegrityException("Ids in the body and path does not match");
-        }
-        return saveOrUpdate(patientId, medicalHistoryDTO, true);
+        return saveOrUpdate(patientId, medicalHistoryDTO, true, id);
     }
 
     @Override
@@ -72,24 +68,27 @@ public class MedicalHistoryService implements IMedicalHistoryService {
         medicalHistoryRepository.delete(id);
     }
 
-    private MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO, boolean update) throws NoSuchElementExistsException, DataIntegrityException {
-        if (!patientId.equals(medicalHistoryDTO.getPatientId())) {
-            throw new DataIntegrityException("Ids in the body and path does not match");
-        }
+    private MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO, boolean update, Long id) throws NoSuchElementExistsException, DataIntegrityException {
 
-        if (!patientRepository.exists(medicalHistoryDTO.getPatientId())) {
+        if (!patientRepository.exists(patientId)) {
             throw new NoSuchElementExistsException("Patient doesn't exists");
         }
+        medicalHistoryDTO.setPatientId(patientId);
 
-        if (update && !medicalHistoryRepository.exists(medicalHistoryDTO.getId())) {
-            throw new NoSuchElementExistsException("Medical record doesn't exists");
+        MedicalHistory medicalHistory = medicalHistoryRepository.findOne(id);
+        if (update) {
+            if (medicalHistory == null) {
+                throw new NoSuchElementExistsException("Medical record doesn't exists");
+            }
+            if (!medicalHistoryDTO.getPatientId().equals(patientId)) {
+                throw new DataIntegrityException("Medical record doesn't belong to this patient");
+            }
+            medicalHistoryDTO.setId(id);
+
         }
 
-        MedicalHistory medicalHistory = objectMapper.convert(medicalHistoryDTO, MedicalHistory.class);
-        Disease disease = diseaseRepository.findByName(medicalHistoryDTO.getDiseaseName());
-        if (disease != null) {
-            medicalHistory.getDisease().setId(disease.getId());
-        }
+        medicalHistory = objectMapper.convert(medicalHistoryDTO, MedicalHistory.class);
+
 
         return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), MedicalHistoryDTO.class);
     }
