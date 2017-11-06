@@ -3,11 +3,9 @@ package engineer.thesis.core.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -34,9 +32,5 @@ public class Account {
 
     @Column(name = "created_date")
     private Date createdDate;
-
-    @Column(name = "uuid")
-    @Type(type = "pg-uuid")
-    private UUID uuid;
 
 }

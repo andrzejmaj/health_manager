@@ -10,20 +10,18 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
-
 @Service
 public interface IAccountService {
 
-    String deleteAccount(UUID uuid) throws NoSuchElementExistsException;
+    String deleteAccount(Long id) throws NoSuchElementExistsException;
 
     PersonalDetailsDTO getMyPersonalDetails(Long id) throws NoSuchElementExistsException;
 
     PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException, AlreadyExistsException;
 
-    FileSystemResource getProfilePicture(UUID uuid) throws NoSuchElementExistsException;
+    FileSystemResource getProfilePicture(Long id) throws NoSuchElementExistsException;
 
-    String saveProfilePicture(UUID uuid, MultipartFile userImage) throws NoSuchElementExistsException;
+    String saveProfilePicture(Long id, MultipartFile userImage) throws NoSuchElementExistsException;
 
     Account createAccount(PersonalDetails personalDetails, User user) throws AlreadyExistsException;
 

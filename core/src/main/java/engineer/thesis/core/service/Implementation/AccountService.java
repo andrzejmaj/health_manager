@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AccountService implements IAccountService {
@@ -31,10 +30,10 @@ public class AccountService implements IAccountService {
     private CustomObjectMapper objectMapper;
 
     @Override
-    public String deleteAccount(UUID uuid) throws NoSuchElementExistsException {
-        Account account = checkExistence(uuid);
+    public String deleteAccount(Long id) throws NoSuchElementExistsException {
+        Account account = checkExistence(id);
         accountRepository.delete(account);
-        return "Account " + uuid + " deleted successfully";
+        return "Account " + id + " deleted successfully";
     }
 
     @Override
@@ -61,15 +60,15 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public FileSystemResource getProfilePicture(UUID uuid) throws NoSuchElementExistsException {
-        Account a = checkExistence(uuid);
+    public FileSystemResource getProfilePicture(Long id) throws NoSuchElementExistsException {
+        Account a = checkExistence(id);
         return fileService.findProfilePicture(a.getId());
     }
 
     @Override
-    public String saveProfilePicture(UUID uuid, MultipartFile userImage) throws NoSuchElementExistsException {
+    public String saveProfilePicture(Long id, MultipartFile userImage) throws NoSuchElementExistsException {
 
-        Account account = checkExistence(uuid);
+        Account account = checkExistence(id);
 
         String imagePath = fileService.saveProfilePicture(account.getId(), userImage);
 
@@ -90,7 +89,6 @@ public class AccountService implements IAccountService {
 
         Account account = new Account();
         account.setCreatedDate(new Date());
-        account.setUuid(UUID.randomUUID());
         account.setPersonalDetails(personalDetails);
         account.setUser(user);
         return account;
@@ -102,8 +100,8 @@ public class AccountService implements IAccountService {
         return account != null;
     }
 
-    private Account checkExistence(UUID uuid) throws NoSuchElementExistsException {
-        return Optional.ofNullable(accountRepository.findByUuid(uuid)).orElseThrow(() -> new NoSuchElementExistsException("Account doesn't exist"));
+    private Account checkExistence(Long id) throws NoSuchElementExistsException {
+        return Optional.ofNullable(accountRepository.findOne(id)).orElseThrow(() -> new NoSuchElementExistsException("Account doesn't exist"));
     }
 
 }

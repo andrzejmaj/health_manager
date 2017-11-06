@@ -13,8 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
-
 @RestController
 public class AccountController {
 
@@ -30,7 +28,7 @@ public class AccountController {
         }
     }
 
-    @RequestMapping(value = {RequestMappings.ACCOUNTS.PERS_DETAILS, RequestMappings.ACCOUNTS.MY_PERS_DETAILLS}, method = RequestMethod.POST)
+    @RequestMapping(value = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.POST)
     public ResponseEntity<?> saveMyPersonalDetails(@RequestBody PersonalDetailsDTO personalDetails) {
         try {
             return new ResponseEntity<>(accountService.saveMyPersonalDetails(getCurrentUser().getId(), personalDetails), HttpStatus.OK);
@@ -42,18 +40,18 @@ public class AccountController {
     }
 
     @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS_PICTURE, method = RequestMethod.GET)
-    public ResponseEntity<?> getProfilePicture(@PathVariable UUID uuid) {
+    public ResponseEntity<?> getProfilePicture(@PathVariable Long id) {
         try {
-            return new ResponseEntity<>(accountService.getProfilePicture(uuid), HttpStatus.OK);
+            return new ResponseEntity<>(accountService.getProfilePicture(id), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS_PICTURE, method = RequestMethod.POST)
-    public ResponseEntity<?> saveProfilePicture(@PathVariable UUID uuid, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> saveProfilePicture(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
-            return new ResponseEntity<>(accountService.saveProfilePicture(uuid, file), HttpStatus.OK);
+            return new ResponseEntity<>(accountService.saveProfilePicture(id, file), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
