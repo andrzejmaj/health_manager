@@ -69,7 +69,7 @@ public class MedicalCheckupService implements BasePatientService, IMedicalChecku
         medicalCheckup.setCreatedDate(new Date());
         medicalCheckup.setLastModifiedDate(new Date());
         medicalCheckup.setPatient(patient);
-
+        medicalCheckup.setForm(form);
         medicalCheckup.getMedicalCheckupValues().forEach(val -> val.setMedicalCheckup(medicalCheckup));
 
         return objectMapper.convert(medicalCheckupRepository.save(medicalCheckup), MedicalCheckupDTO.class);
