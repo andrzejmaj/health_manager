@@ -59,18 +59,22 @@ public class MedicalCheckupService implements BasePatientService, IMedicalChecku
         Patient patient = findPatient(patientId, patientRepository);
         Form form = findForm(medicalCheckupDTO.getFormId());
 
+        medicalCheckupDTO.setId(null);
         MedicalCheckup medicalCheckup = objectMapper.convert(medicalCheckupDTO, MedicalCheckup.class);
 
         if (!formDataValidator.isDataValid(medicalCheckup.getMedicalCheckupValues(), form)) {
             throw new ValidationException(formDataValidator.getErrorMessage());
         }
         //set creator
-        medicalCheckupDTO.setId(null);
         medicalCheckup.setCreatedDate(new Date());
         medicalCheckup.setLastModifiedDate(new Date());
         medicalCheckup.setPatient(patient);
+        medicalCheckup.getMedicalCheckupValues().forEach(val -> {
+            val.setMedicalCheckup(medicalCheckup);
+            val.setId(null);
+        });
+
         medicalCheckup.setForm(form);
-        medicalCheckup.getMedicalCheckupValues().forEach(val -> val.setMedicalCheckup(medicalCheckup));
 
         return objectMapper.convert(medicalCheckupRepository.save(medicalCheckup), MedicalCheckupDTO.class);
     }
