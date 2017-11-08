@@ -1,5 +1,6 @@
 package engineer.thesis.core.service.Implementation;
 
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.Appointment;
 import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.TimeSlot;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +33,13 @@ public class AppointmentService implements IAppointmentService {
 
     @Autowired
     private CustomObjectMapper objectMapper;
+
+    @Override
+    public AppointmentDTO getById(long id) throws NoSuchElementExistsException {
+        return Optional.ofNullable(appointmentRepository.findOne(id))
+                .map(appointment -> objectMapper.convert(appointment, AppointmentDTO.class))
+                .orElseThrow(() -> new NoSuchElementExistsException("No appointment with id " + id));
+    }
 
     @Override
     public AppointmentDTO save(AppointmentDTO appointmentDTO, long patientId) {
