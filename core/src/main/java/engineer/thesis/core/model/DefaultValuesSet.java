@@ -1,4 +1,4 @@
-package engineer.thesis.core.model.entity;
+package engineer.thesis.core.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,30 +12,24 @@ import javax.persistence.*;
 import java.util.List;
 
 @Data
-@Entity
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "hm_form", schema = "hmanager")
-public class Form {
+@NoArgsConstructor
+@Entity
+@Table(name = "hm_default_values_set", schema = "hmanager")
+public class DefaultValuesSet {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "owner_id")
-    private Doctor owner;
+    @ManyToOne
+    @JoinColumn(name = "form_id")
+    private Form form;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @OneToMany(mappedBy = "form", fetch = FetchType.EAGER, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "defaultValuesSet", fetch = FetchType.EAGER, orphanRemoval = true)
     @Cascade(CascadeType.ALL)
-    private List<FormField> formFields;
-
-    @Column(name = "active")
-    private Boolean active;
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<FormFieldDefaultValue> defaultValues;
 
 }

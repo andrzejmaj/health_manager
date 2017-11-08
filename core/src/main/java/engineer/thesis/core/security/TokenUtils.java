@@ -35,14 +35,14 @@ public class TokenUtils {
         return expiration.before(this.getCurrentDate());
     }
 
-    public String generateToken(SecurityUser userDetails, Device device) {
+    public String generateToken(SecurityUser securityUser, Device device) {
 
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("sub", userDetails.getUsername());
-        claims.put("audience", this.generateAudience(device));
+        claims.put("sub", securityUser.getUsername());
+        claims.put("passwordChangeAdvised", !securityUser.getIsActive());
         claims.put("created", this.getCurrentDate());
-        claims.put("scopes", userDetails.getUserRole());
+        claims.put("scopes", securityUser.getUserRole());
 
         return this.buildToken(claims);
     }
@@ -56,14 +56,10 @@ public class TokenUtils {
                 .compact();
     }
 
-    public String getUsername(String token) {
-        try {
-            final Claims claims = this.getClaims(token);
-            System.out.println(claims);
-            return (String) claims.get("sub");
-        } catch (Exception e) {
-            return null;
-        }
+    String getUsername(String token) {
+        final Claims claims = this.getClaims(token);
+        System.out.println(claims);
+        return (String) claims.get("sub");
     }
 
     private String getAudience(String token) {
@@ -94,16 +90,10 @@ public class TokenUtils {
     }
 
     private Claims getClaims(String token) {
-        try {
-            return Jwts.parser()
-                    .setSigningKey("secret_super_secret")
-                    .parseClaimsJws(token)
-                    .getBody();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return Jwts.parser()
+                .setSigningKey("secret_super_secret")
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private String generateAudience(Device device) {

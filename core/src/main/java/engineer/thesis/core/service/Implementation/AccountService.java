@@ -103,7 +103,13 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Account newAccount(PersonalDetails personalDetails, User user) {
+    public Account createAccount(PersonalDetails personalDetails, User user) throws AlreadyExistsException {
+        if (checkExistence(personalDetails.getPesel())) {
+            throw new AlreadyExistsException("Patient with such pesel already exists");
+        }
+
+        personalDetails.setId(null);
+
         Account account = new Account();
         account.setCreatedDate(new Date());
         account.setUuid(UUID.randomUUID());
@@ -113,7 +119,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public boolean checkExitance(String pesel) {
+    public boolean checkExistence(String pesel) {
         Account account = accountRepository.findByPersonalDetails_Pesel(pesel);
         return account != null;
     }

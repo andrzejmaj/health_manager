@@ -35,9 +35,14 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
         if (token != null) {
             token = token.replace(tokenPrefix, "");
-            String email = tokenUtils.getUsername(token);
 
-            logger.info("Email in token: " + email);
+            String email;
+            try {
+                email = tokenUtils.getUsername(token);
+            } catch (Exception e) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = userRepository.findByEmail(email);
@@ -48,7 +53,6 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
                     UserDetails userDetails = SecurityUserFactory.create(user);
                     if (tokenUtils.validateToken(token, userDetails)) {
 
-                        logger.info("Token validated successfully.");
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authentication.setDetails(userDetails);
                         SecurityContextHolder.getContext().setAuthentication(authentication);

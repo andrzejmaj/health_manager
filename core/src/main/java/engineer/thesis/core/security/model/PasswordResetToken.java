@@ -13,12 +13,13 @@ import java.util.Date;
 @NoArgsConstructor
 public class PasswordResetToken {
 
-    private static final Long EXPIRATION = 1000L;
+    private static final long HOUR = 3600 * 1000;
 
     public PasswordResetToken(String token, User user) {
         this.token = token;
         this.user = user;
-        this.expiryDate = new Date(System.currentTimeMillis() + EXPIRATION * 10000000);
+        this.expiryDate = new Date(System.currentTimeMillis() + 3 * HOUR);
+        this.isActive = true;
     }
 
     @Id
@@ -35,4 +36,7 @@ public class PasswordResetToken {
 
     @Column(name = "expiration_date", nullable = false)
     private Date expiryDate;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
 }

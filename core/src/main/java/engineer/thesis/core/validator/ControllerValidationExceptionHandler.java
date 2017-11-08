@@ -1,5 +1,6 @@
-package engineer.thesis.core.handler;
+package engineer.thesis.core.validator;
 
+import engineer.thesis.core.exception.PasswordNotValidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,5 +21,12 @@ public class ControllerValidationExceptionHandler {
         BindingResult bindingResult = ex.getBindingResult();
 
         return bindingResult.getFieldErrors().stream().map(err -> err.getField() + " " + err.getDefaultMessage()).collect(Collectors.joining("\n"));
+    }
+
+    @ExceptionHandler(PasswordNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    String processPasswordException(PasswordNotValidException ex) {
+        return ex.getMessage();
     }
 }

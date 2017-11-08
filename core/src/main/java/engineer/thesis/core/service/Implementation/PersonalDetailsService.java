@@ -25,7 +25,7 @@ public class PersonalDetailsService implements IPersonalDetailsService {
 
         PersonalDetails personalDetails = personalDetailsRepository.findOne(personalDetailsDTO.getId());
         if (personalDetails == null) {
-            throw new NoSuchElementException("Details not found XD");
+            throw new NoSuchElementException("Details not found");
         }
         return objectMapper.convert(personalDetailsRepository.save(objectMapper.convert(personalDetailsDTO, PersonalDetails.class)), PersonalDetailsDTO.class);
     }

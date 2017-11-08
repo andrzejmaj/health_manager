@@ -3,6 +3,8 @@ package engineer.thesis.core.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -22,11 +24,11 @@ public class MedicalCheckup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "form_id")
     private Form form;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
@@ -40,7 +42,8 @@ public class MedicalCheckup {
     @Column(name = "last_modified_date")
     private Date lastModifiedDate;
 
-    @OneToMany(mappedBy = "medicalCheckup", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "medicalCheckup", fetch = FetchType.EAGER, orphanRemoval = true)
+    @Cascade(CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<MedicalCheckupValue> medicalCheckupValues;
 

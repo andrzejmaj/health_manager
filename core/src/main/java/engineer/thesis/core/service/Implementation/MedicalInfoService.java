@@ -1,7 +1,6 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
-import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.entity.MedicalInformation;
 import engineer.thesis.core.model.entity.Patient;
@@ -13,6 +12,8 @@ import engineer.thesis.core.service.Interface.IMedicalInfoService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class MedicalInfoService implements IMedicalInfoService, BasePatientService {
@@ -35,10 +36,7 @@ public class MedicalInfoService implements IMedicalInfoService, BasePatientServi
     }
 
     @Override
-    public MedicalInfoDTO save(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException, AlreadyExistsException, DataIntegrityException {
-        if (!id.equals(medicalInfoDTO.getId())) {
-            throw new DataIntegrityException("Ids in the body and path doesn't match");
-        }
+    public MedicalInfoDTO save(Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException, AlreadyExistsException {
 
         Patient patient = findPatient(id, patientRepository);
         if (patient.getMedicalInformation() != null) {
@@ -46,22 +44,23 @@ public class MedicalInfoService implements IMedicalInfoService, BasePatientServi
         }
         medicalInfoDTO.setId(null);
         patient.setMedicalInformation(objectMapper.convert(medicalInfoDTO, MedicalInformation.class));
+        patient.getMedicalInformation().setLastMeasurement(new Date());
         return objectMapper.convert(patientRepository.save(patient).getMedicalInformation(), MedicalInfoDTO.class);
 
     }
 
     @Override
-    public MedicalInfoDTO update(Long patientId, Long id, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException, DataIntegrityException {
-        if (!id.equals(medicalInfoDTO.getId())) {
-            throw new DataIntegrityException("Ids in the body and path doesn't match");
-        }
+    public MedicalInfoDTO update(Long patientId, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException {
+
         Patient patient = findPatient(patientId, patientRepository);
         if (patient.getMedicalInformation() == null) {
             throw new NoSuchElementExistsException("Patient doesn't have existing medical information");
         }
-        medicalInfoDTO.setId(patient.getMedicalInformation().getId());
 
-        return objectMapper.convert(medicalInfoRepository.save(objectMapper.convert(medicalInfoDTO, MedicalInformation.class)), MedicalInfoDTO.class);
+        medicalInfoDTO.setId(patient.getMedicalInformation().getId());
+        MedicalInformation medicalInformation = objectMapper.convert(medicalInfoDTO, MedicalInformation.class);
+        medicalInformation.setLastMeasurement(new Date());
+        return objectMapper.convert(medicalInfoRepository.save(medicalInformation), MedicalInfoDTO.class);
     }
 
     @Override
