@@ -4,7 +4,9 @@ package engineer.thesis.core.utils;
 import engineer.thesis.core.model.FormFieldDefaultValue;
 import engineer.thesis.core.model.FormFieldType;
 import engineer.thesis.core.model.Patient;
+import engineer.thesis.core.model.Prescription;
 import engineer.thesis.core.model.dto.FormFieldDefaultValueDTO;
+import engineer.thesis.core.model.dto.PrescriptionDTO;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
 import engineer.thesis.core.model.enums.FieldType;
 import org.modelmapper.ModelMapper;
@@ -30,8 +32,8 @@ public class CustomObjectMapper {
     public void setupMappings() {
         modelMapper.addMappings(new PatientShortPatientMap());
         modelMapper.addMappings(new FormFieldDefaultValueDTOToModel());
+        modelMapper.addMappings(new PrescriptionDTOToModel());
         modelMapper.createTypeMap(String.class, FormFieldType.class).setConverter(context -> context.getSource() == null ? null : new FormFieldType(null, FieldType.valueOf(context.getSource())));
-
     }
 
     private class PatientShortPatientMap extends PropertyMap<Patient, ShortPatientDTO> {
@@ -49,4 +51,12 @@ public class CustomObjectMapper {
             map().setId(null);
         }
     }
+
+    private class PrescriptionDTOToModel extends PropertyMap<PrescriptionDTO, Prescription> {
+        @Override
+        protected void configure() {
+            map().setDrugs(null);
+        }
+    }
+
 }

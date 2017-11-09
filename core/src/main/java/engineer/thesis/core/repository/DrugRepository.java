@@ -15,4 +15,5 @@ public interface DrugRepository extends JpaRepository<Drug, Long> {
 
     List<Drug> findByNameContainingIgnoreCase(String name);
 
+    Drug findByName(String name);
 }

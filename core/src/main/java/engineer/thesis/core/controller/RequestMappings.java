@@ -61,5 +61,10 @@ final class RequestMappings {
         static final String DRUGS = "/drugs";
         static final String DRUGS_ID = "/drugs/{id}";
     }
+
+    static final class PRESCRIPTIONS {
+        static final String PRESCRIPTIONS = "/prescriptions";
+        static final String PRESCRIPTIONS_ID = "/prescriptions/{id}";
+    }
 }
 
