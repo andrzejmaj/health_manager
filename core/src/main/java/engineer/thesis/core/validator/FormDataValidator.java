@@ -54,7 +54,7 @@ public class FormDataValidator {
             case DATE:
                 isValid = isDateFieldValid(value);
                 break;
-            case TEXTFIELD:
+            case INPUT:
                 isValid = isTextFieldValid(value, field);
                 break;
             case CHECKBOX:

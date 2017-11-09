@@ -15,7 +15,6 @@ public class EmergencyContactDTO {
     private String firstName;
     @NotNull
     private String lastName;
-    private String email;
     private String phoneNumber;
     private String country;
     private String street;

@@ -46,5 +46,4 @@ public class MedicalCheckup {
     @Cascade(CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<MedicalCheckupValue> medicalCheckupValues;
-
 }
