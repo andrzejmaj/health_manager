@@ -36,11 +36,6 @@ public class FormController {
         return new ResponseEntity<Object>(formService.getFormsByName(name), HttpStatus.OK);
     }
 
-    @RequestMapping(path = RequestMappings.FORMS.FORMS_OWNER_ID, method = RequestMethod.GET)
-    public ResponseEntity<?> getFormsByOwnerId(@PathVariable Long id) {
-        return new ResponseEntity<Object>(formService.getFormsByOwnerId(id), HttpStatus.OK);
-    }
-
     @RequestMapping(path = RequestMappings.FORMS.FORMS, method = RequestMethod.POST)
     public ResponseEntity<?> saveForm(@RequestBody @Validated(PostValidationGroup.class) FormDTO form) {
         try {

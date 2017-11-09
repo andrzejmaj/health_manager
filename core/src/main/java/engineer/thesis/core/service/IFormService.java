@@ -17,8 +17,6 @@ public interface IFormService {
 
     List<FormDTO> getFormsByName(String name);
 
-    List<FormDTO> getFormsByOwnerId(Long id);
-
     FormDTO saveForm(FormDTO formDTO) throws NoSuchElementExistsException;
 
     FormDTO updateForm(Long id, FormDTO form) throws DataIntegrityException, NoSuchElementExistsException;

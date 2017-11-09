@@ -23,10 +23,6 @@ public class Form {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "owner_id")
-    private Doctor owner;
-
     @Column(name = "name", nullable = false)
     private String name;
 

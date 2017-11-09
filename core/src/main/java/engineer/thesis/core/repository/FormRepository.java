@@ -11,7 +11,5 @@ public interface FormRepository extends JpaRepository<Form, Long> {
 
     List<Form> findByNameAndActiveIsTrue(String name);
 
-    List<Form> findByOwner_IdAndActiveIsTrue(Long id);
-
     Form findByIdAndActiveIsTrue(Long id);
 }

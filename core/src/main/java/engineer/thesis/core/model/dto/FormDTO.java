@@ -1,6 +1,5 @@
 package engineer.thesis.core.model.dto;
 
-import engineer.thesis.core.validator.PostValidationGroup;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +20,4 @@ public class FormDTO {
     @NotNull
     @NotEmpty
     private List<FormFieldDTO> formFields;
-    @NotNull(groups = {PostValidationGroup.class})
-    private Long ownerId;
 }

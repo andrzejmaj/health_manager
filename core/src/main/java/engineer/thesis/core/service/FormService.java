@@ -3,7 +3,6 @@ package engineer.thesis.core.service;
 import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.DefaultValuesSet;
-import engineer.thesis.core.model.Doctor;
 import engineer.thesis.core.model.Form;
 import engineer.thesis.core.model.FormFieldDefaultValue;
 import engineer.thesis.core.model.dto.DefaultValuesSetDTO;
@@ -59,19 +58,8 @@ public class FormService implements IFormService {
     }
 
     @Override
-    public List<FormDTO> getFormsByOwnerId(Long id) {
-        return formRepository.findByOwner_IdAndActiveIsTrue(id).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
-    }
-
-    @Override
     public FormDTO saveForm(FormDTO formDTO) throws NoSuchElementExistsException {
-        Doctor doctor = doctorRepository.findOne(formDTO.getOwnerId());
-        if (doctor == null) {
-            throw new NoSuchElementExistsException("Doctor doesn't exist");
-        }
-
         Form form = convertFromDTO(formDTO);
-        form.setOwner(doctor);
         return objectMapper.convert(formRepository.save(form), FormDTO.class);
     }
 
@@ -86,7 +74,6 @@ public class FormService implements IFormService {
 
         formDTO.setId(null);
         Form updatedForm = convertFromDTO(formDTO);
-        updatedForm.setOwner(form.getOwner());
 
         return objectMapper.convert(formRepository.save(updatedForm), FormDTO.class);
     }
