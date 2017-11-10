@@ -13,11 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public interface IAccountService {
 
-    String deleteAccount(Long id) throws NoSuchElementExistsException;
-
     PersonalDetailsDTO getMyPersonalDetails(Long id) throws NoSuchElementExistsException;
 
-    PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException, AlreadyExistsException;
+    PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws AlreadyExistsException;
+
+    PersonalDetailsDTO updateMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException;
 
     FileSystemResource getProfilePicture(Long id) throws NoSuchElementExistsException;
 

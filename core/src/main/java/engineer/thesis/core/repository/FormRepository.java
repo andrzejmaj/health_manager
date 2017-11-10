@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface FormRepository extends JpaRepository<Form, Long> {
 
-    List<Form> findByNameAndActiveIsTrue(String name);
+    List<Form> findByNameContainingIgnoreCaseAndActiveIsTrue(String name);
 
     Form findByIdAndActiveIsTrue(Long id);
 }

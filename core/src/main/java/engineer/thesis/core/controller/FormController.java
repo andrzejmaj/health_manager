@@ -31,8 +31,8 @@ public class FormController {
         return new ResponseEntity<Object>(formService.getFormById(id), HttpStatus.OK);
     }
 
-    @RequestMapping(path = RequestMappings.FORMS.FORMS_NAME, method = RequestMethod.GET)
-    public ResponseEntity<?> getFormsByName(@PathVariable String name) {
+    @RequestMapping(path = RequestMappings.FORMS.FORMS, method = RequestMethod.GET, params = "name")
+    public ResponseEntity<?> getFormsByName(@RequestParam String name) {
         return new ResponseEntity<Object>(formService.getFormsByName(name), HttpStatus.OK);
     }
 

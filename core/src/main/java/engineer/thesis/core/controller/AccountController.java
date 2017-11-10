@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @RestController
 public class AccountController {
 
@@ -29,13 +31,20 @@ public class AccountController {
     }
 
     @RequestMapping(value = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.POST)
-    public ResponseEntity<?> saveMyPersonalDetails(@RequestBody PersonalDetailsDTO personalDetails) {
+    public ResponseEntity<?> saveMyPersonalDetails(@RequestBody @Valid PersonalDetailsDTO personalDetails) {
         try {
             return new ResponseEntity<>(accountService.saveMyPersonalDetails(getCurrentUser().getId(), personalDetails), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
+    @RequestMapping(value = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMyPersonalDetails(@RequestBody @Valid PersonalDetailsDTO personalDetails) {
+        try {
+            return new ResponseEntity<>(accountService.updateMyPersonalDetails(getCurrentUser().getId(), personalDetails), HttpStatus.OK);
+        } catch (NoSuchElementExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

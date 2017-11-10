@@ -54,7 +54,7 @@ public class FormService implements IFormService {
 
     @Override
     public List<FormDTO> getFormsByName(String name) {
-        return formRepository.findByNameAndActiveIsTrue(name).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findByNameContainingIgnoreCaseAndActiveIsTrue(name).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
     }
 
     @Override

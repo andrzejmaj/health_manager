@@ -7,6 +7,7 @@ import engineer.thesis.core.model.PersonalDetails;
 import engineer.thesis.core.model.User;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.AccountRepository;
+import engineer.thesis.core.repository.PersonalDetailsRepository;
 import engineer.thesis.core.service.Interface.IAccountService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,8 @@ public class AccountService implements IAccountService {
     @Autowired
     private CustomObjectMapper objectMapper;
 
-    @Override
-    public String deleteAccount(Long id) throws NoSuchElementExistsException {
-        Account account = checkExistence(id);
-        accountRepository.delete(account);
-        return "Account " + id + " deleted successfully";
-    }
+    @Autowired
+    private PersonalDetailsRepository personalDetailsRepository;
 
     @Override
     public PersonalDetailsDTO getMyPersonalDetails(Long id) throws NoSuchElementExistsException {
@@ -46,7 +43,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException, AlreadyExistsException {
+    public PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws AlreadyExistsException {
         Account account = accountRepository.findByUser_Id(id);
 
         if (account.getPersonalDetails() != null) {
@@ -57,6 +54,18 @@ public class AccountService implements IAccountService {
         account.setPersonalDetails(objectMapper.convert(personalDetails, PersonalDetails.class));
 
         return objectMapper.convert(accountRepository.save(account), PersonalDetailsDTO.class);
+    }
+
+    @Override
+    public PersonalDetailsDTO updateMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException {
+        Account account = accountRepository.findByUser_Id(id);
+        if (account.getPersonalDetails() == null) {
+            throw new NoSuchElementExistsException("Personal Details already exist");
+        }
+
+        personalDetails.setId(account.getPersonalDetails().getId());
+
+        return objectMapper.convert(personalDetailsRepository.save(objectMapper.convert(personalDetails, PersonalDetails.class)), PersonalDetailsDTO.class);
     }
 
     @Override
