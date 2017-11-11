@@ -8,7 +8,6 @@ import engineer.thesis.core.model.FormFieldDefaultValue;
 import engineer.thesis.core.model.dto.DefaultValuesSetDTO;
 import engineer.thesis.core.model.dto.FormDTO;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
-import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.core.validator.FormDataValidator;
@@ -35,21 +34,18 @@ public class FormService implements IFormService {
     @Autowired
     private FormDataValidator formDataValidator;
 
-    @Autowired
-    private DoctorRepository doctorRepository;
-
     @Override
-    public FormDTO getFormById(Long id) {
-        Optional<Form> form = Optional.ofNullable(formRepository.findOne(id));
+    public FormDTO getFormById(Long id) throws NoSuchElementExistsException {
+        Optional<Form> form = Optional.ofNullable(formRepository.findByIdAndActiveIsTrue(id));
         if (!form.isPresent()) {
-            throw new NoSuchElementException("Form doesn't exist");
+            throw new NoSuchElementExistsException("Form doesn't exist");
         }
         return objectMapper.convert(form.get(), FormDTO.class);
     }
 
     @Override
     public List<FormDTO> getAllForms() {
-        return formRepository.findAll().stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findAllByActiveIsTrue().stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -59,6 +55,7 @@ public class FormService implements IFormService {
 
     @Override
     public FormDTO saveForm(FormDTO formDTO) throws NoSuchElementExistsException {
+        formDTO.setId(null);
         Form form = convertFromDTO(formDTO);
         return objectMapper.convert(formRepository.save(form), FormDTO.class);
     }
@@ -72,10 +69,7 @@ public class FormService implements IFormService {
         form.setActive(false);
         formRepository.save(form);
 
-        formDTO.setId(null);
-        Form updatedForm = convertFromDTO(formDTO);
-
-        return objectMapper.convert(formRepository.save(updatedForm), FormDTO.class);
+        return saveForm(formDTO);
     }
 
     @Override

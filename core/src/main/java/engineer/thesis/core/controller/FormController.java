@@ -28,7 +28,11 @@ public class FormController {
 
     @RequestMapping(path = RequestMappings.FORMS.FORM, method = RequestMethod.GET)
     public ResponseEntity<?> getForm(@PathVariable Long id) {
-        return new ResponseEntity<Object>(formService.getFormById(id), HttpStatus.OK);
+        try {
+            return new ResponseEntity<Object>(formService.getFormById(id), HttpStatus.OK);
+        } catch (NoSuchElementExistsException e) {
+            return new ResponseEntity<Object>(e.getMessage(), HttpStatus.OK);
+        }
     }
 
     @RequestMapping(path = RequestMappings.FORMS.FORMS, method = RequestMethod.GET, params = "name")

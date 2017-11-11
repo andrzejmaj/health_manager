@@ -11,5 +11,7 @@ public interface FormRepository extends JpaRepository<Form, Long> {
 
     List<Form> findByNameContainingIgnoreCaseAndActiveIsTrue(String name);
 
+    List<Form> findAllByActiveIsTrue();
+
     Form findByIdAndActiveIsTrue(Long id);
 }

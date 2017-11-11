@@ -47,7 +47,7 @@ public class FormDataValidator {
             return fieldAvailableValues.stream().noneMatch(formAvailableValue -> formAvailableValue.getValue().equals(value));
         }
 
-        switch (field.getType().getType()) {
+        switch (field.getType()) {
             case NUMERIC:
                 isValid = isNumericFieldValid(value, field);
                 break;

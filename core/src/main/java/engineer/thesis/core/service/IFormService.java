@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public interface IFormService {
 
-    FormDTO getFormById(Long id);
+    FormDTO getFormById(Long id) throws NoSuchElementExistsException;
 
     List<FormDTO> getAllForms();
 
