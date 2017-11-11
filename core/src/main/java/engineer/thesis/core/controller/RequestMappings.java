@@ -36,7 +36,7 @@ final class RequestMappings {
 
     static final class HISTORY {
         static final String PATIENT_HISTORY = "/patients/{patientId}/history";
-        static final String PATIENT_HISTORY_ID = "/patients/{patientId}/history/{id}";
+        static final String PATIENT_HISTORY_ID = "/patients/history/{id}";
     }
 
     static final class CURRENT_CONDITION {
@@ -46,7 +46,7 @@ final class RequestMappings {
     }
 
     static final class CHECKUP {
-        static final String PATIENT_CHECKUPS = "/patients/{patientId}/checkups";
+        static final String PATIENT_CHECKUPS = "/checkups";
         static final String CHECKUP_ID = "/checkups/{id}";
     }
 

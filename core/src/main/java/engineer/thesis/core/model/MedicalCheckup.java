@@ -28,10 +28,6 @@ public class MedicalCheckup {
     @JoinColumn(name = "form_id")
     private Form form;
 
-    @ManyToOne
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
-
     @OneToOne
     @JoinColumn(name = "created_by_id")
     private User creator;
@@ -46,4 +42,7 @@ public class MedicalCheckup {
     @Cascade(CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<MedicalCheckupValue> medicalCheckupValues;
+
+    @OneToMany(mappedBy = "medicalCheckup")
+    private List<MedicalHistory> medicalHistories;
 }

@@ -17,12 +17,6 @@ public class MedicalHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "symptoms")
-    private String symptoms;
-
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
@@ -33,7 +27,7 @@ public class MedicalHistory {
     @Column(name = "detection_date")
     private Date detectionDate;
 
-    @Column(name = "cure_date")
-    private Date cureDate;
-
+    @ManyToOne
+    @JoinColumn(name = "medical_checkup")
+    private MedicalCheckup medicalCheckup;
 }

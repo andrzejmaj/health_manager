@@ -36,7 +36,7 @@ public class FormDataValidator {
 
         FormField field = formField.get();
 
-        if (field.getIsRequired() && value.isEmpty()) {
+        if (Boolean.TRUE.equals(field.getIsRequired()) && value.isEmpty()) {
             setErrorMessage("Field " + field.getName() + " is required");
             return false;
         }
