@@ -23,4 +23,8 @@ public class FormFieldType {
     @Column(name = "type")
     private FieldType type;
 
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 }

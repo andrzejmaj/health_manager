@@ -1,6 +1,7 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
+import engineer.thesis.core.exception.NoContent;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.Account;
 import engineer.thesis.core.model.EmergencyContact;
@@ -130,7 +131,7 @@ public class PatientService implements BasePatientService, IPatientService {
     public EmergencyContactDTO findEmergencyById(Long id) throws NoSuchElementExistsException {
         Patient patient = findPatient(id, patientRepository);
         if (patient.getEmergencyContact() == null) {
-            throw new NoSuchElementExistsException("Emergency contact not found");
+            throw new NoContent("Emergency contact not found");
         }
         return objectMapper.convert(patient.getEmergencyContact(), EmergencyContactDTO.class);
     }
