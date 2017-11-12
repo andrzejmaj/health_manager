@@ -2,12 +2,10 @@ package engineer.thesis.core.utils;
 
 
 import engineer.thesis.core.model.FormFieldDefaultValue;
-import engineer.thesis.core.model.MedicalCheckup;
 import engineer.thesis.core.model.Patient;
 import engineer.thesis.core.model.Prescription;
 import engineer.thesis.core.model.dto.FormFieldDefaultValueDTO;
 import engineer.thesis.core.model.dto.PrescriptionDTO;
-import engineer.thesis.core.model.dto.ResponseMedicalHistoryDTO;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -58,10 +56,4 @@ public class CustomObjectMapper {
         }
     }
 
-    private class MedicalCheckupToResponseMedicalCheckupDTO extends PropertyMap<MedicalCheckup, ResponseMedicalHistoryDTO> {
-        @Override
-        protected void configure() {
-            map().set
-        }
-    }
 }
