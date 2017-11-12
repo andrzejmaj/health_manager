@@ -1,8 +1,8 @@
 package engineer.thesis;
 
 
-import engineer.thesis.core.model.User;
-import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.entity.User;
+import engineer.thesis.core.model.entity.UserRole;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.AnonAuthentication;
 import engineer.thesis.core.security.model.SecurityUser;

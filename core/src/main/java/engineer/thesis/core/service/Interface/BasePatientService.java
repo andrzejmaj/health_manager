@@ -1,7 +1,7 @@
 package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.Patient;
+import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 

@@ -2,8 +2,8 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.Disease;
-import engineer.thesis.core.model.MedicalHistory;
+import engineer.thesis.core.model.entity.Disease;
+import engineer.thesis.core.model.entity.MedicalHistory;
 import engineer.thesis.core.model.dto.MedicalHistoryDTO;
 import engineer.thesis.core.repository.DiseaseRepository;
 import engineer.thesis.core.repository.MedicalHistoryRepository;

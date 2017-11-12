@@ -1,6 +1,6 @@
 package engineer.thesis.core.model.dto;
 
-import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.entity.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,7 +1,7 @@
 package engineer.thesis.core.controller;
 
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.Appointment;
+import engineer.thesis.core.model.entity.Appointment;
 import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;

@@ -1,6 +1,6 @@
 package engineer.thesis.medcom.utils;
 
-import engineer.thesis.medcom.model.exceptions.ArchiveIOException;
+import engineer.thesis.medcom.model.error.ArchiveIOException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,5 +43,7 @@ public class FileUtils {
                 .filter(File::isDirectory)
                 .collect(Collectors.toList());
     }
+
+    private FileUtils() {}
 
 }

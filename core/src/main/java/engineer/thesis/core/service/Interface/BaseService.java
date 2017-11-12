@@ -1,6 +1,6 @@
 package engineer.thesis.core.service.Interface;
 
-import engineer.thesis.core.model.UserRole;
+import engineer.thesis.core.model.entity.UserRole;
 import engineer.thesis.core.security.model.SecurityUser;
 import org.springframework.security.core.context.SecurityContextHolder;
 

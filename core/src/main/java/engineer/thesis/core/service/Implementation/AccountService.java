@@ -2,9 +2,9 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.Account;
-import engineer.thesis.core.model.PersonalDetails;
-import engineer.thesis.core.model.User;
+import engineer.thesis.core.model.entity.Account;
+import engineer.thesis.core.model.entity.PersonalDetails;
+import engineer.thesis.core.model.entity.User;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.AccountRepository;
 import engineer.thesis.core.service.Interface.IAccountService;

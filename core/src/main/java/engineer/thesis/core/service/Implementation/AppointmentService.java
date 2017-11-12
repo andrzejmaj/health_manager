@@ -1,10 +1,10 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.Appointment;
-import engineer.thesis.core.model.Patient;
-import engineer.thesis.core.model.TimeSlot;
-import engineer.thesis.core.model.VisitPriority;
+import engineer.thesis.core.model.entity.Appointment;
+import engineer.thesis.core.model.entity.Patient;
+import engineer.thesis.core.model.entity.TimeSlot;
+import engineer.thesis.core.model.entity.VisitPriority;
 import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;

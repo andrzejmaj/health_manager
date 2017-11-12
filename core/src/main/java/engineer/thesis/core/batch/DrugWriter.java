@@ -1,6 +1,6 @@
 package engineer.thesis.core.batch;
 
-import engineer.thesis.core.model.Drug;
+import engineer.thesis.core.model.entity.Drug;
 import engineer.thesis.core.repository.DrugRepository;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;

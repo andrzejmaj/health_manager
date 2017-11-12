@@ -1,6 +1,6 @@
 package engineer.thesis.core.batch;
 
-import engineer.thesis.core.model.Drug;
+import engineer.thesis.core.model.entity.Drug;
 import engineer.thesis.core.model.dto.ExternalDrugDTO;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

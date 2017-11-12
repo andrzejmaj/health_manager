@@ -1,8 +1,8 @@
 package engineer.thesis.core.batch;
 
 import engineer.thesis.core.batch.model.DrugType;
-import engineer.thesis.core.model.Drug;
-import engineer.thesis.core.model.Pack;
+import engineer.thesis.core.model.entity.Drug;
+import engineer.thesis.core.model.entity.Pack;
 import engineer.thesis.core.model.dto.ExternalDrugDTO;
 import lombok.Setter;
 import org.springframework.batch.item.ItemProcessor;

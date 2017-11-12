@@ -2,10 +2,10 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.Account;
+import engineer.thesis.core.model.entity.Account;
 import engineer.thesis.core.model.EmergencyContact;
-import engineer.thesis.core.model.Patient;
-import engineer.thesis.core.model.PersonalDetails;
+import engineer.thesis.core.model.entity.Patient;
+import engineer.thesis.core.model.entity.PersonalDetails;
 import engineer.thesis.core.model.dto.EmergencyContactDTO;
 import engineer.thesis.core.model.dto.PatientDTO;
 import engineer.thesis.core.model.dto.PatientDetailsDTO;

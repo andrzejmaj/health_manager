@@ -26,6 +26,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-web')
 
+
     // https://mvnrepository.com/artifact/com.google.guava/guava
     compile group: 'com.google.guava', name: 'guava', version: '21.0'
 
@@ -39,6 +40,13 @@ dependencies {
     compile group: 'org.dcm4che.tool', name: 'dcm4che-tool-common', version: '3.3.8'
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    // Spock
+    compile "org.codehaus.groovy:groovy-all:2.4.10"
+    testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+    testRuntime "net.bytebuddy:byte-buddy:1.6.5"
+    testRuntime "org.objenesis:objenesis:2.5.1"
+    testRuntime group: 'cglib', name: 'cglib-nodep', version: '2.2.2'
 }
 
 dependencyManagement {
