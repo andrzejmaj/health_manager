@@ -17,6 +17,7 @@ import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -67,6 +68,7 @@ public class PrescriptionService implements IPrescriptionService, BasePatientSer
         prescription.setDrugs(convertPrescriptionListToEntity(prescriptionDTO.getDrugs(), prescription));
         prescription.setAppointment(appointment);
         prescription.setId(null);
+        prescription.setCreationDate(new Date());
 
         return objectMapper.convert(prescriptionRepository.save(prescription), PrescriptionDTO.class);
     }

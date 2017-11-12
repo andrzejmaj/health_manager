@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PrescriptionDTO {
     private Long id;
+    private Date creationDate;
     private String notes;
     @NotNull
     private Long appointmentId;
