@@ -320,6 +320,42 @@ Wykorzystane technologie:
 \end{itemize}
 
 
+%%% TODO DIAGRAMY SEKWENCJI (UML!!)
+
+\subsection{Opis architektury}
+Na architektuję produktu składa się:
+\begin{itemize}
+    \item Aplikacja przeglądarkowa (front-end)
+    \item Aplikacja strony serwerowej (back-end)
+    \item Baza danych
+\end{itemize}
+Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytania o dane i wysyłanie danych do aplikacji strony serwerowej za pomocą HTTP Api. Strona serwerowa komunikuje się z bazą danych za pomocą JDBC.
+\includegraphics{komunikacja-serwer-klient-okolny}
+
+\subsubsection{Architektura bazy danych}
+\includegraphics[width=\textwidth]{db-schema}
+
+\subsubsection{Architektura aplicaji serwerowej}
+\includegraphics[width=\textwidth]{backedn-schema}
+\begin{itemize}
+    \item Controller - warstwa odpowiedzialna za odbieranie zapytań HTTP i przetwarzanie ich na obiekty JVM-owe oraz za przetwarzanie odpowiedzi (obiektów JVM-owych) na waidomości HTTP i odsyłanie ich.
+    \item Service - warstwa pośrednicząca międzu Controller-em a Repository-em. Przetwarza zapytania otrzymane od Controllera na zapytania dla Repository i przetwarza odpowiedzi od Repository na odpowiedzi dla Controller-a.
+    \item Repository - warstwa odpowiedzialna za wykonywanie zapytań do bazy danych.
+    \item Model - wspóny dla wyżej wymienionych warstw sposób reprezentacji encji jako obiektów JVM-kowych, który może być przetworzony na JSON-a (na potrzeby HTTP API) lub repotezentację bazodanową (na potrzeby bazy danych). Umożliwia komunikację pomiędzy Controller-em, Servic-em i Repository-em.
+\end{itemize}
+
+\subsubsection{Architektuwa aplikacji przeglądarkowej}
+\includegraphics[width=\textwidth]{front-schema}
+\begin{itemize}
+    \item Service - serwisy odpowiadają za wysyłanie zapytań do aplikacji serwerowej i odbieranie odpowiedzi
+    \item Page - Trasowalna strona wyświatlana użytkownikowi
+    \item Component - Strony korzystają z komponentów
+\end{itemize}
+
+\subsubsection{Komunikcja aplikacji serwerowej i klienckiej}
+\emph{TODO przekleić wszystko ze Słagera xDDDD}
+
+
 \section{Organizacja pracy}
 %\section{Work organization}
 \label{sec:organizacja-pracy}
@@ -364,20 +400,26 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
   %% Koniec organizacji pracy!
 
 
-\section{Dokumentacja techniczna}
-%\section{Tecch doc}
 
-\label{sec:dokumentacja-techniczna}
+\section{Wyniki projektu}
+%\section{Project results}
 
-\emph{No siemano ziomeczki}
+\label{sec:wyniki-projektu}
 
-\subsection{Wymagania techniczne dla klienta}
+\emph{Wskazanie wyników projektu (co konkretnie udało się uzyskało:
+  oprogramowanie, dokumentacja, raporty z testów/wdrożenia, itd.), prezentacja wyników
+  i ocena ich użyteczności (jak zostało to zweryfikowane --- np.\ wnioski
+  klienta/użytkownika, zrealizowane testy wydajnościowe, itd.),
+  istniejce ograniczenia i propozycje dalszych prac.}
+
+\subsection{Wymagania dla uruchomiania aplikacji}
+\subsubsection{Wymagania techniczne dla klienta}
 \begin{itemize}
   \item  Połączenie z serwerem Health-Menagera (zazwyczaj realizowane przez sieć Internet)
   \item Przeglądarka internetowa zdolna do obsługi ECMAScript-u w wersji 6 lub późniejszej (na przykład Mozilla Firefox w wersji 56.0)
 \end{itemize}
 
-\subsection{Wymagania techniczne dla serwera}
+\subsubsection{Wymagania techniczne dla serwera}
 \begin{itemize}
     \item Połączenie z siecią komuterową w której znajdują się użytkownicy
     \item Java Runtime Environment w wersi 8 lub późniejszej (na przykład \href{https://www.java.com/pl/download/manual.jsp}{JRE firmy Oracle}
@@ -385,7 +427,7 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     \item Serwer HTTP (TODO)
 \end{itemize}
 
-\subsection{Wymagania techniczne dla programisty}
+\subsubsection{Wymagania techniczne dla programisty}
 \begin{itemize}
     \item \href{https://www.npmjs.com/}{NPM - Next Popular Module}
     \item Java Developement Kit w wersi 8 lub późniejszej
@@ -393,38 +435,6 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     \item Baza danych Postgresql
 \end{itemize}
 
-\subsection{Opis architektury}
-Na architektuję produktu składa się:
-\begin{itemize}
-    \item Aplikacja przeglądarkowa (front-end)
-    \item Aplikacja strony serwerowej (back-end)
-    \item Baza danych
-\end{itemize}
-Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytania o dane i wysyłanie danych do aplikacji strony serwerowej za pomocą HTTP Api. Strona serwerowa komunikuje się z bazą danych za pomocą JDBC.
-\includegraphics{komunikacja-serwer-klient-okolny}
-
-\subsubsection{Architektura bazy danych}
-\includegraphics[width=\textwidth]{db-schema}
-
-\subsubsection{Architektura aplicaji serwerowej}
-\includegraphics[width=\textwidth]{backedn-schema}
-\begin{itemize}
-    \item Controller - warstwa odpowiedzialna za odbieranie zapytań HTTP i przetwarzanie ich na obiekty JVM-owe oraz za przetwarzanie odpowiedzi (obiektów JVM-owych) na waidomości HTTP i odsyłanie ich.
-    \item Service - warstwa pośrednicząca międzu Controller-em a Repository-em. Przetwarza zapytania otrzymane od Controllera na zapytania dla Repository i przetwarza odpowiedzi od Repository na odpowiedzi dla Controller-a.
-    \item Repository - warstwa odpowiedzialna za wykonywanie zapytań do bazy danych.
-    \item Model - wspóny dla wyżej wymienionych warstw sposób reprezentacji encji jako obiektów JVM-kowych, który może być przetworzony na JSON-a (na potrzeby HTTP API) lub repotezentację bazodanową (na potrzeby bazy danych). Umożliwia komunikację pomiędzy Controller-em, Servic-em i Repository-em.
-\end{itemize}
-
-\subsubsection{Architektuwa aplikacji przeglądarkowej}
-\includegraphics[width=\textwidth]{front-schema}
-\begin{itemize}
-    \item Service - serwisy odpowiadają za wysyłanie zapytań do aplikacji serwerowej i odbieranie odpowiedzi
-    \item Page - Trasowalna strona wyświatlana użytkownikowi
-    \item Component - Strony korzystają z komponentów
-\end{itemize}
-
-\subsubsection{Komunikcja aplikacji serwerowej i klienckiej}
-\emph{TODO przekleić wszystko ze Słagera xDDDD}
 
 \subsection{Konfiguracja aplikacji}
 \subsubsection{Aplikacja przeglądarkowa}{Należy ustawić:
@@ -438,37 +448,26 @@ Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytan
 \end{itemize}}
 \paragraph{Baza danych}{Prawidłowo skonfigurowana aplikacja serwerowa powinna utworzyć schemat bazy danych w przypadku jego nieistnienia}
 
-\section{Przewodnik użytkownika}
-\subsection{Administrator}
-\subsubsection{Rejestracja użytkownika}{}
-\subsubsection{Utrzymanie aplikacji}{}
-\subsection{Lekarz}
-\subsubsection{Ustalanie grafiku}{}
-\subsubsection{Drukowanie grafiku}{}
-\subsubsection{Ustalanie terminów}{}
-\subsubsection{Rejestracja pacjenta}{}
-\subsubsection{Eksport kalendarza}{}
-\subsection{Pacjent}
-\subsubsection{Rejestracja}{}
-\subsubsection{Logowanie}{}
-\subsubsection{Zapis na wizytę}{}
-\subsubsection{Eksport kalendarza}{}
-\subsection{Recepcjonistka}
-\subsubsection{Rejestracja pacjenta}{}
-\subsubsection{Zmiana terminu wizyty}{}
 
+\subsection{Przewodnik użytkownika}
+\subsubsection{Administrator}
+\paragraph{Rejestracja użytkownika}{}
+\paragraph{Utrzymanie aplikacji}{}
+\subsubsection{Lekarz}
+\paragraph{Ustalanie grafiku}{}
+\paragraph{Drukowanie grafiku}{}
+\paragraph{Ustalanie terminów}{}
+\paragraph{Rejestracja pacjenta}{}
+\paragraph{Eksport kalendarza}{}
+\subsubsection{Pacjent}
+\paragraph{Rejestracja}{}
+\paragraph{Logowanie}{}
+\paragraph{Zapis na wizytę}{}
+\paragraph{Eksport kalendarza}{}
+\subsubsection{Recepcjonistka}
+\paragraph{Rejestracja pacjenta}{}
+\paragraph{Zmiana terminu wizyty}{}
 
-\section{Wyniki projektu}
-%\section{Project results}
-
-\label{sec:wyniki-projektu}
-
-\emph{Wskazanie wyników projektu (co konkretnie udało się uzyskało:
-  oprogramowanie, dokumentacja, raporty z testów/wdrożenia, itd.), prezentacja wyników
-  i ocena ich użyteczności (jak zostało to zweryfikowane --- np.\ wnioski
-  klienta/użytkownika, zrealizowane testy wydajnościowe, itd.),
-  istniejce ograniczenia i propozycje dalszych prac.}
-  
 %%%%% KONIEC %%%%%%
 % o ile to mozliwe prosze uzywac odwolan \cite w konkretnych miejscach a nie \nocite
 
