@@ -1,8 +1,8 @@
 package engineer.thesis.core.validator;
 
-import engineer.thesis.core.model.Form;
-import engineer.thesis.core.model.FormAvailableValue;
-import engineer.thesis.core.model.FormField;
+import engineer.thesis.core.model.entity.Form;
+import engineer.thesis.core.model.entity.FormAvailableValue;
+import engineer.thesis.core.model.entity.FormField;
 import engineer.thesis.core.model.FormFieldData;
 import lombok.Getter;
 import lombok.Setter;

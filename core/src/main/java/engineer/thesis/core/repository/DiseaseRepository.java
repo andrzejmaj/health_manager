@@ -1,6 +1,6 @@
 package engineer.thesis.core.repository;
 
-import engineer.thesis.core.model.Disease;
+import engineer.thesis.core.model.entity.Disease;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

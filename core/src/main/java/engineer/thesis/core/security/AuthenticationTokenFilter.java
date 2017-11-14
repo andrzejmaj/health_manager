@@ -1,6 +1,6 @@
 package engineer.thesis.core.security;
 
-import engineer.thesis.core.model.User;
+import engineer.thesis.core.model.entity.User;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.SecurityUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;

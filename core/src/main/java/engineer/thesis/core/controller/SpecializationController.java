@@ -1,6 +1,6 @@
 package engineer.thesis.core.controller;
 
-import engineer.thesis.core.model.Specialization;
+import engineer.thesis.core.model.entity.Specialization;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.SpecializationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

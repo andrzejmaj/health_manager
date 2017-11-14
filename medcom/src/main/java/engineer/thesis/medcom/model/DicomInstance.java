@@ -1,32 +1,81 @@
 package engineer.thesis.medcom.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import engineer.thesis.medcom.model.core.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.dcm4che3.data.*;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * @author MKlaman
- * @since 11.06.2017
+ * @since 12.09.2017
  */
-/* TODO
- * maybe separate medcom model will not be needed
- * and database models/dtos from engineer.thesis.core.model will be used instead
-**/
-@Data
-@Builder
-public class DicomInstance {
+@Getter
+@Setter
+@NoArgsConstructor
+@JsonPropertyOrder({"instanceUID", "seriesInstanceUID", "creationDate", "sopClassName", "attributes"})
+public class DicomInstance extends DicomObject {
 
-    private String sopInstanceUid;
+    private String instanceUID;
+    private Date creationDate;
+    private String sopClassName;
 
-    @JsonInclude(NON_NULL)
-    private String seriesInstanceUid;
+    // non attribute
+    private String seriesInstanceUID;
 
-    @JsonInclude(NON_NULL)
-    private String studyInstanceUid;
+    public static DicomInstance.Builder builder() {
+        return new DicomInstance.Builder();
+    }
 
-    @JsonInclude(NON_NULL)
-    private String patientId;
+    private DicomInstance(Set<DicomAttribute> attributes) {
+        super(attributes);
+        setFields();
+    }
 
+    @Override
+    public void lazyMerge(DicomObject other) {
+        if (!(other instanceof DicomInstance))
+            return;
+
+        super.lazyAttributesMerge(other);
+        setFields();
+
+        if (seriesInstanceUID == null)
+            seriesInstanceUID = ((DicomInstance) other).getSeriesInstanceUID();
+    }
+
+    private void setFields() {
+        this.setRequiredField(Tag.SOPInstanceUID, this::setInstanceUID);
+        this.setRequiredField(Tag.SOPClassUID, this::setSopClassNameByCode);
+        this.setDateTimeField(Tag.InstanceCreationDate, Tag.InstanceCreationTime, this::setCreationDate);
+    }
+
+    private void setSopClassNameByCode(String code) {
+        sopClassName = UID.nameOf(code);
+    }
+
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Builder extends DicomObjectBuilder<DicomInstance> {
+
+        @Override
+        public DicomInstance build() {
+            return new DicomInstance(attributes);
+        }
+
+        @Override
+        public boolean accepts(DicomAttribute attribute) {
+            return true; // accept all remaining attributes
+        }
+
+        @Override
+        protected int getPriority() {
+            return 0; // lowest getPriority - accepts attributes last
+        }
+    }
 }

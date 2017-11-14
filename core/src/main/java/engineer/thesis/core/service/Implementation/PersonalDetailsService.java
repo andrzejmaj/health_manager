@@ -1,6 +1,6 @@
 package engineer.thesis.core.service.Implementation;
 
-import engineer.thesis.core.model.PersonalDetails;
+import engineer.thesis.core.model.entity.PersonalDetails;
 import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.PersonalDetailsRepository;
 import engineer.thesis.core.service.Interface.IPersonalDetailsService;

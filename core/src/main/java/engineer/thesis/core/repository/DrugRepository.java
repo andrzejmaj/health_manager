@@ -1,6 +1,6 @@
 package engineer.thesis.core.repository;
 
-import engineer.thesis.core.model.Drug;
+import engineer.thesis.core.model.entity.Drug;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

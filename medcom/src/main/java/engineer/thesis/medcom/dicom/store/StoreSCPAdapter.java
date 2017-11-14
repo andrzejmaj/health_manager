@@ -1,6 +1,7 @@
 package engineer.thesis.medcom.dicom.store;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,9 @@ public class StoreSCPAdapter {
     @Value("${dicom.store.scp.archiveDirectory}")
     private String storageDirectory;
 
+    @Autowired
+    private DatabaseStorageService databaseStorageService;
+
     @PostConstruct
     public void initStoreSCP() {
         runStoreSCP(applicationEntityName, port, storageDirectory);
@@ -40,7 +44,7 @@ public class StoreSCPAdapter {
                 .split("\\s+");
 
         logger.info(String.format("Starting StoreSCP '%s' on port: %d", applicationEntityName, port));
-        StoreSCP.main(args);
+        StoreSCP.main(args, databaseStorageService);
     }
 
 }

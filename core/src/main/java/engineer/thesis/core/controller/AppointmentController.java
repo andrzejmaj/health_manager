@@ -1,6 +1,7 @@
 package engineer.thesis.core.controller;
 
-import engineer.thesis.core.model.Appointment;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
+import engineer.thesis.core.model.entity.Appointment;
 import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;
@@ -30,6 +31,15 @@ public class AppointmentController {
             return new ResponseEntity<>(appointment, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("No appointment with timeSlotId " + timeSlotId, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/appointments/{id}")
+    public ResponseEntity<?> getById(@PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(appointmentService.getById(id), HttpStatus.OK);
+        } catch (NoSuchElementExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

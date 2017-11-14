@@ -5,6 +5,7 @@ import engineer.thesis.core.repository.PersonalDetailsRepository;
 import engineer.thesis.core.service.Implementation.PatientService;
 import engineer.thesis.core.service.Implementation.PersonalDetailsService;
 import engineer.thesis.core.service.Interface.IUserService;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+@Ignore
 @RunWith(SpringRunner.class)
 public class PatientServiceTest {
 

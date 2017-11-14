@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @PropertySource("medcom.properties")
-@ComponentScan("engineer.thesis.core")
+@ComponentScan({"engineer.thesis.core","engineer.thesis.medcom"})
 @EnableScheduling
 public class HealthManagerApplication {
 	public static void main(String[] args) {

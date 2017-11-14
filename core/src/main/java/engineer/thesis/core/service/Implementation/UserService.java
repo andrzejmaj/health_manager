@@ -3,7 +3,7 @@ package engineer.thesis.core.service.Implementation;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.PasswordNotValidException;
 import engineer.thesis.core.exception.TokenExpiredException;
-import engineer.thesis.core.model.*;
+import engineer.thesis.core.model.entity.*;
 import engineer.thesis.core.model.dto.RegisterRequestDTO;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
 import engineer.thesis.core.model.dto.UserDTO;
@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
 
 @Service
 public class UserService implements IUserService {

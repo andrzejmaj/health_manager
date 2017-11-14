@@ -1,16 +1,11 @@
 package engineer.thesis;
 
-import engineer.thesis.core.model.User;
 import engineer.thesis.core.security.TokenUtils;
-import engineer.thesis.core.security.model.SecurityUserFactory;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.Ignore;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.util.ReflectionTestUtils;
 
+@Ignore
 public class TokenHelperTest {
 
     private TokenUtils tokenHelper;

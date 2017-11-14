@@ -49,6 +49,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import engineer.thesis.medcom.model.error.DatabaseStorageException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
@@ -88,6 +89,8 @@ public class StoreSCP {
             ResourceBundle.getBundle("storeMessages");
     private static final String PART_EXT = ".part";
 
+    private final DatabaseStorageService databaseStorageService; // spring service
+
     private final Device device = new Device("storescp");
     private final ApplicationEntity ae = new ApplicationEntity("*");
     private final Connection conn = new Connection();
@@ -96,6 +99,7 @@ public class StoreSCP {
     private int status;
     private final BasicCStoreSCP cstoreSCP = new BasicCStoreSCP("*") {
 
+
         @Override
         protected void store(Association as, PresentationContext pc,
                              Attributes rq, PDVInputStream data, Attributes rsp)
@@ -103,7 +107,6 @@ public class StoreSCP {
             rsp.setInt(Tag.Status, VR.US, status);
             if (storageDir == null)
                 return;
-
             String cuid = rq.getString(Tag.AffectedSOPClassUID);
             String iuid = rq.getString(Tag.AffectedSOPInstanceUID);
             String tsuid = pc.getTransferSyntax();
@@ -111,10 +114,15 @@ public class StoreSCP {
             try {
                 storeTo(as, as.createFileMetaInformation(iuid, cuid, tsuid),
                         data, file);
-                renameTo(as, file, new File(storageDir,
-                        filePathFormat == null
+                File finalFile = new File(storageDir,
+                        (filePathFormat == null)
                                 ? iuid
-                                : filePathFormat.format(parse(file))));
+                                : filePathFormat.format(parse(file)));
+                renameTo(as, file, finalFile);
+
+                databaseStorageService.store(finalFile, as);
+            } catch (DatabaseStorageException e) { // do not remove file from the disk
+                LOG.error("database persistence failure", e);
             } catch (Exception e) {
                 deleteFile(as, file);
                 throw new DicomServiceException(Status.ProcessingFailure, e);
@@ -123,7 +131,9 @@ public class StoreSCP {
 
     };
 
-    public StoreSCP() throws IOException {
+    public StoreSCP(DatabaseStorageService databaseStorageService) throws IOException {
+        this.databaseStorageService = databaseStorageService;
+
         device.setDimseRQHandler(createServiceRegistry());
         device.addConnection(conn);
         device.addApplicationEntity(ae);
@@ -243,10 +253,11 @@ public class StoreSCP {
                 .create(null));
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args, DatabaseStorageService databaseStorageService) {
         try {
             CommandLine cl = parseComandLine(args);
-            StoreSCP main = new StoreSCP();
+            StoreSCP main = new StoreSCP(databaseStorageService);
+
             CLIUtils.configureBindServer(main.conn, main.ae, cl);
             CLIUtils.configure(main.conn, cl);
             main.setStatus(CLIUtils.getIntOption(cl, "status", 0));

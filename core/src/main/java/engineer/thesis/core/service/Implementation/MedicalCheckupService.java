@@ -2,8 +2,9 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.Form;
-import engineer.thesis.core.model.MedicalCheckup;
+import engineer.thesis.core.model.entity.Form;
+import engineer.thesis.core.model.entity.MedicalCheckup;
+import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.dto.MedicalCheckupDTO;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.repository.MedicalCheckupRepository;

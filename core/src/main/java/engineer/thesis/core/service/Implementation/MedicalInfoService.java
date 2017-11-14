@@ -2,8 +2,8 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.MedicalInformation;
-import engineer.thesis.core.model.Patient;
+import engineer.thesis.core.model.entity.MedicalInformation;
+import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.dto.MedicalInfoDTO;
 import engineer.thesis.core.repository.MedicalInfoRepository;
 import engineer.thesis.core.repository.PatientRepository;
