@@ -26,6 +26,9 @@ public final class DicomUtils {
             .toFormatter();
 
 
+    private DicomUtils() {
+    }
+
     public static Instant parseDateTime(String dicomDate, String dicomTime) {
         if (dicomDate == null || dicomTime == null)
             throw new IllegalArgumentException("arguments can not be null");
@@ -41,9 +44,6 @@ public final class DicomUtils {
 
     public static void applyAttributeValue(Attributes attributes, int tag, Consumer<String> consumer) {
         getAttributeValue(attributes, tag).ifPresent(consumer);
-    }
-
-    private DicomUtils() {
     }
 
 }

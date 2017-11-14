@@ -1,4 +1,4 @@
-package engineer.thesis.core.model;
+package engineer.thesis.core.model.entity;
 
 public interface FormFieldData {
     Long getFormFieldId();

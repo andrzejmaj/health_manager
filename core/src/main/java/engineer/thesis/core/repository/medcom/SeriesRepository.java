@@ -1,7 +1,6 @@
 package engineer.thesis.core.repository.medcom;
 
 import engineer.thesis.core.model.entity.medcom.Series;
-import engineer.thesis.core.model.entity.medcom.Study;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

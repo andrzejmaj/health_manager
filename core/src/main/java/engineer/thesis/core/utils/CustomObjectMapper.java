@@ -1,13 +1,12 @@
 package engineer.thesis.core.utils;
 
 
-import engineer.thesis.core.model.FormFieldDefaultValue;
-import engineer.thesis.core.model.entity.FormFieldType;
-import engineer.thesis.core.model.entity.Patient;
-import engineer.thesis.core.model.Prescription;
 import engineer.thesis.core.model.dto.FormFieldDefaultValueDTO;
 import engineer.thesis.core.model.dto.PrescriptionDTO;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
+import engineer.thesis.core.model.entity.FormFieldDefaultValue;
+import engineer.thesis.core.model.entity.Patient;
+import engineer.thesis.core.model.entity.Prescription;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;

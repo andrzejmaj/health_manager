@@ -3,7 +3,7 @@ package engineer.thesis.core.validator;
 import engineer.thesis.core.model.entity.Form;
 import engineer.thesis.core.model.entity.FormAvailableValue;
 import engineer.thesis.core.model.entity.FormField;
-import engineer.thesis.core.model.FormFieldData;
+import engineer.thesis.core.model.entity.FormFieldData;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;

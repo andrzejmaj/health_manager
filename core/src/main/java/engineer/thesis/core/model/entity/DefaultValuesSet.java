@@ -1,6 +1,5 @@
-package engineer.thesis.core.model;
+package engineer.thesis.core.model.entity;
 
-import engineer.thesis.core.model.entity.Form;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

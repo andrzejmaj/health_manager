@@ -6,14 +6,16 @@ import engineer.thesis.medcom.utils.DicomUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.log4j.Logger;
 import org.dcm4che3.data.Keyword;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
 
 /**
  * DicomObject owns a set of dicom attributes
@@ -37,6 +39,7 @@ public abstract class DicomObject {
 
     /**
      * merges without overriding existing values
+     *
      * @param other source of new values
      */
     public abstract void lazyMerge(DicomObject other);

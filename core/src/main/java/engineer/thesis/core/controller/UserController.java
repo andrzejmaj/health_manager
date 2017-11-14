@@ -2,8 +2,8 @@ package engineer.thesis.core.controller;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
-import engineer.thesis.core.model.entity.UserRole;
 import engineer.thesis.core.model.dto.*;
+import engineer.thesis.core.model.entity.UserRole;
 import engineer.thesis.core.security.TokenUtils;
 import engineer.thesis.core.security.model.AuthenticationRequest;
 import engineer.thesis.core.security.model.AuthenticationResponse;

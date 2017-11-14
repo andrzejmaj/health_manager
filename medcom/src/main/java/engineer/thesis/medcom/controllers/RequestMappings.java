@@ -11,6 +11,9 @@ final class RequestMappings {
         static final String GET_DICOM = "/medcom/patients/{patientId}/studies/{studyId}/series/{seriesId}/instances/{instanceId}";
     }
 
+    private RequestMappings() {
+    }
+
     static final class INSTANCES {
         static final String GET_ALL = "/medcom/instances";
         static final String GET_DETAILS = "/medcom/instances/{instanceId}";
@@ -38,9 +41,5 @@ final class RequestMappings {
         static final String GET_ALL = "/medcom/modalities";
         static final String UPDATE = "/medcom/modalities";
         static final String DELETE = "/medcom/modalities/{aet}";
-    }
-
-
-    private RequestMappings() {
     }
 }

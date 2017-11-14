@@ -1,6 +1,5 @@
 package engineer.thesis.core.model.entity;
 
-import engineer.thesis.core.model.EmergencyContact;
 import engineer.thesis.core.model.entity.medcom.Study;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
