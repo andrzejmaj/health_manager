@@ -1,5 +1,6 @@
 package engineer.thesis.core.model.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +12,10 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class MedicalHistoryDTO {
-
     private Long id;
     private Long patientId;
     @NotNull
     private String diseaseName;
     @NotNull
     private Date detectionDate;
-    private Long medicalCheckupId;
 }

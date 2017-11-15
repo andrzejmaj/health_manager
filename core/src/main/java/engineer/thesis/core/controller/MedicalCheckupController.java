@@ -31,10 +31,10 @@ public class MedicalCheckupController {
     }
 
 
-    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS, method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@Validated(PutValidationGroup.class) @RequestBody MedicalCheckupDTO medicalCheckupDTO) {
+    @RequestMapping(path = RequestMappings.CHECKUP.CHECKUP_ID, method = RequestMethod.PUT)
+    public ResponseEntity<?> update(@Validated(PutValidationGroup.class) @RequestBody MedicalCheckupDTO medicalCheckupDTO, @PathVariable Long id) {
         try {
-            return new ResponseEntity<>(medicalCheckupService.updateMedicalCheckup(medicalCheckupDTO), HttpStatus.OK);
+            return new ResponseEntity<>(medicalCheckupService.updateMedicalCheckup(id, medicalCheckupDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (DataIntegrityException e) {

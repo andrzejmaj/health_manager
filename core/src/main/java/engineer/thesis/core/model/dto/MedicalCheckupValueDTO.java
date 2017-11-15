@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class MedicalCheckupValueDTO {
+class MedicalCheckupValueDTO {
     @NotNull
     private String value;
     @NotNull

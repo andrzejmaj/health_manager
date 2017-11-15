@@ -44,7 +44,11 @@ public class FormDataValidator {
         List<FormAvailableValue> fieldAvailableValues = field.getFieldAvailableValues();
 
         if (fieldAvailableValues != null && !fieldAvailableValues.isEmpty()) {
-            return fieldAvailableValues.stream().noneMatch(formAvailableValue -> formAvailableValue.getValue().equals(value));
+            boolean invalid = fieldAvailableValues.stream().noneMatch(formAvailableValue -> formAvailableValue.getValue().equals(value));
+            if (invalid) {
+                setErrorMessage(value + " is not applicable for field " + field.getName());
+            }
+            return !invalid;
         }
 
         switch (field.getType()) {

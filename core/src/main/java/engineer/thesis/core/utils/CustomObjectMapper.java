@@ -3,8 +3,10 @@ package engineer.thesis.core.utils;
 
 import engineer.thesis.core.model.dto.FormFieldDefaultValueDTO;
 import engineer.thesis.core.model.dto.PrescriptionDTO;
+import engineer.thesis.core.model.dto.ResponseMedicalCheckupDTO;
 import engineer.thesis.core.model.dto.ShortPatientDTO;
 import engineer.thesis.core.model.entity.FormFieldDefaultValue;
+import engineer.thesis.core.model.entity.MedicalCheckup;
 import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.entity.Prescription;
 import org.modelmapper.ModelMapper;
@@ -31,6 +33,8 @@ public class CustomObjectMapper {
         modelMapper.addMappings(new PatientShortPatientMap());
         modelMapper.addMappings(new FormFieldDefaultValueDTOToModel());
         modelMapper.addMappings(new PrescriptionDTOToModel());
+        modelMapper.addMappings(new MedicalCheckupToResponseMedicalCheckupDTO());
+
     }
 
     private class PatientShortPatientMap extends PropertyMap<Patient, ShortPatientDTO> {
@@ -56,4 +60,10 @@ public class CustomObjectMapper {
         }
     }
 
+    private class MedicalCheckupToResponseMedicalCheckupDTO extends PropertyMap<MedicalCheckup, ResponseMedicalCheckupDTO> {
+        @Override
+        protected void configure() {
+            map().setMedicalCheckupValues(null);
+        }
+    }
 }
