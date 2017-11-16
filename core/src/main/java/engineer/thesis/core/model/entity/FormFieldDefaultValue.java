@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "hm_form_field_default_value", schema = "hmanager")
-public class FormFieldDefaultValue implements FormFieldData {
+public class FormFieldDefaultValue {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -21,8 +21,8 @@ public class FormFieldDefaultValue implements FormFieldData {
     @Column(name = "value")
     private String value;
 
-    @Column(name = "form_field_id")
-    private Long formFieldId;
+    @Column(name = "name")
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "default_values_set_id")

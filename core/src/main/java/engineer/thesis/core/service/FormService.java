@@ -6,7 +6,6 @@ import engineer.thesis.core.model.dto.DefaultValuesSetDTO;
 import engineer.thesis.core.model.dto.FormDTO;
 import engineer.thesis.core.model.entity.DefaultValuesSet;
 import engineer.thesis.core.model.entity.Form;
-import engineer.thesis.core.model.entity.FormFieldDefaultValue;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
@@ -83,9 +82,11 @@ public class FormService implements IFormService {
 
     @Override
     public List<DefaultValuesSetDTO> getDefaultValues(Long id) throws NoSuchElementExistsException {
-        if (!formRepository.exists(id)) {
+        Form form = formRepository.findOne(id);
+        if (form == null) {
             throw new NoSuchElementExistsException("Form doesn't exist");
         }
+
         return defaultValuesSetRepository.findAllByForm_Id(id).stream().map(set -> objectMapper.convert(set, DefaultValuesSetDTO.class)).collect(Collectors.toList());
     }
 
@@ -99,7 +100,7 @@ public class FormService implements IFormService {
         defaultValuesSetDTO.setFormId(id);
         DefaultValuesSet defaultValuesSet = objectMapper.convert(defaultValuesSetDTO, DefaultValuesSet.class);
 
-        if (!formDataValidator.isDataValid(defaultValuesSet.getDefaultValues(), form)) {
+        if (!formDataValidator.isDataValidDefault(defaultValuesSet.getDefaultValues(), form)) {
             throw new DataIntegrityException(formDataValidator.getErrorMessage());
         }
 
@@ -116,22 +117,19 @@ public class FormService implements IFormService {
             throw new NoSuchElementExistsException("Values set doesn't exist");
         }
 
-        if (!defaultValuesSet.getForm().getId().equals(id)) {
-            throw new DataIntegrityException("Form id in set and path doesn't match");
-        }
+        defaultValuesSetDTO.setFormId(defaultValuesSet.getForm().getId());
+        DefaultValuesSet newDefaultValuesSet = objectMapper.convert(defaultValuesSetDTO, DefaultValuesSet.class);
 
-        List<FormFieldDefaultValue> formFieldDefaultValues = defaultValuesSetDTO.getDefaultValues().stream()
-                .map(dto -> objectMapper.convert(dto, FormFieldDefaultValue.class).builderSetDefaultValuesSet(defaultValuesSet))
-                .collect(Collectors.toList());
-
-        if (!formDataValidator.isDataValid(formFieldDefaultValues, defaultValuesSet.getForm())) {
+        if (!formDataValidator.isDataValidDefault(newDefaultValuesSet.getDefaultValues(), defaultValuesSet.getForm())) {
             throw new DataIntegrityException(formDataValidator.getErrorMessage());
         }
 
         defaultValuesSet.getDefaultValues().clear();
-        defaultValuesSet.getDefaultValues().addAll(formFieldDefaultValues);
+        defaultValuesSet.getDefaultValues().addAll(newDefaultValuesSet.getDefaultValues());
+        newDefaultValuesSet.setDefaultValues(defaultValuesSet.getDefaultValues());
+        newDefaultValuesSet.setForm(defaultValuesSet.getForm());
 
-        return objectMapper.convert(defaultValuesSetRepository.save(defaultValuesSet), DefaultValuesSetDTO.class);
+        return objectMapper.convert(defaultValuesSetRepository.save(newDefaultValuesSet), DefaultValuesSetDTO.class);
     }
 
     @Override

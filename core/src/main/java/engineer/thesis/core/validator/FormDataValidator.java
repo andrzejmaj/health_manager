@@ -1,9 +1,6 @@
 package engineer.thesis.core.validator;
 
-import engineer.thesis.core.model.entity.Form;
-import engineer.thesis.core.model.entity.FormAvailableValue;
-import engineer.thesis.core.model.entity.FormField;
-import engineer.thesis.core.model.entity.FormFieldData;
+import engineer.thesis.core.model.entity.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -21,8 +18,12 @@ public class FormDataValidator {
 
     private String errorMessage;
 
-    public Boolean isDataValid(List<? extends FormFieldData> dataList, Form form) {
+    public Boolean isDataValid(List<MedicalCheckupValue> dataList, Form form) {
         return dataList.stream().noneMatch(entry -> isEntryValid(entry.getValue(), getFormField(entry.getFormFieldId(), form)).equals(false));
+    }
+
+    public Boolean isDataValidDefault(List<FormFieldDefaultValue> dataList, Form form) {
+        return dataList.stream().noneMatch(entry -> isEntryValid(entry.getValue(), getFormField(entry.getName(), form)).equals(false));
     }
 
     private Boolean isEntryValid(String value, Optional<FormField> formField) {
@@ -82,6 +83,10 @@ public class FormDataValidator {
 
     private Optional<FormField> getFormField(Long fieldId, Form form) {
         return form.getFormFields().stream().filter(field -> Objects.equals(field.getId(), fieldId)).findFirst();
+    }
+
+    private Optional<FormField> getFormField(String name, Form form) {
+        return form.getFormFields().stream().filter(field -> Objects.equals(field.getName(), name)).findFirst();
     }
 
     private Boolean isCheckboxValid(String value, FormField field) {
