@@ -320,10 +320,22 @@ Wykorzystane technologie:
 \end{itemize}
 
 
-%%% TODO DIAGRAMY SEKWENCJI (UML!!)
+\subsection{Dziedzina problemu}
 
-\subsection{Opis architektury}
-Na architektuję produktu składa się:
+\subsubsection{Przeglądarka internetowa}
+Produktem jest przeglądarka internetowa. Przeglądarka to  program komputerowy służący do pobierania i wyświetlania stron internetowych udostępnianych przez serwery WWW\footnote{https://pl.wikipedia.org/wiki/Przeglądarka_internetowa}.
+Owe strony internetowe są tworzone z użyciem HTML-a, CSS-a i JavaScript-a.
+\includegraphics[width=\textwidth]{html-css-js}
+https://melaloo.wordpress.com/2015/07/12/intiwebsites-for-dummies-what-are-html-css-javascript-and-php/
+
+Przeglądarka internetowa pobiera strony internetowe używając protokołu HTTP.
+\includegraphics[width=\textwidth]{http_diagram}
+https://code.tutsplus.com/tutorials/http-headers-for-dummies--net-8039
+
+
+%%% TODO DIAGRAMY SEKWENCJI (UML!!)
+\subsection{Wstęp do architektury systemu - widok z lotu ptaka}
+Na architekturę produktu składa się:
 \begin{itemize}
     \item Aplikacja przeglądarkowa (front-end)
     \item Aplikacja strony serwerowej (back-end)
@@ -332,8 +344,7 @@ Na architektuję produktu składa się:
 Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytania o dane i wysyłanie danych do aplikacji strony serwerowej za pomocą HTTP Api. Strona serwerowa komunikuje się z bazą danych za pomocą JDBC.
 \includegraphics{komunikacja-serwer-klient-okolny}
 
-\subsubsection{Architektura bazy danych}
-\includegraphics[width=\textwidth]{db-schema}
+
 
 \subsubsection{Architektura aplicaji serwerowej}
 \includegraphics[width=\textwidth]{backedn-schema}
@@ -355,6 +366,42 @@ Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytan
 \subsubsection{Komunikcja aplikacji serwerowej i klienckiej}
 \emph{TODO przekleić wszystko ze Słagera xDDDD}
 
+
+\subsection{Baza danych}
+Schemat relacyjnej bazy danych:
+\includegraphics[width=\textwidth]{db-schema}
+
+\subsection{Aplikacja strony serwerowej}
+\subsubsection{Modelowane encje}
+    \paragraph{Timeslot} - możliwy termin wizyty u danego lekarza.\\
+    Nie zawiera informacji czy termin jest zarezerwowany, może być interpretowany jako czas w którym lekarz na pewno jest w pracy \\
+    \includegraphics[width=\textwidth]{TimeSlot}
+    \paragraph{Appointment} - Zarezerwowany termin u wizyty \\
+    Zawiera szczegóły rezerwacji, jak na przykład dane pacjenta czy priorytet wizyty.
+    Zawieta w sobie \emph{TimeSlot} - czyli informację o terminie i lekarzu przyjmującym wizytę \\
+    \includegraphics[width=\textwidth]{Appointment}
+    \paragraph{Doctor} - lekarz \\
+    Encja lekarza odpowiada jednej jego specjalizacji \\
+    \includegraphics[width=\textwidth]{Doctor}
+    \paragraph{Patient} - pacjent \\
+    \includegraphics[width=\textwidth]{Patient}
+    \paragraph{Account} - konto w systemie \\
+    Konto nie opisuje uprawnień ani hasła użytkownika, jest tylko łącznikiem dla endji \\
+    Account zawiera \emph{User} które ma hasło i e-mail użytkownika.
+    \includegraphics[width=\textwidth]{Account}
+    \paragraph{PersonalDetails} - dane osobowe \\
+    Ta encja dotyczy zarówno lekarza i pacjenta \\
+    \includegraphics[width=\textwidth]{PersonalDetails}
+    \paragraph{User} - dane użytkownika \\
+    powiązane z \emph{Account} \\
+    \includegraphics[width=\textwidth]{User}
+    \paragraph{Specialization} - specjalizacja lekarza \\
+    \includegraphics[width=\textwidth]{Specialization}
+\subsubsection{Powiązanie modelowanych encji}
+\paragraph{Wersja zwinięta} - Schemat bez widocznych pól\\
+\includegraphics[width=\textwidth]{java-entities-small}
+\paragraph{Wersja rozwinięta} - Schemat z widocznymi polami \\
+\includegraphics[width=\textwidth]{java-entities-big}
 
 \section{Organizacja pracy}
 %\section{Work organization}
