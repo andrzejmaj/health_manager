@@ -368,10 +368,24 @@ Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytan
 
 
 \subsection{Baza danych}
+Wykorzystano bazę PostgresSQL.
 Schemat relacyjnej bazy danych:
 \includegraphics[width=\textwidth]{db-schema}
 
 \subsection{Aplikacja strony serwerowej}
+\subsubsection{Technologie}
+Wykorzystano język programowania Java, zrębów Spring i Hibernate.
+\paragraph{Spring} pozwala na:
+\begin{itemize}
+    \item odbieranie i wysyłanie zapytań HTTP
+    \item używanie CRUD-owego API do bazy danych
+\end{itemize}
+\paragraph{Hibernate} pozwala na:
+\begin{itemize}
+    \item Utworzenie schematu bazy danych na podstawie klas Java-owych
+    \item serializację i zapis obiektów Java-owych
+    \item odczyt z bazy obiektów Java-owuch
+\end{itemize}
 \subsubsection{Modelowane encje}
     \paragraph{Timeslot} - możliwy termin wizyty u danego lekarza.\\
     Nie zawiera informacji czy termin jest zarezerwowany, może być interpretowany jako czas w którym lekarz na pewno jest w pracy \\
@@ -402,6 +416,67 @@ Schemat relacyjnej bazy danych:
 \includegraphics[width=\textwidth]{java-entities-small}
 \paragraph{Wersja rozwinięta} - Schemat z widocznymi polami \\
 \includegraphics[width=\textwidth]{java-entities-big}
+
+\subsubsection{Obsługa zapytań}
+\paragraph{Schemat} -  
+obsługa zapytań HTTP przychodzących do serwera ma w większości przypadków następujący przebieg (opisany we wstępie):
+\begin{enumerate}
+  \item \emph{Kontroler} odbiera zapytanie HTTP i przekazuje serwisowi
+  \item \emph{Serwis} sprawdza poprawność zapytania i wykonuje pod-zapytania do repozytorium
+  \item \emph{Repozytorium} pobiera potrzebne dane z bazy danych i zwraca serwisowi
+  \item \emph{Serwis} przekształca dane otrzymane od repozytorium w odpowiedź na zapytanie i przekazuje odpowiedź kontrolerowi
+  \item \emph{Kontroler} odsyła odpowiedź po HTTP
+\end{enumerate}
+
+\paragraph{Przykład - getTimeSlotById} - zapytanie o dane \emph{TimeSlot}-u na podstawie jego \emph{ID}
+\includegraphics[width=\textwidth]{timeSlotById}
+
+\paragraph{Przykład - getInIntervalForDoctor} - zapytanie o listę \emph{TimeSlot}-ów dla danego doktora w zadanym przedziale czasownym. \\
+Schemat opisany powyżej jest na tyle ogólny że równie dobrze modeluje prostrze zapytanie \emph{getTimeSlotById} jak i bardziej skomplikowane \emph{getInIntervalForDoctor}. Różnica w implementacji występuje na poziomie \emph{repozytorium}, które musi wykonać odpowiednio inne zapytania do bazy danych i \emph{serwisu} który inaczej sprawdza poprawność danych
+\includegraphics[width=\textwidth]{inIntervalDorDoctor}
+
+\subsection{Aplikacja front-endowa}
+\subsubsection{Technologie}
+\paragraph{Angular 2} - zręby aplikacji przeglądarkowej. Umożliwiają:
+\begin{itemize}
+    \item wysyłanie i odbieranie zapytań HTTP
+    \item dynamiczną zmianę zawartości strony internetowej
+\end{itemize}
+\subsubsection{Serwisy}
+TODO może wypisać wszystkie metody?
+Serwisy służą do wysyłania zapytań HTTP. Ich metody zwracają \emph{Promise}. Serwisy służące rejestracji pacjentów:
+\begin{itemize}
+    \item authentication service
+    \item appointment service
+    \item doctor service
+    \item google calendar service
+    \item patient service
+    \item timeSlot service
+    \item user service
+\end{itemize}
+\paragraph{Zależności między serwisami}{
+ Graf pokazuje których serwisów trzeba użyć any uzyskać całość danych na temat danej encji. \\
+ Na przykład aby uzyskać całość danych na temat \emph{Appointment} trzeba znać \emph{TimeSlot}, \emph{Doctor}-a przyjmującego wizytę i \emph{Patient}-a zapisanego na wizytę.
+ \includegraphics[width=\textwidth]{services-dep}
+}
+
+\subsubsection{Kalendarz terminów}
+Kalendarz jest centralną częścią frontowej części systemu rejestracji
+\paragraph{Diagram zależności} pokazuje wszystkie zależności komponentu kalendarza
+\includegraphics[width=\textwidth]{visitsCalendar_dep}
+\paragraph{Inicjalizacja kalendarza}
+Inicjalizacja wygląda inaczej w zależności od tego kto otwiera widok kalendarza.
+\begin{itemize}
+    \item Pacjent \\
+     \includegraphics[width=\textwidth]{patient-init-cal}
+    \item Doktor \\
+    \includegraphics[width=\textwidth]{doctor-init-cal}
+    \item Recepcjonistka \\
+    \includegraphics[width=\textwidth]{cal-recep-init}
+\end{itemize}
+
+
+
 
 \section{Organizacja pracy}
 %\section{Work organization}
