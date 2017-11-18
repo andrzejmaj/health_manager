@@ -71,6 +71,9 @@ public class FormDataValidator {
             case SELECT:
                 isValid = isSelectFieldValid(value, field);
                 break;
+            case TEXTAREA:
+                isValid = isTextareaValid(value, field);
+                break;
         }
 
 
@@ -128,4 +131,7 @@ public class FormDataValidator {
         return true;
     }
 
+    private Boolean isTextareaValid(String value, FormField field) {
+        return true;
+    }
 }

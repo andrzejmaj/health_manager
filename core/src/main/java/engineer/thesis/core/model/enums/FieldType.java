@@ -7,7 +7,8 @@ public enum FieldType {
     EMAIL("EMAIL"),
     NUMERIC("NUMERIC"),
     INPUT("INPUT"),
-    SELECT("SELECT");
+    SELECT("SELECT"),
+    TEXTAREA("TEXTAREA");
 
     private String value;
 
