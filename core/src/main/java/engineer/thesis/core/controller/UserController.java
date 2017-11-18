@@ -10,7 +10,7 @@ import engineer.thesis.core.security.model.AuthenticationResponse;
 import engineer.thesis.core.security.model.SecurityUser;
 import engineer.thesis.core.security.model.UpdatePasswordRequest;
 import engineer.thesis.core.service.Implementation.PatientService;
-import engineer.thesis.core.service.Implementation.UserService;
+import engineer.thesis.core.service.Interface.IUserService;
 import engineer.thesis.core.utils.MailService;
 import engineer.thesis.core.validator.RegisterUserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class UserController {
 
     private static final String NOT_ALLOWED_MESSAGE = "You are not allowed to perform this operation";
     @Autowired
-    private UserService userService;
+    private IUserService userService;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
