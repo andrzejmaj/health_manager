@@ -1,0 +1,1185 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is Health Manager API\n",
+    "version" : "1.0.0",
+    "title" : "Health Manager",
+    "termsOfService" : "http://swagger.io/terms/",
+    "contact" : {
+      "email" : "andrzejmaj123@gmail.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags" : [ {
+    "name" : "patient",
+    "description" : "Patients' API"
+  }, {
+    "name" : "doctor",
+    "description" : "Doctor's API"
+  }, {
+    "name" : "user",
+    "description" : "User's API"
+  } ],
+  "paths" : {
+    "/users/login" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Logs user into the system",
+        "operationId" : "login",
+        "produces" : [ "text" ],
+        "parameters" : [ {
+          "name" : "Login data",
+          "in" : "body",
+          "description" : "Data used to login user",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AuthenticationRequestDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Authentication token",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Invalid username/password supplied"
+          }
+        }
+      }
+    },
+    "/users/register" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Create user",
+        "description" : "Allowed for anyone.",
+        "operationId" : "createUser",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "Registration data",
+          "description" : "Data necessary to register new user in system",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RegisterRequestDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "User registered successfully",
+            "schema" : {
+              "$ref" : "#/definitions/UserDTO"
+            }
+          },
+          "409" : {
+            "description" : "User with such email already exist"
+          }
+        }
+      }
+    },
+    "/users/{id}" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Get user by id",
+        "description" : "This can only be done by the logged in user with appropriate permissions.",
+        "operationId" : "getUserById",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "User's ID",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/UserDTO"
+            }
+          },
+          "400" : {
+            "description" : "Invalid id supplied"
+          },
+          "404" : {
+            "description" : "User not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "user" ],
+        "summary" : "Updated user",
+        "description" : "This can only be done by the logged in user with appropriate permissions.",
+        "operationId" : "updateUser",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of user that need to be updated",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Updated user object",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserDTO"
+          }
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Invalid user supplied"
+          },
+          "403" : {
+            "description" : "You are not permitted"
+          },
+          "404" : {
+            "description" : "User not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "user" ],
+        "summary" : "Delete user",
+        "description" : "This can only be done by the logged in user with appropriate permissions.",
+        "operationId" : "deleteUser",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of user that needs to be deleted",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Invalid username supplied"
+          },
+          "403" : {
+            "description" : "You are not permitted"
+          },
+          "404" : {
+            "description" : "User not found"
+          }
+        }
+      }
+    },
+    "/users/resetPassword" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Reset user's password",
+        "operationId" : "Reset user's password",
+        "produces" : [ "text" ],
+        "parameters" : [ {
+          "name" : "User's email",
+          "in" : "body",
+          "description" : "User's email",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation. Email has been sent."
+          },
+          "404" : {
+            "description" : "User not found"
+          },
+          "500" : {
+            "description" : "An internal error has occurred."
+          }
+        }
+      }
+    },
+    "/users/{id}/changePassword" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Change user's password",
+        "operationId" : "changePassword",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "User's id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "Change password data",
+          "description" : "Data necessary to change user's password",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UpdatePasswordDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Operation successful. Password has been changed."
+          },
+          "403" : {
+            "description" : "You are not permitted."
+          },
+          "404" : {
+            "description" : "User not found."
+          }
+        }
+      }
+    },
+    "/specializations" : {
+      "get" : {
+        "tags" : [ "specialization" ],
+        "summary" : "Get available specializations",
+        "operationId" : "getAvailabeSpecializations",
+        "produces" : [ "application/json", "application/xml" ],
+        "responses" : {
+          "200" : {
+            "description" : "succesfull operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Specialization"
+              }
+            }
+          },
+          "500" : {
+            "description" : "An internal error has occurred."
+          }
+        }
+      }
+    },
+    "/specializations/{specializationId}" : {
+      "get" : {
+        "tags" : [ "specialization" ],
+        "summary" : "Find specialization by ID",
+        "description" : "Returns a single specialization",
+        "operationId" : "getSpecializationById",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "specializationId",
+          "in" : "path",
+          "description" : "ID of specialization to return",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Specialization"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Specialization not found"
+          }
+        }
+      }
+    },
+    "/specializations/{specializationId}/doctors" : {
+      "get" : {
+        "tags" : [ "specialization" ],
+        "summary" : "Find doctors by specialization ID",
+        "description" : "Returns list of doctors",
+        "operationId" : "getDoctorsBySpecialization",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "specializationId",
+          "in" : "path",
+          "description" : "ID of specialization to return",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/DoctorDTO"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        }
+      }
+    },
+    "/doctors" : {
+      "get" : {
+        "tags" : [ "doctor" ],
+        "summary" : "Get all doctors",
+        "description" : "Returns all doctors",
+        "operationId" : "getAllDoctors",
+        "produces" : [ "application/json", "application/xml" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/DoctorDTO"
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "doctor" ],
+        "summary" : "Create new doctor",
+        "operationId" : "createDoctor",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "Doctor data",
+          "description" : "Doctor data that needs to be added to the system",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/DoctorDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Doctor was succssfully saved in system",
+            "schema" : {
+              "$ref" : "#/definitions/DoctorDTO"
+            }
+          },
+          "403" : {
+            "description" : "You are not permitted."
+          },
+          "405" : {
+            "description" : "Invalid input"
+          },
+          "409" : {
+            "description" : "Patient already exits"
+          }
+        }
+      }
+    },
+    "/doctors/{doctorId}" : {
+      "get" : {
+        "tags" : [ "doctor" ],
+        "summary" : "Find doctor by ID",
+        "description" : "Returns a single doctor",
+        "operationId" : "getDoctorById",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "doctorId",
+          "in" : "path",
+          "description" : "ID of doctor to return",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Doctor"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Doctor not found"
+          }
+        }
+      }
+    },
+    "/doctors/{doctorId}/slots" : {
+      "get" : {
+        "tags" : [ "doctor" ],
+        "summary" : "Find slots",
+        "description" : "Find slots by condition",
+        "operationId" : "findSlots",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "doctorId",
+          "in" : "path",
+          "description" : "ID of doctor to return",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "available",
+          "in" : "query",
+          "description" : "(true|false) Get only available or reserved slots",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "startDate",
+          "in" : "query",
+          "description" : "ISO Date (https://en.wikipedia.org/wiki/ISO_8601) (remenmber to escape '+' with '%2B' in URL",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "endDate",
+          "in" : "query",
+          "description" : "ISO Date (https://en.wikipedia.org/wiki/ISO_8601) (remenmber to escape '+' with '%2B' in URL",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/TimeSlot"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Doctor not found"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "doctor" ],
+        "summary" : "Create or update slots",
+        "description" : "Create or update slots belonging to the given doctor",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "doctorId",
+          "in" : "path",
+          "description" : "ID of doctor which owns the slot",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/TimeSlotDTO"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad request (ex. misformatted date)"
+          },
+          "404" : {
+            "description" : "doctor with given id not found"
+          },
+          "409" : {
+            "description" : "slot id conflict or slot interleaving with other slots of the same doctor"
+          }
+        }
+      }
+    },
+    "/doctors/{doctorId}/slots/{slotId}" : {
+      "get" : {
+        "tags" : [ "doctor" ],
+        "summary" : "Find appointment-slot by ID",
+        "description" : "Returns a single appointment-slot",
+        "operationId" : "getSlotById",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "doctorId",
+          "in" : "path",
+          "description" : "ID of doctor",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "slotId",
+          "in" : "path",
+          "description" : "ID of slot to return",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/TimeSlot"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Doctor not found"
+          }
+        }
+      }
+    },
+    "/patients" : {
+      "post" : {
+        "tags" : [ "patient" ],
+        "summary" : "Create new patient in system",
+        "operationId" : "createPatient",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "Patient data",
+          "description" : "Patient data that needs to be added to the system",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PatientDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Patient was succssfully saved in system",
+            "schema" : {
+              "$ref" : "#/definitions/PatientDTO"
+            }
+          },
+          "403" : {
+            "description" : "You are not permitted."
+          },
+          "405" : {
+            "description" : "Invalid input"
+          },
+          "409" : {
+            "description" : "Patient already exits"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "patient" ],
+        "summary" : "Update an existing patient",
+        "operationId" : "updatePatient",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "patient",
+          "description" : "Patient object that needs to be added to the store",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PatientDTO"
+          }
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Patient not found"
+          },
+          "405" : {
+            "description" : "Invalid input"
+          }
+        }
+      }
+    },
+    "/patients/{id}" : {
+      "get" : {
+        "tags" : [ "patient" ],
+        "description" : "Finds patient data by id",
+        "operationId" : "findById",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of patient",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "resposnes" : {
+          "200" : {
+            "description" : "Operation successful",
+            "schema" : {
+              "$ref" : "#/definitions/PatientDTO"
+            }
+          },
+          "403" : {
+            "description" : "You are not permitted."
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      }
+    },
+    "/patients/{id}/emergencyContact" : {
+      "get" : {
+        "tags" : [ "patient" ],
+        "description" : "Finds patient emergency contact",
+        "operationId" : "getPatientEmergency",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of patient",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Operation successful",
+            "schema" : {
+              "$ref" : "#/definitions/PersonalDetailsDTO"
+            }
+          },
+          "403" : {
+            "description" : "You are not permitted."
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "patient" ],
+        "description" : "Saves patient's emergency contact",
+        "operationId" : "saveEmergencyContact",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of patient",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "Emergency contact data",
+          "in" : "body",
+          "description" : "Emergency contact data",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PersonalDetailsDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Operation successful",
+            "schema" : {
+              "$ref" : "#/definitions/PersonalDetailsDTO"
+            }
+          },
+          "403" : {
+            "description" : "You are not permitted."
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      }
+    },
+    "/patients/findByName" : {
+      "get" : {
+        "tags" : [ "patient" ],
+        "summary" : "Finds patients by names",
+        "description" : "Firstname, lastname can be provided with comma separated strings. Use\\ \\ firstname, lastname.",
+        "operationId" : "findByName",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "names",
+          "in" : "query",
+          "description" : "Names to filter by",
+          "required" : true,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/PatientDTO"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid name value"
+          }
+        }
+      }
+    },
+    "/patients/findByPesel" : {
+      "get" : {
+        "tags" : [ "patient" ],
+        "summary" : "Finds patient by peselNo",
+        "description" : "Returns patient by pesel number",
+        "operationId" : "getPatientByPesel",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "pesel",
+          "in" : "query",
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successfull operation",
+            "schema" : {
+              "$ref" : "#/definitions/PatientDTO"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : null
+        }
+      }
+    },
+    "/patients/{patientId}/appointments" : {
+      "get" : {
+        "tags" : [ "patient", "appointment" ],
+        "summary" : "Lists patient's appointments",
+        "description" : "Returns lists of patient's appointments",
+        "operationId" : "getPatientsAppointments",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "patientId",
+          "in" : "path",
+          "description" : "ID of patient",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/PatientDTO"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "patient", "appointment" ],
+        "summary" : "Create appointment",
+        "description" : "Create new appointment for patient",
+        "operationId" : "createAppointment",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "patient",
+          "description" : "Appointment object that needs to be creted",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Appointment"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Patient"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "patient", "appointment" ],
+        "summary" : "Updates existing appointment",
+        "description" : "Updates data of existing appointment",
+        "operationId" : "updateAppointment",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "patient",
+          "description" : "Appointment object that needs to be updated",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Appointment"
+          }
+        } ]
+      }
+    },
+    "/patients/{patientId}/medicalInformations" : {
+      "get" : {
+        "tags" : [ "patient", "informations" ],
+        "summary" : "Patient's medical informations",
+        "description" : "Returns patient's medical informations",
+        "operationId" : "getPatientsMedicalInformations",
+        "parameters" : [ {
+          "name" : "patientId",
+          "in" : "path",
+          "description" : "ID of patient",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MedicalInformations"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "patient", "medicalInformations" ],
+        "summary" : "Create medical information",
+        "description" : "Create new medical information for patient",
+        "operationId" : "createMedicalInformation",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "patientId",
+          "in" : "path",
+          "description" : "ID of patient",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "medical_information",
+          "description" : "Medical information object that needs to be creted",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/MedicalInformations"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MedicalInformations"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "patient", "appointment" ],
+        "summary" : "Updates existing medical information",
+        "description" : "Updates data of existing medical information",
+        "operationId" : "updateMedicalInformation",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "medical_information",
+          "description" : "Medical information object that needs to be updated",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/MedicalInformations"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MedicalInformations"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "RegisterRequestDTO" : {
+      "type" : "object",
+      "properties" : {
+        "email" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AuthenticationRequestDTO" : {
+      "type" : "object",
+      "properties" : {
+        "email" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        }
+      }
+    },
+    "UserDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "email" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "UserDTO"
+      }
+    },
+    "AccountDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "personalDetails" : {
+          "$ref" : "#/definitions/PersonalDetailsDTO"
+        }
+      }
+    },
+    "PatientDTO" : {
+      "type" : "object",
+      "required" : [ "account" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "account" : {
+          "$ref" : "#/definitions/AccountDTO"
+        }
+      },
+      "xml" : {
+        "name" : "Patient"
+      }
+    },
+    "UpdatePasswordDTO" : {
+      "type" : "object",
+      "required" : [ "passwordCurrent", "passwordConfirmation", "password" ],
+      "properties" : {
+        "passwordCurrent" : {
+          "type" : "string"
+        },
+        "passwordConfirmation" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Specialization" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DoctorDTO" : {
+      "type" : "object",
+      "required" : [ "specialization" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "account" : {
+          "$ref" : "#/definitions/PersonalDetailsDTO"
+        },
+        "specialization" : {
+          "$ref" : "#/definitions/Specialization"
+        }
+      }
+    },
+    "PersonalDetailsDTO" : {
+      "type" : "object",
+      "required" : [ "firstName", "lastName", "pesel", "birthdate", "gender", "phoneNo", "country", "city", "street", "buildingNo", "flatNo" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "firstName" : {
+          "type" : "string",
+          "example" : "Adam"
+        },
+        "lastName" : {
+          "type" : "string",
+          "example" : "Smith"
+        },
+        "gender" : {
+          "type" : "string",
+          "enum" : [ "male", "female", "undefined" ]
+        },
+        "pesel" : {
+          "type" : "string",
+          "example" : "95072111111"
+        },
+        "birthdate" : {
+          "type" : "string",
+          "example" : "2017-07-21"
+        },
+        "country" : {
+          "type" : "string",
+          "example" : "Poland"
+        },
+        "city" : {
+          "type" : "string",
+          "example" : "Chrzanow"
+        },
+        "street" : {
+          "type" : "string",
+          "example" : "Puszkina"
+        },
+        "buildingNo" : {
+          "type" : "integer",
+          "example" : 69
+        },
+        "flatNo" : {
+          "type" : "integer",
+          "example" : 69
+        },
+        "phoneNo" : {
+          "type" : "string",
+          "example" : "+48-700-800-900"
+        }
+      }
+    },
+    "TimeSlot" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "doctorId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "startDateTime" : {
+          "type" : "string",
+          "example" : "2017-01-01T12:00:00"
+        },
+        "endDateTime" : {
+          "type" : "string",
+          "example" : "2017-01-01T12:00:00"
+        }
+      }
+    },
+    "TimeSlotDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "startDateTime" : {
+          "type" : "string",
+          "example" : "2017-01-01 12:00"
+        },
+        "endDateTime" : {
+          "type" : "string",
+          "example" : "2017-01-01 12:05"
+        }
+      }
+    },
+    "Appointment" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "timeSlotId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "patientId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "officeNo" : {
+          "type" : "string",
+          "example" : "64A/5"
+        }
+      }
+    },
+    "MedicalInformations" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "patientId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "allergies" : {
+          "type" : "string",
+          "example" : "Gluten, nuts, paracetamol"
+        },
+        "weight" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 80
+        },
+        "height" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 180
+        },
+        "other_notes" : {
+          "type" : "string",
+          "example" : "Some other notes"
+        }
+      }
+    }
+  },
+  "externalDocs" : {
+    "description" : "Find out more about Swagger",
+    "url" : "http://swagger.io"
+  },
+  "basePath" : "/andrzejmaj/HealthManager/1.0.0",
+  "host" : "virtserver.swaggerhub.com",
+  "schemes" : [ "https" ]
+}

@@ -4,6 +4,11 @@
 \usepackage[usenames, dvipsnames]{color}
 \usepackage{hyperref}
 \usepackage{titlesec}
+\usepackage{wrapfig}
+\usepackage{lipsum}
+\usepackage{float}
+\usepackage{caption}
+
 \setcounter{secnumdepth}{4}
 
 \author{Wojciech Karpiel\\ Michał Hamuda\\ Filip Galas}
@@ -323,31 +328,49 @@ Wykorzystane technologie:
 \subsection{Dziedzina problemu}
 
 \subsubsection{Przeglądarka internetowa}
-Produktem jest przeglądarka internetowa. Przeglądarka to  program komputerowy służący do pobierania i wyświetlania stron internetowych udostępnianych przez serwery WWW\footnote{https://pl.wikipedia.org/wiki/Przeglądarka_internetowa}.
-Owe strony internetowe są tworzone z użyciem HTML-a, CSS-a i JavaScript-a.
-\includegraphics[width=\textwidth]{html-css-js}
-https://melaloo.wordpress.com/2015/07/12/intiwebsites-for-dummies-what-are-html-css-javascript-and-php/
+Produktem jest przeglądarka internetowa. Przeglądarka to  program komputerowy służący do pobierania i wyświetlania stron internetowych udostępnianych przez serwery WWW\footnote{\href{https://pl.wikipedia.org/wiki/Przeglądarka_internetowa}}.
 
-Przeglądarka internetowa pobiera strony internetowe używając protokołu HTTP.
-\includegraphics[width=\textwidth]{http_diagram}
-https://code.tutsplus.com/tutorials/http-headers-for-dummies--net-8039
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{html-css-js} % first figure itself
+        \caption{Strony internetowe są tworzone z użyciem HTML-a, CSS-a i JavaScript-a}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{http_diagram} % second figure itself
+        \caption{Przeglądarka internetowa pobiera strony internetowe używając protokołu HTTP}
+    \end{minipage}
+\end{figure}
 
 
-%%% TODO DIAGRAMY SEKWENCJI (UML!!)
-\subsection{Wstęp do architektury systemu - widok z lotu ptaka}
+\subsection{Wstęp - zarys architektury systemu}
 Na architekturę produktu składa się:
 \begin{itemize}
     \item Aplikacja przeglądarkowa (front-end)
     \item Aplikacja strony serwerowej (back-end)
     \item Baza danych
 \end{itemize}
-Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytania o dane i wysyłanie danych do aplikacji strony serwerowej za pomocą HTTP Api. Strona serwerowa komunikuje się z bazą danych za pomocą JDBC.
-\includegraphics{komunikacja-serwer-klient-okolny}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{komunikacja-serwer-klient-okolny}
+    \caption{Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytania o dane i wysyłanie danych do aplikacji strony serwerowej za pomocą HTTP Api. Strona serwerowa komunikuje się z bazą danych za pomocą JDBC}
+    \label{fig:my_label}
+\end{figure}
 
 
 
-\subsubsection{Architektura aplicaji serwerowej}
-\includegraphics[width=\textwidth]{backedn-schema}
+
+\subsubsection{Zarys architektury aplikacji serwerowej}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=\textwidth]{backedn-schema}
+    \caption{Poglądowy schemat architektury aplikacji serwerowej}
+\end{figure}
+    
 \begin{itemize}
     \item Controller - warstwa odpowiedzialna za odbieranie zapytań HTTP i przetwarzanie ich na obiekty JVM-owe oraz za przetwarzanie odpowiedzi (obiektów JVM-owych) na waidomości HTTP i odsyłanie ich.
     \item Service - warstwa pośrednicząca międzu Controller-em a Repository-em. Przetwarza zapytania otrzymane od Controllera na zapytania dla Repository i przetwarza odpowiedzi od Repository na odpowiedzi dla Controller-a.
@@ -355,22 +378,25 @@ Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytan
     \item Model - wspóny dla wyżej wymienionych warstw sposób reprezentacji encji jako obiektów JVM-kowych, który może być przetworzony na JSON-a (na potrzeby HTTP API) lub repotezentację bazodanową (na potrzeby bazy danych). Umożliwia komunikację pomiędzy Controller-em, Servic-em i Repository-em.
 \end{itemize}
 
-\subsubsection{Architektuwa aplikacji przeglądarkowej}
+\subsubsection{Zarys architektury aplikacji przeglądarkowej}
+\begin{figure}[H]
 \includegraphics[width=\textwidth]{front-schema}
+\caption{Poglądowy schemat architektury aplikacji przeglądarkowej}
+\end{figure}
 \begin{itemize}
     \item Service - serwisy odpowiadają za wysyłanie zapytań do aplikacji serwerowej i odbieranie odpowiedzi
     \item Page - Trasowalna strona wyświatlana użytkownikowi
     \item Component - Strony korzystają z komponentów
 \end{itemize}
 
-\subsubsection{Komunikcja aplikacji serwerowej i klienckiej}
-\emph{TODO przekleić wszystko ze Słagera xDDDD}
 
 
 \subsection{Baza danych}
-Wykorzystano bazę PostgresSQL.
-Schemat relacyjnej bazy danych:
+Wykorzystano bazę PostgresSQL. 
+\begin{figure}[H]
+\caption{Schemat bazy danych jest tworzony ad-hoc przy starcie aplikacji przez \emph{Hibernate}-a}
 \includegraphics[width=\textwidth]{db-schema}
+\end{figure}
 
 \subsection{Aplikacja strony serwerowej}
 \subsubsection{Technologie}
@@ -387,32 +413,48 @@ Wykorzystano język programowania Java, zrębów Spring i Hibernate.
     \item odczyt z bazy obiektów Java-owuch
 \end{itemize}
 \subsubsection{Modelowane encje}
-    \paragraph{Timeslot} - możliwy termin wizyty u danego lekarza.\\
-    Nie zawiera informacji czy termin jest zarezerwowany, może być interpretowany jako czas w którym lekarz na pewno jest w pracy \\
-    \includegraphics[width=\textwidth]{TimeSlot}
-    \paragraph{Appointment} - Zarezerwowany termin u wizyty \\
-    Zawiera szczegóły rezerwacji, jak na przykład dane pacjenta czy priorytet wizyty.
-    Zawieta w sobie \emph{TimeSlot} - czyli informację o terminie i lekarzu przyjmującym wizytę \\
-    \includegraphics[width=\textwidth]{Appointment}
-    \paragraph{Doctor} - lekarz \\
-    Encja lekarza odpowiada jednej jego specjalizacji \\
-    \includegraphics[width=\textwidth]{Doctor}
-    \paragraph{Patient} - pacjent \\
-    \includegraphics[width=\textwidth]{Patient}
-    \paragraph{Account} - konto w systemie \\
-    Konto nie opisuje uprawnień ani hasła użytkownika, jest tylko łącznikiem dla endji \\
-    Account zawiera \emph{User} które ma hasło i e-mail użytkownika.
-    \includegraphics[width=\textwidth]{Account}
-    \paragraph{PersonalDetails} - dane osobowe \\
-    Ta encja dotyczy zarówno lekarza i pacjenta \\
-    \includegraphics[width=\textwidth]{PersonalDetails}
-    \paragraph{User} - dane użytkownika \\
-    powiązane z \emph{Account} \\
-    \includegraphics[width=\textwidth]{User}
-    \paragraph{Specialization} - specjalizacja lekarza \\
-    \includegraphics[width=\textwidth]{Specialization}
+    \paragraph{Timeslot} - możliwy termin wizyty u danego lekarza.
+    \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{TimeSlot}
+    \caption{Nie zawiera informacji czy termin jest zarezerwowany, może być interpretowany jako czas w którym lekarz na pewno jest w pracy}
+    \end{figure}
+    \paragraph{Appointment} - Zarezerwowany termin u wizyty
+    \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{Appointment}
+    \caption{Zawiera szczegóły rezerwacji, jak na przykład dane pacjenta czy priorytet wizyty.
+    Zawiera w sobie \emph{TimeSlot} - czyli informację o terminie i lekarzu przyjmującym wizytę}
+    \end{figure}
+    \paragraph{Doctor} - lekarz 
+    \begin{figure}[H] 
+    \includegraphics[width=0.7\textwidth]{Doctor} 
+    \caption{Encja lekarza odpowiada jednej jego specjalizacji}
+    \end{figure}
+    \paragraph{Patient} - pacjent 
+    \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{Patient}
+    \end{figure}
+    \paragraph{Account} - konto w systemie 
+    \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{Account}
+    \caption{Konto nie opisuje uprawnień ani hasła użytkownika, jest tylko łącznikiem dla encji \\
+    Account zawiera \emph{User} które ma hasło i e-mail użytkownika.}
+    \end{figure}
+    \paragraph{PersonalDetails} - dane osobowe 
+    \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{PersonalDetails}
+        \caption{Ta encja dotyczy zarówno lekarza i pacjenta}
+    \end{figure}
+    \paragraph{User} - dane użytkownika 
+    \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{User}
+    \caption{powiązane z \emph{Account}}
+    \end{figure}
+    \paragraph{Specialization} - specjalizacja lekarza 
+    \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{Specialization}
+    \end{figure}
 \subsubsection{Powiązanie modelowanych encji}
-\paragraph{Wersja zwinięta} - Schemat bez widocznych pól\\
+\paragraph{Wersja zwinięta} - Schemat bez widocznych pól
 \includegraphics[width=\textwidth]{java-entities-small}
 \paragraph{Wersja rozwinięta} - Schemat z widocznymi polami \\
 \includegraphics[width=\textwidth]{java-entities-big}
@@ -443,7 +485,6 @@ Schemat opisany powyżej jest na tyle ogólny że równie dobrze modeluje prostr
     \item dynamiczną zmianę zawartości strony internetowej
 \end{itemize}
 \subsubsection{Serwisy}
-TODO może wypisać wszystkie metody?
 Serwisy służą do wysyłania zapytań HTTP. Ich metody zwracają \emph{Promise}. Serwisy służące rejestracji pacjentów:
 \begin{itemize}
     \item authentication service
@@ -475,8 +516,82 @@ Inicjalizacja wygląda inaczej w zależności od tego kto otwiera widok kalendar
     \includegraphics[width=\textwidth]{cal-recep-init}
 \end{itemize}
 
+%\paragraph{Zapis i modyfikacja danych}
 
 
+\paragraph{Eksport terminów z kalendarza do 'Google Calendar'\footnote{Specyfikacja API znajduje się \href{https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest}{tutaj}}} odbywa się wg schematu
+\begin{enumerate}
+    \item Zaloguj się - użytkownik zostaje przekierowany na stronę logowania Google, po zalogowaniu aplikacja otrzymuje jego token oAuth
+    \item Dodaj wydarzenie do kalendarza
+    \item Wyloguj się - token jest unieważniany
+\end{enumerate}
+
+
+\subsubsection{Formularze}
+Formularze do tworzenia pacjentów, doktorów, terminów wizyt itp. są oparte o komponent \emph{DynamicForm} autorstwa powiązanego zespołu \emph{Health Manager}.
+Ich konfiguracją jest lista JSON-owa. Przykład dla tworzenia dostępnych terminów (\emph{createTimeslot.component.ts})
+\begin{verbatim}
+    [
+        {
+            type: 'select',
+            label: 'Doctor',
+            name: 'doctor',
+            placeholder: 'Select a doctor',
+            options: []
+        },
+        {
+            type: 'date',
+            label: 'Start Date-time',
+            name: 'startDateTime'
+        },
+        {
+            type: 'date',
+            label: 'End Date-time',
+            name: 'endDateTime'
+        },
+        {
+            type: 'checkbox',
+            label: 'Available for self-sign',
+            name: 'availableForSelfSign',
+            value: true
+        },
+        {
+            label: 'Submit',
+            name: 'submit',
+            type: 'button'
+        }
+    ];
+\end{verbatim}
+Każdy obiekt na liście konfigurującej odpowiada jednemu komponentowi do wprowadzania danych. Obiekty listy konfiguracji muszą mieć pola:
+\begin{itemize}
+    \item type - typ komponentu, może przyjmować wartości: 'select', 'date', 'checkbox', 'input', 'button'.
+    \item label - nazwa widocza dla użytkownika, dowolny ciąg znaków
+    \item name - nazwa która będzie identyfikowała komponent w kodzie, niewidoczna dla użytkownika
+    \item value [opcjonalne] - domyślna wartość dla komponentu. Dostępne wartości zależą od rodzaju komponentu
+\end{itemize}
+
+\subsection{Komunikacja aplikacji przeglądarkowej i serwerowej}
+Aplikacja przeglądarkowa i serwerowa komunikują się przez protokół HTTP (sposób nazywany czasem \emph{RESTowym API}. W treści zapytań jest JSON.
+\paragraph{Przykład komunikacji:}{
+\begin{enumerate}
+  \item Lekarz, korzystając z aplikacji klienckiej, wysyła zapytanie o umówiony termin wizyty wysyłając HTTP GET na adres server-addr:8080/appointments/123. "123" to numer identyfikacyjny umówionej wizyty.
+  \item Serwer zwraca odpowiedź
+\begin{verbatim}
+{    
+  id: 123,
+  patientId: 32,
+  timeSlotId: 432,
+  tookPlace: false,
+  officeNumber: 10,
+  data: "Podejrzenie shizofrenii bezobjawowej!",
+  priority: LOW
+}
+\end{verbatim}
+\end{enumerate}
+
+
+Wykaz formatu zapytań i odpowiedzi znajduje się w załączniku
+}
 
 \section{Organizacja pracy}
 %\section{Work organization}
@@ -546,7 +661,7 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     \item Połączenie z siecią komuterową w której znajdują się użytkownicy
     \item Java Runtime Environment w wersi 8 lub późniejszej (na przykład \href{https://www.java.com/pl/download/manual.jsp}{JRE firmy Oracle}
     \item Baza danych PostgreSQL
-    \item Serwer HTTP (TODO)
+    \item Serwer HTTP Tomcat
 \end{itemize}
 
 \subsubsection{Wymagania techniczne dla programisty}
