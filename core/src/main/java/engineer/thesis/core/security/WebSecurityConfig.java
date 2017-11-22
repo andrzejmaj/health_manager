@@ -4,6 +4,7 @@ import engineer.thesis.core.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -59,9 +60,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // change later to some variables
                 .antMatchers("/admin/**")
                     .hasRole("PATIENT")
-                .antMatchers("/medcom/**")
-                    //.hasRole("DOCTOR")
+
+                .antMatchers(HttpMethod.OPTIONS, "/medcom/**")
                     .permitAll()
+                .antMatchers("/medcom/**")
+                    .hasRole("DOCTOR")
+
                 .antMatchers(
                         "/users/register",
                         "/users/login",
