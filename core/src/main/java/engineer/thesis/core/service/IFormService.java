@@ -11,13 +11,11 @@ import java.util.List;
 @Service
 public interface IFormService {
 
-    FormDTO getFormById(Long id);
+    FormDTO getFormById(Long id) throws NoSuchElementExistsException;
 
     List<FormDTO> getAllForms();
 
     List<FormDTO> getFormsByName(String name);
-
-    List<FormDTO> getFormsByOwnerId(Long id);
 
     FormDTO saveForm(FormDTO formDTO) throws NoSuchElementExistsException;
 

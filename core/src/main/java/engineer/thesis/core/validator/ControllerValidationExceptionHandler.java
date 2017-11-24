@@ -1,5 +1,6 @@
 package engineer.thesis.core.validator;
 
+import engineer.thesis.core.exception.NoContent;
 import engineer.thesis.core.exception.PasswordNotValidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -29,4 +30,11 @@ public class ControllerValidationExceptionHandler {
     String processPasswordException(PasswordNotValidException ex) {
         return ex.getMessage();
     }
+
+    @ExceptionHandler(NoContent.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    void proccessNoContent() {
+    }
+
 }

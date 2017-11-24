@@ -1,6 +1,5 @@
-package engineer.thesis.core.model;
+package engineer.thesis.core.model.entity;
 
-import engineer.thesis.core.model.entity.Form;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +22,9 @@ public class DefaultValuesSet {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "name")
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "form_id")

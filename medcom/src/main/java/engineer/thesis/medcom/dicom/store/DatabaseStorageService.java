@@ -85,7 +85,7 @@ public class DatabaseStorageService {
 
         // instance
         Instance instanceEntity = instanceRepository.findOne(dicomData.getInstance().getInstanceUID());
-        if(instanceEntity != null)
+        if (instanceEntity != null)
             logger.warn(String.format("instance '%s' already persisted", dicomData.getInstance().getInstanceUID()));
         instanceEntity = mergeEntity(instanceEntity, Instance.class, dicomData.getInstance(), DicomInstance.class);
 

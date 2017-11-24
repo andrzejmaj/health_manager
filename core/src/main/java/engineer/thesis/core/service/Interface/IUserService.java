@@ -2,12 +2,14 @@ package engineer.thesis.core.service.Interface;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
+import engineer.thesis.core.model.dto.RegisterRequestDTO;
+import engineer.thesis.core.model.dto.ResetPasswordDTO;
+import engineer.thesis.core.model.dto.UserDTO;
 import engineer.thesis.core.model.entity.User;
 import engineer.thesis.core.model.entity.UserRole;
-import engineer.thesis.core.model.dto.RegisterRequestDTO;
-import engineer.thesis.core.model.dto.UserDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -24,4 +26,6 @@ public interface IUserService {
     String updateUserEmail(Long id, String newEmail);
 
     Optional<User> findByEmail(String email);
+
+    ResetPasswordDTO resetUserPassword(String email) throws NoSuchElementException;
 }

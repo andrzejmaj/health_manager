@@ -18,7 +18,6 @@ public class FormFieldDTO {
     private FieldType type;
     @NotNull
     private String name;
-    @NotNull
     private Boolean isRequired;
     private Boolean isEditable;
     private String label;

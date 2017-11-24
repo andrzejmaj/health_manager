@@ -43,7 +43,7 @@ public class ModalitiesController {
     public void deleteModality(@PathVariable String aet) {
         modalitiesService.deleteModality(aet);
     }
-    
+
 
     @ExceptionHandler(ModalityNotFoundException.class) // TODO global exception handler
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

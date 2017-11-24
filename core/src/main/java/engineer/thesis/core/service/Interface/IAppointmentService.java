@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public interface IAppointmentService {
 
-	AppointmentDTO getById(long id) throws NoSuchElementExistsException;
+    AppointmentDTO getById(long id) throws NoSuchElementExistsException;
 
 	AppointmentDTO save(AppointmentDTO appointmentDTO, long patientId);
 

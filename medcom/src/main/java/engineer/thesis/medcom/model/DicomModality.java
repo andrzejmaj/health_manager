@@ -45,6 +45,10 @@ public class DicomModality extends DicomObject {
         setFields();
     }
 
+    public static DicomModality.Builder builder() {
+        return new DicomModality.Builder();
+    }
+
     @Override
     public void lazyMerge(DicomObject other) {
         if (!(other instanceof DicomModality))
@@ -65,11 +69,6 @@ public class DicomModality extends DicomObject {
         this.setRequiredField(Tag.Modality, this::setType);
         this.setOptionalField(Tag.StationName, this::setStationName);
     }
-
-    public static DicomModality.Builder builder() {
-        return new DicomModality.Builder();
-    }
-
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Builder extends DicomObjectBuilder<DicomModality> {

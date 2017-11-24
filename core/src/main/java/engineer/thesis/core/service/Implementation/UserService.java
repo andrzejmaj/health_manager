@@ -3,21 +3,23 @@ package engineer.thesis.core.service.Implementation;
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.PasswordNotValidException;
 import engineer.thesis.core.exception.TokenExpiredException;
-import engineer.thesis.core.model.entity.*;
 import engineer.thesis.core.model.dto.RegisterRequestDTO;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
 import engineer.thesis.core.model.dto.UserDTO;
+import engineer.thesis.core.model.entity.*;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.PasswordResetTokenRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.PasswordResetToken;
+import engineer.thesis.core.service.Interface.IAccountService;
 import engineer.thesis.core.service.Interface.IUserService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.core.utils.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -44,7 +46,7 @@ public class UserService implements IUserService {
     private DoctorRepository doctorRepository;
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     @Autowired
     private MailService mailService;
@@ -53,6 +55,7 @@ public class UserService implements IUserService {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
 
+    @Transactional(rollbackFor = AlreadyExistsException.class)
     @Override
     public void registerUserByRole(RegisterRequestDTO request, UserRole userRole, Boolean isOnBehalf) throws AlreadyExistsException {
 
@@ -164,6 +167,7 @@ public class UserService implements IUserService {
         return "Email updated successfully";
     }
 
+    @Override
     public ResetPasswordDTO resetUserPassword(String email) throws NoSuchElementException {
 
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));

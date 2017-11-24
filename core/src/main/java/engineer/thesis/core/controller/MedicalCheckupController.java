@@ -19,38 +19,22 @@ public class MedicalCheckupController {
     @Autowired
     private IMedicalCheckupService medicalCheckupService;
 
-    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS, method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(@PathVariable Long patientId) {
-        try {
-            return new ResponseEntity<>(medicalCheckupService.getPatientCheckups(patientId), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-//    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS_BY_NAME, method = RequestMethod.GET)
-//    public ResponseEntity<?> getByName(@PathVariable Long patientId) {
-//        try {
-//            return new ResponseEntity<>(medicalCheckupService.getPatientCheckups(patientId), HttpStatus.OK);
-//        } catch (NoSuchElementExistsException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
-//    }
-
     @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS, method = RequestMethod.POST)
-    public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Valid MedicalCheckupDTO medicalCheckupDTO) {
+    public ResponseEntity<?> save(@RequestBody @Valid MedicalCheckupDTO medicalCheckupDTO) {
         try {
-            return new ResponseEntity<>(medicalCheckupService.saveMedicalCheckup(patientId, medicalCheckupDTO), HttpStatus.OK);
+            return new ResponseEntity<>(medicalCheckupService.saveMedicalCheckup(medicalCheckupDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (DataIntegrityException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
 
-    @RequestMapping(path = RequestMappings.CHECKUP.PATIENT_CHECKUPS, method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@PathVariable Long patientId, @Validated(PutValidationGroup.class) @RequestBody MedicalCheckupDTO medicalCheckupDTO) {
+    @RequestMapping(path = RequestMappings.CHECKUP.CHECKUP_ID, method = RequestMethod.PUT)
+    public ResponseEntity<?> update(@Validated(PutValidationGroup.class) @RequestBody MedicalCheckupDTO medicalCheckupDTO, @PathVariable Long id) {
         try {
-            return new ResponseEntity<>(medicalCheckupService.updateMedicalCheckup(patientId, medicalCheckupDTO), HttpStatus.OK);
+            return new ResponseEntity<>(medicalCheckupService.updateMedicalCheckup(id, medicalCheckupDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (DataIntegrityException e) {
@@ -62,7 +46,7 @@ public class MedicalCheckupController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             medicalCheckupService.delete(id);
-            return new  ResponseEntity<>(true, HttpStatus.OK);
+            return new ResponseEntity<>("Successfully deleted checkup" + id, HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

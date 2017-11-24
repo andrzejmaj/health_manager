@@ -28,17 +28,16 @@ public class FormController {
 
     @RequestMapping(path = RequestMappings.FORMS.FORM, method = RequestMethod.GET)
     public ResponseEntity<?> getForm(@PathVariable Long id) {
-        return new ResponseEntity<Object>(formService.getFormById(id), HttpStatus.OK);
+        try {
+            return new ResponseEntity<Object>(formService.getFormById(id), HttpStatus.OK);
+        } catch (NoSuchElementExistsException e) {
+            return new ResponseEntity<Object>(e.getMessage(), HttpStatus.OK);
+        }
     }
 
-    @RequestMapping(path = RequestMappings.FORMS.FORMS_NAME, method = RequestMethod.GET)
-    public ResponseEntity<?> getFormsByName(@PathVariable String name) {
+    @RequestMapping(path = RequestMappings.FORMS.FORMS, method = RequestMethod.GET, params = "name")
+    public ResponseEntity<?> getFormsByName(@RequestParam String name) {
         return new ResponseEntity<Object>(formService.getFormsByName(name), HttpStatus.OK);
-    }
-
-    @RequestMapping(path = RequestMappings.FORMS.FORMS_OWNER_ID, method = RequestMethod.GET)
-    public ResponseEntity<?> getFormsByOwnerId(@PathVariable Long id) {
-        return new ResponseEntity<Object>(formService.getFormsByOwnerId(id), HttpStatus.OK);
     }
 
     @RequestMapping(path = RequestMappings.FORMS.FORMS, method = RequestMethod.POST)

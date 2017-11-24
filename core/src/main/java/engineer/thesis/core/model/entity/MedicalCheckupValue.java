@@ -1,6 +1,5 @@
 package engineer.thesis.core.model.entity;
 
-import engineer.thesis.core.model.FormFieldData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hm_medical_checkups_values", schema = "hmanager")
-public class MedicalCheckupValue implements FormFieldData {
+public class MedicalCheckupValue {
 
     @Id
     @Column(name = "id", nullable = false)

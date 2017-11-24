@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class FormFieldDefaultValueDTO {
     @NotNull
-    private Long formFieldId;
+    private String name;
     @NotNull
     private String value;
 }

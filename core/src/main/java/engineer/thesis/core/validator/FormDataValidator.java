@@ -1,9 +1,6 @@
 package engineer.thesis.core.validator;
 
-import engineer.thesis.core.model.entity.Form;
-import engineer.thesis.core.model.entity.FormAvailableValue;
-import engineer.thesis.core.model.entity.FormField;
-import engineer.thesis.core.model.FormFieldData;
+import engineer.thesis.core.model.entity.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -21,8 +18,12 @@ public class FormDataValidator {
 
     private String errorMessage;
 
-    public Boolean isDataValid(List<? extends FormFieldData> dataList, Form form) {
+    public Boolean isDataValid(List<MedicalCheckupValue> dataList, Form form) {
         return dataList.stream().noneMatch(entry -> isEntryValid(entry.getValue(), getFormField(entry.getFormFieldId(), form)).equals(false));
+    }
+
+    public Boolean isDataValidDefault(List<FormFieldDefaultValue> dataList, Form form) {
+        return dataList.stream().noneMatch(entry -> isEntryValid(entry.getValue(), getFormField(entry.getName(), form)).equals(false));
     }
 
     private Boolean isEntryValid(String value, Optional<FormField> formField) {
@@ -36,7 +37,7 @@ public class FormDataValidator {
 
         FormField field = formField.get();
 
-        if (field.getIsRequired() && value.isEmpty()) {
+        if (Boolean.TRUE.equals(field.getIsRequired()) && value.isEmpty()) {
             setErrorMessage("Field " + field.getName() + " is required");
             return false;
         }
@@ -44,17 +45,21 @@ public class FormDataValidator {
         List<FormAvailableValue> fieldAvailableValues = field.getFieldAvailableValues();
 
         if (fieldAvailableValues != null && !fieldAvailableValues.isEmpty()) {
-            return fieldAvailableValues.stream().noneMatch(formAvailableValue -> formAvailableValue.getValue().equals(value));
+            boolean invalid = fieldAvailableValues.stream().noneMatch(formAvailableValue -> formAvailableValue.getValue().equals(value));
+            if (invalid) {
+                setErrorMessage(value + " is not applicable for field " + field.getName());
+            }
+            return !invalid;
         }
 
-        switch (field.getType().getType()) {
+        switch (field.getType()) {
             case NUMERIC:
                 isValid = isNumericFieldValid(value, field);
                 break;
             case DATE:
                 isValid = isDateFieldValid(value);
                 break;
-            case TEXTFIELD:
+            case INPUT:
                 isValid = isTextFieldValid(value, field);
                 break;
             case CHECKBOX:
@@ -65,6 +70,9 @@ public class FormDataValidator {
                 break;
             case SELECT:
                 isValid = isSelectFieldValid(value, field);
+                break;
+            case TEXTAREA:
+                isValid = isTextareaValid(value, field);
                 break;
         }
 
@@ -78,6 +86,10 @@ public class FormDataValidator {
 
     private Optional<FormField> getFormField(Long fieldId, Form form) {
         return form.getFormFields().stream().filter(field -> Objects.equals(field.getId(), fieldId)).findFirst();
+    }
+
+    private Optional<FormField> getFormField(String name, Form form) {
+        return form.getFormFields().stream().filter(field -> Objects.equals(field.getName(), name)).findFirst();
     }
 
     private Boolean isCheckboxValid(String value, FormField field) {
@@ -119,4 +131,7 @@ public class FormDataValidator {
         return true;
     }
 
+    private Boolean isTextareaValid(String value, FormField field) {
+        return true;
+    }
 }

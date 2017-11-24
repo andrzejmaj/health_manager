@@ -2,11 +2,12 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
+import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.model.entity.Account;
 import engineer.thesis.core.model.entity.PersonalDetails;
 import engineer.thesis.core.model.entity.User;
-import engineer.thesis.core.model.dto.PersonalDetailsDTO;
 import engineer.thesis.core.repository.AccountRepository;
+import engineer.thesis.core.repository.PersonalDetailsRepository;
 import engineer.thesis.core.service.Interface.IAccountService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AccountService implements IAccountService {
@@ -31,18 +30,8 @@ public class AccountService implements IAccountService {
     @Autowired
     private CustomObjectMapper objectMapper;
 
-    @Override
-    public String deleteAccount(UUID uuid) throws NoSuchElementExistsException {
-        Account account = checkExistence(uuid);
-        accountRepository.delete(account);
-        return "Account " + uuid + " deleted successfully";
-    }
-
-    @Override
-    public PersonalDetailsDTO getPersonalDetails(UUID uuid) throws NoSuchElementExistsException {
-        Account account = checkExistence(uuid);
-        return objectMapper.convert(account.getPersonalDetails(), PersonalDetailsDTO.class);
-    }
+    @Autowired
+    private PersonalDetailsRepository personalDetailsRepository;
 
     @Override
     public PersonalDetailsDTO getMyPersonalDetails(Long id) throws NoSuchElementExistsException {
@@ -54,22 +43,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public PersonalDetailsDTO savePersonalDetails(UUID uuid, PersonalDetailsDTO personalDetailsDTO) {
-
-        Optional<Account> personalAccount = Optional.ofNullable(accountRepository.findByUuid(uuid));
-
-        if (!personalAccount.isPresent()) {
-            throw new NoSuchElementException("Account not found");
-        }
-
-        personalDetailsDTO.setId(null);
-        personalAccount.get().setPersonalDetails(objectMapper.convert(personalDetailsDTO, PersonalDetails.class));
-
-        return objectMapper.convert(accountRepository.save(personalAccount.get()).getPersonalDetails(), PersonalDetailsDTO.class);
-    }
-
-    @Override
-    public PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException, AlreadyExistsException {
+    public PersonalDetailsDTO saveMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws AlreadyExistsException {
         Account account = accountRepository.findByUser_Id(id);
 
         if (account.getPersonalDetails() != null) {
@@ -83,15 +57,27 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public FileSystemResource getProfilePicture(UUID uuid) throws NoSuchElementExistsException {
-        Account a = checkExistence(uuid);
+    public PersonalDetailsDTO updateMyPersonalDetails(Long id, PersonalDetailsDTO personalDetails) throws NoSuchElementExistsException {
+        Account account = accountRepository.findByUser_Id(id);
+        if (account.getPersonalDetails() == null) {
+            throw new NoSuchElementExistsException("Personal Details already exist");
+        }
+
+        personalDetails.setId(account.getPersonalDetails().getId());
+
+        return objectMapper.convert(personalDetailsRepository.save(objectMapper.convert(personalDetails, PersonalDetails.class)), PersonalDetailsDTO.class);
+    }
+
+    @Override
+    public FileSystemResource getProfilePicture(Long id) throws NoSuchElementExistsException {
+        Account a = checkExistence(id);
         return fileService.findProfilePicture(a.getId());
     }
 
     @Override
-    public String saveProfilePicture(UUID uuid, MultipartFile userImage) throws NoSuchElementExistsException {
+    public String saveProfilePicture(Long id, MultipartFile userImage) throws NoSuchElementExistsException {
 
-        Account account = checkExistence(uuid);
+        Account account = checkExistence(id);
 
         String imagePath = fileService.saveProfilePicture(account.getId(), userImage);
 
@@ -112,7 +98,6 @@ public class AccountService implements IAccountService {
 
         Account account = new Account();
         account.setCreatedDate(new Date());
-        account.setUuid(UUID.randomUUID());
         account.setPersonalDetails(personalDetails);
         account.setUser(user);
         return account;
@@ -124,8 +109,8 @@ public class AccountService implements IAccountService {
         return account != null;
     }
 
-    private Account checkExistence(UUID uuid) throws NoSuchElementExistsException {
-        return Optional.ofNullable(accountRepository.findByUuid(uuid)).orElseThrow(() -> new NoSuchElementExistsException("Account doesn't exist"));
+    private Account checkExistence(Long id) throws NoSuchElementExistsException {
+        return Optional.ofNullable(accountRepository.findOne(id)).orElseThrow(() -> new NoSuchElementExistsException("Account doesn't exist"));
     }
 
 }

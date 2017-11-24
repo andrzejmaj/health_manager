@@ -13,22 +13,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
+import javax.validation.Valid;
 
 @RestController
 public class AccountController {
 
     @Autowired
     private IAccountService accountService;
-
-    @RequestMapping(path = RequestMappings.ACCOUNTS.PERS_DETAILS, method = RequestMethod.GET)
-    public ResponseEntity<?> getPersonalDetails(@PathVariable UUID uuid) {
-        try {
-            return new ResponseEntity<>(accountService.getPersonalDetails(uuid), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
 
     @RequestMapping(path = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.GET)
     public ResponseEntity<?> getMyPersonalDetails() {
@@ -39,40 +30,37 @@ public class AccountController {
         }
     }
 
-    @RequestMapping(value = {RequestMappings.ACCOUNTS.PERS_DETAILS, RequestMappings.ACCOUNTS.PERS_DETAILS}, method = RequestMethod.POST)
-    public ResponseEntity<?> savePersonalDetails(@PathVariable UUID uuid,
-                                                 @RequestBody PersonalDetailsDTO personalDetails) {
-        try {
-            return new ResponseEntity<>(accountService.savePersonalDetails(uuid, personalDetails), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(value = {RequestMappings.ACCOUNTS.PERS_DETAILS, RequestMappings.ACCOUNTS.MY_PERS_DETAILLS}, method = RequestMethod.POST)
-    public ResponseEntity<?> saveMyPersonalDetails(@RequestBody PersonalDetailsDTO personalDetails) {
+    @RequestMapping(value = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.POST)
+    public ResponseEntity<?> saveMyPersonalDetails(@RequestBody @Valid PersonalDetailsDTO personalDetails) {
         try {
             return new ResponseEntity<>(accountService.saveMyPersonalDetails(getCurrentUser().getId(), personalDetails), HttpStatus.OK);
-        } catch (NoSuchElementExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
-    @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS_PICTURE, method = RequestMethod.GET)
-    public ResponseEntity<?> getProfilePicture(@PathVariable UUID uuid) {
+    @RequestMapping(value = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMyPersonalDetails(@RequestBody @Valid PersonalDetailsDTO personalDetails) {
         try {
-            return new ResponseEntity<>(accountService.getProfilePicture(uuid), HttpStatus.OK);
+            return new ResponseEntity<>(accountService.updateMyPersonalDetails(getCurrentUser().getId(), personalDetails), HttpStatus.OK);
+        } catch (NoSuchElementExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS_PICTURE, method = RequestMethod.GET)
+    public ResponseEntity<?> getProfilePicture(@PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(accountService.getProfilePicture(id), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @RequestMapping(path = RequestMappings.ACCOUNTS.ACCOUNTS_PICTURE, method = RequestMethod.POST)
-    public ResponseEntity<?> saveProfilePicture(@PathVariable UUID uuid, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> saveProfilePicture(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
-            return new ResponseEntity<>(accountService.saveProfilePicture(uuid, file), HttpStatus.OK);
+            return new ResponseEntity<>(accountService.saveProfilePicture(id, file), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

@@ -24,3 +24,9 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+out/
+core/out/
+medcom/out/
+src/main/resources/test4.xml
+src/main/resources/oauth.yml

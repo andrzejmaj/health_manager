@@ -1,6 +1,5 @@
 package engineer.thesis.core.model.entity;
 
-import engineer.thesis.core.model.EmergencyContact;
 import engineer.thesis.core.model.entity.medcom.Study;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
@@ -14,7 +13,7 @@ import java.util.List;
 @Data
 @Entity
 @Builder
-@EqualsAndHashCode(exclude = {"medicalInformation","medicalHistories"})
+@EqualsAndHashCode(exclude = {"medicalInformation", "medicalHistories"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hm_patient", schema = "hmanager")

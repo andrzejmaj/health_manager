@@ -1,7 +1,10 @@
 package engineer.thesis.medcom.model;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import engineer.thesis.medcom.model.core.*;
+import engineer.thesis.medcom.model.core.AttributeModule;
+import engineer.thesis.medcom.model.core.DicomAttribute;
+import engineer.thesis.medcom.model.core.DicomObject;
+import engineer.thesis.medcom.model.core.DicomObjectBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,13 +37,13 @@ public class DicomStudy extends DicomObject {
     // non attribute
     private String patientPesel;
 
-    public static DicomStudy.Builder builder() {
-        return new DicomStudy.Builder();
-    }
-
     private DicomStudy(Set<DicomAttribute> attributes) {
         super(attributes);
         setFields();
+    }
+
+    public static DicomStudy.Builder builder() {
+        return new DicomStudy.Builder();
     }
 
     @Override

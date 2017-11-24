@@ -1,10 +1,6 @@
 package engineer.thesis.medcom.services
 
-import engineer.thesis.medcom.model.AttributeModules
-import engineer.thesis.medcom.model.DicomModality
-import engineer.thesis.medcom.model.DicomPatient
-import engineer.thesis.medcom.model.DicomSeries
-import engineer.thesis.medcom.model.DicomStudy
+import engineer.thesis.medcom.model.*
 import engineer.thesis.medcom.model.core.AttributeModule
 import engineer.thesis.medcom.model.core.DicomAttribute
 import engineer.thesis.medcom.model.core.DicomAttributeTag
