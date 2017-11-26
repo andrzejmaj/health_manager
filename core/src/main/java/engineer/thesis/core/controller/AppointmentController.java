@@ -1,17 +1,19 @@
 package engineer.thesis.core.controller;
 
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.entity.Appointment;
 import engineer.thesis.core.model.dto.AppointmentDTO;
+import engineer.thesis.core.model.entity.Appointment;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.service.Interface.IAppointmentService;
+import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @RestController
 public class AppointmentController {
@@ -22,6 +24,8 @@ public class AppointmentController {
     private PatientRepository patientRepository;
     @Autowired
     private IAppointmentService appointmentService;
+    @Autowired
+    private CustomObjectMapper customObjectMapper;
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/appointments/byTimeSlot/{timeSlotId}")
@@ -49,7 +53,10 @@ public class AppointmentController {
             return new ResponseEntity<>("Patient with id " + patientId + "not found", HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(appointmentRepository.findByPatientId(patientId), HttpStatus.OK);
+        return new ResponseEntity<>(appointmentRepository.findByPatientId(patientId)
+                .stream()
+                .map(appointment -> customObjectMapper.convert(appointment, AppointmentDTO.class))
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/appointments/{appointmentId}")

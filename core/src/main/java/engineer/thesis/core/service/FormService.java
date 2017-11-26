@@ -2,14 +2,11 @@ package engineer.thesis.core.service;
 
 import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.DefaultValuesSet;
-import engineer.thesis.core.model.entity.Doctor;
-import engineer.thesis.core.model.entity.Form;
-import engineer.thesis.core.model.FormFieldDefaultValue;
 import engineer.thesis.core.model.dto.DefaultValuesSetDTO;
 import engineer.thesis.core.model.dto.FormDTO;
+import engineer.thesis.core.model.entity.DefaultValuesSet;
+import engineer.thesis.core.model.entity.Form;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
-import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.core.validator.FormDataValidator;
@@ -36,42 +33,29 @@ public class FormService implements IFormService {
     @Autowired
     private FormDataValidator formDataValidator;
 
-    @Autowired
-    private DoctorRepository doctorRepository;
-
     @Override
-    public FormDTO getFormById(Long id) {
-        Optional<Form> form = Optional.ofNullable(formRepository.findOne(id));
+    public FormDTO getFormById(Long id) throws NoSuchElementExistsException {
+        Optional<Form> form = Optional.ofNullable(formRepository.findByIdAndActiveIsTrue(id));
         if (!form.isPresent()) {
-            throw new NoSuchElementException("Form doesn't exist");
+            throw new NoSuchElementExistsException("Form doesn't exist");
         }
         return objectMapper.convert(form.get(), FormDTO.class);
     }
 
     @Override
     public List<FormDTO> getAllForms() {
-        return formRepository.findAll().stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findAllByActiveIsTrue().stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public List<FormDTO> getFormsByName(String name) {
-        return formRepository.findByNameAndActiveIsTrue(name).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FormDTO> getFormsByOwnerId(Long id) {
-        return formRepository.findByOwner_IdAndActiveIsTrue(id).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findByNameContainingIgnoreCaseAndActiveIsTrue(name).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public FormDTO saveForm(FormDTO formDTO) throws NoSuchElementExistsException {
-        Doctor doctor = doctorRepository.findOne(formDTO.getOwnerId());
-        if (doctor == null) {
-            throw new NoSuchElementExistsException("Doctor doesn't exist");
-        }
-
+        formDTO.setId(null);
         Form form = convertFromDTO(formDTO);
-        form.setOwner(doctor);
         return objectMapper.convert(formRepository.save(form), FormDTO.class);
     }
 
@@ -84,11 +68,7 @@ public class FormService implements IFormService {
         form.setActive(false);
         formRepository.save(form);
 
-        formDTO.setId(null);
-        Form updatedForm = convertFromDTO(formDTO);
-        updatedForm.setOwner(form.getOwner());
-
-        return objectMapper.convert(formRepository.save(updatedForm), FormDTO.class);
+        return saveForm(formDTO);
     }
 
     @Override
@@ -102,9 +82,11 @@ public class FormService implements IFormService {
 
     @Override
     public List<DefaultValuesSetDTO> getDefaultValues(Long id) throws NoSuchElementExistsException {
-        if (!formRepository.exists(id)) {
+        Form form = formRepository.findOne(id);
+        if (form == null) {
             throw new NoSuchElementExistsException("Form doesn't exist");
         }
+
         return defaultValuesSetRepository.findAllByForm_Id(id).stream().map(set -> objectMapper.convert(set, DefaultValuesSetDTO.class)).collect(Collectors.toList());
     }
 
@@ -118,7 +100,7 @@ public class FormService implements IFormService {
         defaultValuesSetDTO.setFormId(id);
         DefaultValuesSet defaultValuesSet = objectMapper.convert(defaultValuesSetDTO, DefaultValuesSet.class);
 
-        if (!formDataValidator.isDataValid(defaultValuesSet.getDefaultValues(), form)) {
+        if (!formDataValidator.isDataValidDefault(defaultValuesSet.getDefaultValues(), form)) {
             throw new DataIntegrityException(formDataValidator.getErrorMessage());
         }
 
@@ -135,22 +117,19 @@ public class FormService implements IFormService {
             throw new NoSuchElementExistsException("Values set doesn't exist");
         }
 
-        if (!defaultValuesSet.getForm().getId().equals(id)) {
-            throw new DataIntegrityException("Form id in set and path doesn't match");
-        }
+        defaultValuesSetDTO.setFormId(defaultValuesSet.getForm().getId());
+        DefaultValuesSet newDefaultValuesSet = objectMapper.convert(defaultValuesSetDTO, DefaultValuesSet.class);
 
-        List<FormFieldDefaultValue> formFieldDefaultValues = defaultValuesSetDTO.getDefaultValues().stream()
-                .map(dto -> objectMapper.convert(dto, FormFieldDefaultValue.class).builderSetDefaultValuesSet(defaultValuesSet))
-                .collect(Collectors.toList());
-
-        if (!formDataValidator.isDataValid(formFieldDefaultValues, defaultValuesSet.getForm())) {
+        if (!formDataValidator.isDataValidDefault(newDefaultValuesSet.getDefaultValues(), defaultValuesSet.getForm())) {
             throw new DataIntegrityException(formDataValidator.getErrorMessage());
         }
 
         defaultValuesSet.getDefaultValues().clear();
-        defaultValuesSet.getDefaultValues().addAll(formFieldDefaultValues);
+        defaultValuesSet.getDefaultValues().addAll(newDefaultValuesSet.getDefaultValues());
+        newDefaultValuesSet.setDefaultValues(defaultValuesSet.getDefaultValues());
+        newDefaultValuesSet.setForm(defaultValuesSet.getForm());
 
-        return objectMapper.convert(defaultValuesSetRepository.save(defaultValuesSet), DefaultValuesSetDTO.class);
+        return objectMapper.convert(defaultValuesSetRepository.save(newDefaultValuesSet), DefaultValuesSetDTO.class);
     }
 
     @Override

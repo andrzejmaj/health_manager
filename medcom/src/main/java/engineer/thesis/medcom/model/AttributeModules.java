@@ -14,7 +14,9 @@ import org.dcm4che3.data.Tag;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AttributeModules {
 
-    /** patient level **/
+    /**
+     * patient level
+     **/
     public final static AttributeModule patientModule = AttributeModule.of(
             Tag.PatientID,
             Tag.OtherPatientIDs,
@@ -37,7 +39,9 @@ public final class AttributeModules {
             Tag.ClinicalTrialSubjectReadingID
     );
 
-    /** modality level **/
+    /**
+     * modality level
+     **/
     public final static AttributeModule generalEquipmentModule = AttributeModule.of(
             Tag.Manufacturer,
             Tag.InstitutionName,
@@ -73,7 +77,9 @@ public final class AttributeModules {
             Tag.SourceApplicationEntityTitle
     );
 
-    /** study level **/
+    /**
+     * study level
+     **/
     public final static AttributeModule generalStudyModule = AttributeModule.of(
             Tag.StudyInstanceUID,
             Tag.StudyID,
@@ -104,7 +110,9 @@ public final class AttributeModules {
             Tag.ClinicalTrialTimePointDescription
     );
 
-    /** series level **/
+    /**
+     * series level
+     **/
     public final static AttributeModule generalSeriesModule = AttributeModule.of(
             Tag.SeriesInstanceUID,
             Tag.SeriesNumber,
@@ -179,7 +187,9 @@ public final class AttributeModules {
             Tag.SecondaryCountsType
     );
 
-    /** small fraction of image level **/
+    /**
+     * small fraction of image level
+     **/
     public final static AttributeModule commonModule = AttributeModule.of(
             Tag.SOPClassUID,
             Tag.SOPInstanceUID,

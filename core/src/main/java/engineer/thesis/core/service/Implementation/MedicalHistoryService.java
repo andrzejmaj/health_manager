@@ -2,10 +2,15 @@ package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.DataIntegrityException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.entity.Disease;
+import engineer.thesis.core.model.dto.RequestMedicalHistoryDTO;
+import engineer.thesis.core.model.dto.ResponseMedicalCheckupValueDTO;
+import engineer.thesis.core.model.dto.ResponseMedicalHistoryDTO;
+import engineer.thesis.core.model.entity.Form;
+import engineer.thesis.core.model.entity.MedicalCheckup;
+import engineer.thesis.core.model.entity.MedicalCheckupValue;
 import engineer.thesis.core.model.entity.MedicalHistory;
-import engineer.thesis.core.model.dto.MedicalHistoryDTO;
-import engineer.thesis.core.repository.DiseaseRepository;
+import engineer.thesis.core.repository.FormRepository;
+import engineer.thesis.core.repository.MedicalCheckupRepository;
 import engineer.thesis.core.repository.MedicalHistoryRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.service.Interface.IMedicalHistoryService;
@@ -13,10 +18,7 @@ import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,68 +31,93 @@ public class MedicalHistoryService implements IMedicalHistoryService {
     private PatientRepository patientRepository;
 
     @Autowired
-    private DiseaseRepository diseaseRepository;
+    private MedicalCheckupRepository medicalCheckupRepository;
 
     @Autowired
     private CustomObjectMapper objectMapper;
 
+    @Autowired
+    private FormRepository formRepository;
 
     @Override
-    public List<MedicalHistoryDTO> getAllByPatientIdFromPeriod(Long id, Date start, Date end) throws NoSuchElementExistsException {
+    public List<ResponseMedicalHistoryDTO> getAllByPatientIdFromPeriod(Long id, Date start, Date end) throws NoSuchElementExistsException, DataIntegrityException {
+        try {
 
-        if (start == null && end == null) {
-            return medicalHistoryRepository.findAllByPatient_Id(id)
-                    .stream().map(mh -> objectMapper.convert(mh, MedicalHistoryDTO.class)).collect(Collectors.toList());
-        } else {
-            return medicalHistoryRepository.findAllByPatient_IdAndDetectionDateBetween(id,
-                    start != null ? start : new GregorianCalendar(1800, Calendar.JANUARY, 1).getTime(),
-                    end != null ? end : new GregorianCalendar().getTime())
-                    .stream().map(medHist -> objectMapper.convert(medHist, MedicalHistoryDTO.class))
-                    .collect(Collectors.toList());
+            if (start == null && end == null) {
+                return medicalHistoryRepository.findAllByPatient_Id(id)
+                        .stream().map(this::mapToDTO).collect(Collectors.toList());
+            } else {
+                return medicalHistoryRepository.findAllByPatient_IdAndDetectionDateBetween(id,
+                        start != null ? start : new GregorianCalendar(1800, Calendar.JANUARY, 1).getTime(),
+                        end != null ? end : new GregorianCalendar().getTime())
+                        .stream().map(this::mapToDTO)
+                        .collect(Collectors.toList());
+            }
+        } catch (NoSuchElementException e) {
+            throw new DataIntegrityException(e.getMessage());
         }
     }
-
     @Override
-    public MedicalHistoryDTO save(Long patientId, MedicalHistoryDTO medicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException {
-        medicalHistoryDTO.setId(null);
-        return saveOrUpdate(patientId, medicalHistoryDTO, false);
-    }
+    public RequestMedicalHistoryDTO save(Long patientId, RequestMedicalHistoryDTO requestMedicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException {
+        requestMedicalHistoryDTO.setId(null);
 
-    @Override
-    public MedicalHistoryDTO update(Long patientId, MedicalHistoryDTO medicalHistoryDTO, Long id) throws NoSuchElementExistsException, DataIntegrityException {
-        if (!id.equals(medicalHistoryDTO.getId())) {
-            throw new DataIntegrityException("Ids in the body and path does not match");
+        if (!patientRepository.exists(patientId)) {
+            throw new NoSuchElementExistsException("Patient doesn't exists");
         }
-        return saveOrUpdate(patientId, medicalHistoryDTO, true);
+        requestMedicalHistoryDTO.setPatientId(patientId);
+
+        MedicalCheckup medicalCheckup = medicalCheckupRepository.findOne(requestMedicalHistoryDTO.getMedicalCheckupId());
+        if (medicalCheckup == null) {
+            throw new NoSuchElementExistsException("Medical Checkup doesn't exist");
+        }
+
+        MedicalHistory medicalHistory = objectMapper.convert(requestMedicalHistoryDTO, MedicalHistory.class);
+
+        return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), RequestMedicalHistoryDTO.class);
+    }
+
+
+    @Override
+    public RequestMedicalHistoryDTO update(RequestMedicalHistoryDTO requestMedicalHistoryDTO, Long id) throws NoSuchElementExistsException, DataIntegrityException {
+
+        MedicalHistory existingMedicalHistory = medicalHistoryRepository.findOne(id);
+
+        if (existingMedicalHistory == null) {
+            throw new NoSuchElementExistsException("Medical record doesn't exists");
+        }
+
+        requestMedicalHistoryDTO.setId(existingMedicalHistory.getId());
+        requestMedicalHistoryDTO.setPatientId(existingMedicalHistory.getPatient().getId());
+
+        MedicalCheckup medicalCheckup = medicalCheckupRepository.findOne(requestMedicalHistoryDTO.getMedicalCheckupId());
+        if (medicalCheckup == null) {
+            throw new NoSuchElementExistsException("Medical Checkup doesn't exist");
+        }
+
+        MedicalHistory medicalHistory = objectMapper.convert(requestMedicalHistoryDTO, MedicalHistory.class);
+
+        return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), RequestMedicalHistoryDTO.class);
     }
 
     @Override
-    public void delete(Long patientId, Long id) throws NoSuchElementExistsException {
-        if (medicalHistoryRepository.exists(id)) {
-            throw new NoSuchElementExistsException("History note not doesn't exists");
+    public void delete(Long id) throws NoSuchElementExistsException {
+        if (!medicalHistoryRepository.exists(id)) {
+            throw new NoSuchElementExistsException("History record doesn't exist");
         }
         medicalHistoryRepository.delete(id);
     }
 
-    private MedicalHistoryDTO saveOrUpdate(Long patientId, MedicalHistoryDTO medicalHistoryDTO, boolean update) throws NoSuchElementExistsException, DataIntegrityException {
-        if (!patientId.equals(medicalHistoryDTO.getPatientId())) {
-            throw new DataIntegrityException("Ids in the body and path does not match");
-        }
+    private List<ResponseMedicalCheckupValueDTO> convertToResponseMedicalCheckupValueDTO(Long id, List<MedicalCheckupValue> values) {
+        Form form = formRepository.getOne(id);
 
-        if (!patientRepository.exists(medicalHistoryDTO.getPatientId())) {
-            throw new NoSuchElementExistsException("Patient doesn't exists");
-        }
+        return values.stream().map(val -> new ResponseMedicalCheckupValueDTO(val, form.getFormFields().stream()
+                .filter(field -> Objects.equals(field.getId(), val.getFormFieldId())).findFirst().get().getName())).collect(Collectors.toList());
+    }
 
-        if (update && !medicalHistoryRepository.exists(medicalHistoryDTO.getId())) {
-            throw new NoSuchElementExistsException("Medical record doesn't exists");
-        }
-
-        MedicalHistory medicalHistory = objectMapper.convert(medicalHistoryDTO, MedicalHistory.class);
-        Disease disease = diseaseRepository.findByName(medicalHistoryDTO.getDiseaseName());
-        if (disease != null) {
-            medicalHistory.getDisease().setId(disease.getId());
-        }
-
-        return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), MedicalHistoryDTO.class);
+    private ResponseMedicalHistoryDTO mapToDTO(MedicalHistory mh) {
+        ResponseMedicalHistoryDTO historyDTO = objectMapper.convert(mh, ResponseMedicalHistoryDTO.class);
+        if (historyDTO.getMedicalCheckup() != null)
+            historyDTO.getMedicalCheckup().setMedicalCheckupValues(convertToResponseMedicalCheckupValueDTO(mh.getMedicalCheckup().getForm().getId(), mh.getMedicalCheckup().getMedicalCheckupValues()));
+        return historyDTO;
     }
 }

@@ -20,8 +20,8 @@ public abstract class DicomObjectBuilder<T extends DicomObject> implements Compa
 
     public abstract boolean accepts(DicomAttribute attribute);
 
-    public DicomObjectBuilder<T> attribute(DicomAttribute attribute){
-        if(!accepts(attribute))
+    public DicomObjectBuilder<T> attribute(DicomAttribute attribute) {
+        if (!accepts(attribute))
             throw new IllegalStateException("illegal attribute passed into builder: " + attribute.getName());
 
         attributes.add(attribute);

@@ -1,6 +1,7 @@
 package engineer.thesis.core.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "hm_pack", schema = "hmanager")
 public class Pack {
 

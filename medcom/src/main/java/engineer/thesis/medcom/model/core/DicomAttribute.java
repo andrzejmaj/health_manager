@@ -14,15 +14,15 @@ import org.dcm4che3.data.Keyword;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "code")
-public class DicomAttribute{
-
-    public DicomAttribute(Integer code, String value) {
-        this(code, value, Keyword.valueOf(code));
-    }
+public class DicomAttribute {
 
     private Integer code;
     private String value;
     private String name;
+
+    public DicomAttribute(Integer code, String value) {
+        this(code, value, Keyword.valueOf(code));
+    }
 
     @Override
     public String toString() {

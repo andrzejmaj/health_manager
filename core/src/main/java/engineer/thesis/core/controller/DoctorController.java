@@ -2,10 +2,10 @@ package engineer.thesis.core.controller;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
-import engineer.thesis.core.model.entity.Doctor;
-import engineer.thesis.core.model.entity.TimeSlot;
 import engineer.thesis.core.model.dto.DoctorDTO;
 import engineer.thesis.core.model.dto.TimeSlotDTO;
+import engineer.thesis.core.model.entity.Doctor;
+import engineer.thesis.core.model.entity.TimeSlot;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;
 import engineer.thesis.core.service.Interface.IDoctorService;

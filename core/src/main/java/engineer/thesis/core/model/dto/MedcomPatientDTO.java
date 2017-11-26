@@ -8,15 +8,15 @@ import java.util.Date;
 
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 public class MedcomPatientDTO extends PatientDTO2 {
+
+    private int studyCount;
+    private Date lastStudyDate;
 
     public MedcomPatientDTO(PatientDTO2 patient, int studyCount, Date lastStudyDate) {
         super(patient.getId(), patient.getAccount(), patient.getInsuranceNumber());
         this.studyCount = studyCount;
         this.lastStudyDate = lastStudyDate;
     }
-
-    private int studyCount;
-    private Date lastStudyDate;
 }

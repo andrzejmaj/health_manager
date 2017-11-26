@@ -1,12 +1,15 @@
 package engineer.thesis.medcom.model;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import engineer.thesis.medcom.model.core.*;
+import engineer.thesis.medcom.model.core.DicomAttribute;
+import engineer.thesis.medcom.model.core.DicomObject;
+import engineer.thesis.medcom.model.core.DicomObjectBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.dcm4che3.data.*;
+import org.dcm4che3.data.Tag;
+import org.dcm4che3.data.UID;
 
 import java.util.Date;
 import java.util.Set;
@@ -28,13 +31,13 @@ public class DicomInstance extends DicomObject {
     // non attribute
     private String seriesInstanceUID;
 
-    public static DicomInstance.Builder builder() {
-        return new DicomInstance.Builder();
-    }
-
     private DicomInstance(Set<DicomAttribute> attributes) {
         super(attributes);
         setFields();
+    }
+
+    public static DicomInstance.Builder builder() {
+        return new DicomInstance.Builder();
     }
 
     @Override

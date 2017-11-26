@@ -1,5 +1,6 @@
 package engineer.thesis.core.model.entity;
 
+import engineer.thesis.core.model.enums.FieldType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,10 +24,9 @@ public class FormField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "form_field_type_id")
-    @Cascade(CascadeType.ALL)
-    private FormFieldType type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private FieldType type;
 
     @ManyToOne
     @JoinColumn(name = "form_id")

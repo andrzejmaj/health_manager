@@ -13,9 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DefaultValuesSetDTO {
-    //    @NotNull(groups = PutValidationGroup.class)
     private Long Id;
     @NotNull
+    private String name;
     private Long formId;
     @NotNull
     @NotEmpty

@@ -35,6 +35,10 @@ public class DicomPatient extends DicomObject {
         setFields();
     }
 
+    public static DicomPatient.Builder builder() {
+        return new DicomPatient.Builder();
+    }
+
     @Override
     public void lazyMerge(DicomObject other) {
         if (!(other instanceof DicomPatient))
@@ -47,11 +51,6 @@ public class DicomPatient extends DicomObject {
     private void setFields() {
         this.setRequiredField(Tag.PatientID, this::setPesel);
     }
-
-    public static DicomPatient.Builder builder() {
-        return new DicomPatient.Builder();
-    }
-
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Builder extends DicomObjectBuilder<DicomPatient> {

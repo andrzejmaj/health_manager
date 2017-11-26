@@ -23,14 +23,14 @@ public class AppointmentServiceTest {
     @Autowired
     private AppointmentService appointmentService;
 
-	@MockBean
-	private AppointmentRepository appointmentRepository;
+    @MockBean
+    private AppointmentRepository appointmentRepository;
 
-	@MockBean
-	private PatientRepository patientRepository;
+    @MockBean
+    private PatientRepository patientRepository;
 
-	@MockBean
-	private TimeSlotRepository timeSlotRepository;
+    @MockBean
+    private TimeSlotRepository timeSlotRepository;
 
     @TestConfiguration
     static class AppointmentServiceTestContextConfiguration {

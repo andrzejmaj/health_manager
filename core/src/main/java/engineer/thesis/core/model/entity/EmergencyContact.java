@@ -1,4 +1,4 @@
-package engineer.thesis.core.model;
+package engineer.thesis.core.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,9 +22,6 @@ public class EmergencyContact {
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "phone_number")
     private String phoneNumber;
