@@ -34,4 +34,7 @@ public class Form {
     @Column(name = "active")
     private Boolean active;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
+    private User owner;
 }

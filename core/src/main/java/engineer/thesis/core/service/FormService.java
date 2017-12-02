@@ -8,9 +8,11 @@ import engineer.thesis.core.model.entity.DefaultValuesSet;
 import engineer.thesis.core.model.entity.Form;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
 import engineer.thesis.core.repository.FormRepository;
+import engineer.thesis.core.security.model.SecurityUser;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.core.validator.FormDataValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,7 +46,7 @@ public class FormService implements IFormService {
 
     @Override
     public List<FormDTO> getAllForms() {
-        return formRepository.findAllByActiveIsTrue().stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findAvailableForms(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getId()).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
     }
 
     @Override
