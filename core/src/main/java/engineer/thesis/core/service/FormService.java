@@ -8,6 +8,7 @@ import engineer.thesis.core.model.entity.DefaultValuesSet;
 import engineer.thesis.core.model.entity.Form;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
 import engineer.thesis.core.repository.FormRepository;
+import engineer.thesis.core.repository.UserRepository;
 import engineer.thesis.core.security.model.SecurityUser;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.core.validator.FormDataValidator;
@@ -35,6 +36,9 @@ public class FormService implements IFormService {
     @Autowired
     private FormDataValidator formDataValidator;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public FormDTO getFormById(Long id) throws NoSuchElementExistsException {
         Optional<Form> form = Optional.ofNullable(formRepository.findByIdAndActiveIsTrue(id));
@@ -51,7 +55,9 @@ public class FormService implements IFormService {
 
     @Override
     public List<FormDTO> getFormsByName(String name) {
-        return formRepository.findByNameContainingIgnoreCaseAndActiveIsTrue(name).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findByNameContainingIgnoreCaseAndActiveIsTrue(name, ((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+        ).getId())
+                .stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -158,7 +164,7 @@ public class FormService implements IFormService {
                 }
         );
         form.setActive(true);
-
+        form.setOwner(userRepository.findOne(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId()));
         return form;
     }
 
