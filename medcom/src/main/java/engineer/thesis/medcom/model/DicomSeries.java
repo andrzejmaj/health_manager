@@ -75,7 +75,7 @@ public class DicomSeries extends DicomObject {
 
         @Override
         public boolean accepts(DicomAttribute attribute) {
-            return attributeModule.contains(attribute.getCode());
+            return super.accepts(attribute) && attributeModule.contains(attribute.getCode());
         }
 
         @Override
