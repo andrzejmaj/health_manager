@@ -1,17 +1,17 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.exception.AlreadyExistsException;
-import engineer.thesis.core.exception.NoContent;
+import engineer.thesis.core.exception.NoContentException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.*;
 import engineer.thesis.core.model.entity.Account;
 import engineer.thesis.core.model.entity.EmergencyContact;
 import engineer.thesis.core.model.entity.Patient;
 import engineer.thesis.core.model.entity.PersonalDetails;
-import engineer.thesis.core.repository.EmergencyContactRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.PersonalDetailsRepository;
 import engineer.thesis.core.service.Interface.BasePatientService;
+import engineer.thesis.core.service.Interface.BaseService;
 import engineer.thesis.core.service.Interface.IPatientService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class PatientService implements BasePatientService, IPatientService {
+public class PatientService implements BasePatientService, IPatientService, BaseService {
 
     @Autowired
     private PatientRepository patientRepository;
@@ -38,9 +38,6 @@ public class PatientService implements BasePatientService, IPatientService {
 
     @Autowired
     private PersonalDetailsRepository personalDetailsRepository;
-
-    @Autowired
-    private EmergencyContactRepository emergencyContactRepository;
 
     @Override
     public PatientDTO findById(Long id) throws NoSuchElementExistsException {
@@ -131,7 +128,7 @@ public class PatientService implements BasePatientService, IPatientService {
     public EmergencyContactDTO findEmergencyById(Long id) throws NoSuchElementExistsException {
         Patient patient = findPatient(id, patientRepository);
         if (patient.getEmergencyContact() == null) {
-            throw new NoContent("Emergency contact not found");
+            throw new NoContentException("Emergency contact not found");
         }
         return objectMapper.convert(patient.getEmergencyContact(), EmergencyContactDTO.class);
     }
@@ -139,6 +136,38 @@ public class PatientService implements BasePatientService, IPatientService {
     @Override
     public EmergencyContactDTO saveEmergency(Long id, EmergencyContactDTO emergencyContact) throws AlreadyExistsException, NoSuchElementExistsException {
         Patient patient = findPatient(id, patientRepository);
+        return savePatientEmergency(patient, emergencyContact);
+    }
+
+    @Override
+    public EmergencyContactDTO updateEmergency(Long id, EmergencyContactDTO emergencyContact) throws NoSuchElementExistsException {
+        Patient patient = findPatient(id, patientRepository);
+        return updatePatientEmergency(patient, emergencyContact);
+    }
+
+
+    @Override
+    public EmergencyContactDTO findEmergencyMine() {
+        EmergencyContact emergencyContact = patientRepository.findByAccount_User_Email(getCurrentLoggedUser().getEmail()).getEmergencyContact();
+        if (emergencyContact == null) {
+            throw new NoContentException("Patient doesn't have emergency contact");
+        }
+        return objectMapper.convert(emergencyContact, EmergencyContactDTO.class);
+    }
+
+    @Override
+    public EmergencyContactDTO saveEmergencyMine(EmergencyContactDTO emergencyContact) throws AlreadyExistsException {
+        Patient patient = patientRepository.findByAccount_User_Email(getCurrentLoggedUser().getEmail());
+        return savePatientEmergency(patient, emergencyContact);
+    }
+
+    @Override
+    public EmergencyContactDTO updateEmergencyMine(EmergencyContactDTO emergencyContact) throws NoSuchElementExistsException {
+        Patient patient = patientRepository.findByAccount_User_Email(getCurrentLoggedUser().getEmail());
+        return updatePatientEmergency(patient, emergencyContact);
+    }
+
+    private EmergencyContactDTO savePatientEmergency(Patient patient, EmergencyContactDTO emergencyContact) throws AlreadyExistsException {
         if (patient.getEmergencyContact() != null) {
             throw new AlreadyExistsException("Emergency contact already exists");
         }
@@ -147,13 +176,10 @@ public class PatientService implements BasePatientService, IPatientService {
         return objectMapper.convert(patientRepository.save(patient).getEmergencyContact(), EmergencyContactDTO.class);
     }
 
-    @Override
-    public EmergencyContactDTO updateEmergency(Long id, EmergencyContactDTO emergencyContact) throws NoSuchElementExistsException {
-        Patient patient = findPatient(id, patientRepository);
+    private EmergencyContactDTO updatePatientEmergency(Patient patient, EmergencyContactDTO emergencyContact) throws NoSuchElementExistsException {
         if (patient.getEmergencyContact() == null) {
             throw new NoSuchElementExistsException("Patient haven't set emergency contact yet");
         }
-
         emergencyContact.setId(patient.getEmergencyContact().getId());
         patient.setEmergencyContact(objectMapper.convert(emergencyContact, EmergencyContact.class));
         return objectMapper.convert(patientRepository.save(patient).getEmergencyContact(), EmergencyContactDTO.class);
