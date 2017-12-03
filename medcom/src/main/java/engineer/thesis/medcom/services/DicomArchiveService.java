@@ -80,6 +80,7 @@ public class DicomArchiveService { // TODO generify
                                     study.setPatientPesel(patientEntity.getAccount().getPersonalDetails().getPesel()); // TODO objectMapper config
                                     return study;
                                 })
+                                .sorted(Comparator.comparing(DicomStudy::getCreationDate).reversed())
                                 .collect(Collectors.toList()))
                 .orElseThrow(() -> new InstanceNotFoundException(
                         String.format("patient with id '%s' not found in the database!", patientId)
