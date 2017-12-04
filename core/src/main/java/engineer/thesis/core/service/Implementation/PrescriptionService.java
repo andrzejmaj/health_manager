@@ -123,7 +123,7 @@ public class PrescriptionService implements IPrescriptionService, BaseService, B
 
     private PrescriptionDrug convertToPrescriptionDrug(String name, Prescription prescription, String size) {
         PrescriptionDrug prescriptionDrug = new PrescriptionDrug();
-        Drug drug = drugRepository.findByName(name);
+        Drug drug = drugRepository.findFirstByName(name);
         if (drug == null) {
             throw new NoSuchElementException("Drug doesn't exist");
         }
