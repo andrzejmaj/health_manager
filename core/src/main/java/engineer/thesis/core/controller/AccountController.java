@@ -21,7 +21,7 @@ public class AccountController {
     @Autowired
     private IAccountService accountService;
 
-    @RequestMapping(path = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.GET)
+    @RequestMapping(path = RequestMappings.ACCOUNTS.MY_PERS_DETAILS, method = RequestMethod.GET)
     public ResponseEntity<?> getMyPersonalDetails() {
         try {
             return new ResponseEntity<>(accountService.getMyPersonalDetails(getCurrentUser().getId()), HttpStatus.OK);
@@ -30,7 +30,7 @@ public class AccountController {
         }
     }
 
-    @RequestMapping(value = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.POST)
+    @RequestMapping(value = RequestMappings.ACCOUNTS.MY_PERS_DETAILS, method = RequestMethod.POST)
     public ResponseEntity<?> saveMyPersonalDetails(@RequestBody @Valid PersonalDetailsDTO personalDetails) {
         try {
             return new ResponseEntity<>(accountService.saveMyPersonalDetails(getCurrentUser().getId(), personalDetails), HttpStatus.OK);
@@ -39,7 +39,7 @@ public class AccountController {
         }
     }
 
-    @RequestMapping(value = RequestMappings.ACCOUNTS.MY_PERS_DETAILLS, method = RequestMethod.PUT)
+    @RequestMapping(value = RequestMappings.ACCOUNTS.MY_PERS_DETAILS, method = RequestMethod.PUT)
     public ResponseEntity<?> updateMyPersonalDetails(@RequestBody @Valid PersonalDetailsDTO personalDetails) {
         try {
             return new ResponseEntity<>(accountService.updateMyPersonalDetails(getCurrentUser().getId(), personalDetails), HttpStatus.OK);

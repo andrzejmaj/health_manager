@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 
 @AllArgsConstructor
@@ -19,5 +20,6 @@ public class MedicalInfoDTO {
     @NotNull
     private Integer height;
     private String otherNotes;
+    private Date lastMeasurement;
 
 }

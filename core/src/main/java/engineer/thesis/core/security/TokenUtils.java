@@ -42,7 +42,7 @@ public class TokenUtils {
         claims.put("sub", securityUser.getUsername());
         claims.put("passwordChangeAdvised", !securityUser.getIsActive());
         claims.put("created", this.getCurrentDate());
-        claims.put("scopes", securityUser.getUserRole());
+        claims.put("scopes", securityUser.getRole());
 
         return this.buildToken(claims);
     }

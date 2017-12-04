@@ -12,6 +12,8 @@ public interface IPrescriptionService {
 
     List<PrescriptionDTO> getByPatientId(Long patientId) throws NoSuchElementExistsException;
 
+    List<PrescriptionDTO> getMine();
+
     PrescriptionDTO save(PrescriptionDTO prescriptionDTO) throws NoSuchElementExistsException;
 
     PrescriptionDTO update(Long id, PrescriptionDTO prescriptionDTO) throws NoSuchElementExistsException;

@@ -85,7 +85,7 @@ public class UserService implements IUserService {
                 doctorRepository.save(doctor);
                 break;
             }
-            case ROLE_ADMIN: {
+            default: {
                 break;
             }
         }

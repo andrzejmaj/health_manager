@@ -223,11 +223,11 @@ public class UserController {
     }
 
     private boolean canPerformUserAction(Long id, SecurityUser currentUser) {
-        return id.equals(currentUser.getId()) || currentUser.getUserRole() == UserRole.ROLE_ADMIN;
+        return id.equals(currentUser.getId()) || currentUser.getRole() == UserRole.ROLE_ADMIN;
     }
 
     private boolean canPerformUserAction(String email, SecurityUser currentUser) {
-        return email.equals(currentUser.getEmail()) || currentUser.getUserRole() == UserRole.ROLE_ADMIN;
+        return email.equals(currentUser.getEmail()) || currentUser.getRole() == UserRole.ROLE_ADMIN;
     }
 
 }

@@ -38,4 +38,9 @@ public interface IPatientService {
 
     PersonalDetailsDTO updatePersonalDetails(Long id, PersonalDetailsDTO personalDetailsDTO) throws NoSuchElementExistsException;
 
+    EmergencyContactDTO findEmergencyMine();
+
+    EmergencyContactDTO saveEmergencyMine(EmergencyContactDTO emergencyContact) throws AlreadyExistsException;
+
+    EmergencyContactDTO updateEmergencyMine(EmergencyContactDTO emergencyContact) throws NoSuchElementExistsException;
 }

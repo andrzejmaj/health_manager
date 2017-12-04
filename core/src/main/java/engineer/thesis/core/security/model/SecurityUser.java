@@ -16,7 +16,7 @@ public class SecurityUser implements UserDetails {
     private Long id;
     private String email;
     private String password;
-    private UserRole userRole;
+    private UserRole role;
     private Collection<? extends GrantedAuthority> authorities;
     private Boolean isActive;
 
@@ -24,15 +24,16 @@ public class SecurityUser implements UserDetails {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.userRole = role;
+        this.role = role;
         this.isActive = isActive;
+        Collection<SimpleGrantedAuthority> auths = new ArrayList<>();
+        auths.add(new SimpleGrantedAuthority(String.valueOf(role)));
+        authorities = auths;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<SimpleGrantedAuthority> auths = new ArrayList<>();
-        auths.add(new SimpleGrantedAuthority(String.valueOf(userRole)));
-        return  auths;
+        return authorities;
     }
 
     @JsonIgnore

@@ -27,6 +27,11 @@ public class MedicalInfoController {
         }
     }
 
+    @RequestMapping(path = RequestMappings.ACCOUNTS.MY_MEDICAL, method = RequestMethod.GET)
+    public ResponseEntity<?> getMine() {
+        return new ResponseEntity<>(medicalInfoService.findMine(), HttpStatus.OK);
+    }
+
     @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL, method = RequestMethod.POST)
     public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Valid MedicalInfoDTO medicalInfoDTO) {
         try {
@@ -38,10 +43,28 @@ public class MedicalInfoController {
         }
     }
 
+    @RequestMapping(path = RequestMappings.ACCOUNTS.MY_MEDICAL, method = RequestMethod.POST)
+    public ResponseEntity<?> saveMine(@RequestBody @Valid MedicalInfoDTO medicalInfoDTO) {
+        try {
+            return new ResponseEntity<>(medicalInfoService.saveMine(medicalInfoDTO), HttpStatus.OK);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
     @RequestMapping(path = RequestMappings.MEDICAL.PATIENT_MEDICAL, method = RequestMethod.PUT)
     public ResponseEntity<?> update(@PathVariable Long patientId, @RequestBody @Valid MedicalInfoDTO medicalInfoDTO) {
         try {
             return new ResponseEntity<>(medicalInfoService.update(patientId, medicalInfoDTO), HttpStatus.OK);
+        } catch (NoSuchElementExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = RequestMappings.ACCOUNTS.MY_MEDICAL, method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMine(@RequestBody @Valid MedicalInfoDTO medicalInfoDTO) {
+        try {
+            return new ResponseEntity<>(medicalInfoService.updateMine(medicalInfoDTO), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

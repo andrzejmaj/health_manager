@@ -15,4 +15,10 @@ public interface IMedicalInfoService {
     MedicalInfoDTO update(Long patientId, MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException;
 
     void delete(Long id) throws NoSuchElementExistsException;
+
+    MedicalInfoDTO findMine();
+
+    MedicalInfoDTO saveMine(MedicalInfoDTO medicalInfoDTO) throws AlreadyExistsException;
+
+    MedicalInfoDTO updateMine(MedicalInfoDTO medicalInfoDTO) throws NoSuchElementExistsException;
 }
