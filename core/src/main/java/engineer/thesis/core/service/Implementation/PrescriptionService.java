@@ -3,15 +3,13 @@ package engineer.thesis.core.service.Implementation;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.PrescriptionDTO;
 import engineer.thesis.core.model.dto.PrescriptionDrugDTO;
-import engineer.thesis.core.model.entity.Appointment;
-import engineer.thesis.core.model.entity.Drug;
-import engineer.thesis.core.model.entity.Prescription;
-import engineer.thesis.core.model.entity.PrescriptionDrug;
+import engineer.thesis.core.model.entity.*;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.DrugRepository;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.PrescriptionRepository;
 import engineer.thesis.core.service.Interface.BasePatientService;
+import engineer.thesis.core.service.Interface.BaseService;
 import engineer.thesis.core.service.Interface.IPrescriptionService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
-public class PrescriptionService implements IPrescriptionService, BasePatientService {
+public class PrescriptionService implements IPrescriptionService, BaseService, BasePatientService {
 
     @Autowired
     private PrescriptionRepository prescriptionRepository;
@@ -53,6 +51,16 @@ public class PrescriptionService implements IPrescriptionService, BasePatientSer
     @Override
     public List<PrescriptionDTO> getByPatientId(Long patientId) throws NoSuchElementExistsException {
         checkPatientExistence(patientId, patientRepository);
+        return getPatientsPrescriptions(patientId);
+    }
+
+    @Override
+    public List<PrescriptionDTO> getMine() {
+        Patient patient = patientRepository.findByAccount_User_Email(getCurrentLoggedUser().getEmail());
+        return getPatientsPrescriptions(patient.getId());
+    }
+
+    private List<PrescriptionDTO> getPatientsPrescriptions(Long patientId) {
         return prescriptionRepository.findAllByAppointment_Patient_Id(patientId).stream().map(p -> objectMapper.convert(p, PrescriptionDTO.class)).collect(Collectors.toList());
     }
 

@@ -39,6 +39,7 @@ public final class RequestMappings {
     public static final class HISTORY {
         public static final String PATIENT_HISTORY = "/patients/{patientId}/history";
         public static final String PATIENT_HISTORY_ID = "/patients/history/{id}";
+        public static final String MY_HISTORY = "/accounts/history";
     }
 
     public static final class CURRENT_CONDITION {
@@ -63,6 +64,7 @@ public final class RequestMappings {
 
     public static final class PRESCRIPTIONS {
         public static final String PRESCRIPTIONS = "/prescriptions";
+        public static final String MY_PRESCRIPTIONS = "/accounts/prescriptions";
         public static final String PRESCRIPTIONS_ID = "/prescriptions/{id}";
     }
 }

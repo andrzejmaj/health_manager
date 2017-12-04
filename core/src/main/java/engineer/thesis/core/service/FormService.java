@@ -184,7 +184,7 @@ public class FormService implements IFormService, BaseService {
         return Optional.ofNullable(formRepository.findOne(id)).isPresent();
     }
 
-    private void checkOwnership(Form form) {
+    public void checkOwnership(Form form) {
         if (!getCurrentLoggedUser().getId().equals(form.getOwner().getId())) {
             throw new ForbiddenContentException();
         }

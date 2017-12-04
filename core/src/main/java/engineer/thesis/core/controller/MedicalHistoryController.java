@@ -32,6 +32,18 @@ public class MedicalHistoryController {
         }
     }
 
+    @RequestMapping(path = RequestMappings.HISTORY.MY_HISTORY, method = RequestMethod.GET)
+    public ResponseEntity<?> getAllFromPeriod(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date start,
+                                              @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date end) {
+        try {
+            return new ResponseEntity<>(medicalHistoryService.getAllMineFromPeriod(start, end), HttpStatus.OK);
+        } catch (NoSuchElementExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (DataIntegrityException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.I_AM_A_TEAPOT);
+        }
+    }
+
     @RequestMapping(path = RequestMappings.HISTORY.PATIENT_HISTORY, method = RequestMethod.POST)
     public ResponseEntity<?> save(@PathVariable Long patientId, @RequestBody @Valid RequestMedicalHistoryDTO requestMedicalHistoryDTO) {
         try {
