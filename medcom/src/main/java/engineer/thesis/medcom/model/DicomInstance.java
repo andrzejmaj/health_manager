@@ -73,7 +73,7 @@ public class DicomInstance extends DicomObject {
 
         @Override
         public boolean accepts(DicomAttribute attribute) {
-            return true; // accept all remaining attributes
+            return super.accepts(attribute); // accept all remaining attributes
         }
 
         @Override

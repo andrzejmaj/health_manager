@@ -14,17 +14,22 @@ public abstract class DicomObjectBuilder<T extends DicomObject> implements Compa
             Comparator.<DicomObjectBuilder>comparingInt(DicomObjectBuilder::getPriority).reversed();
 
     protected Set<DicomAttribute> attributes = new HashSet<>();
+    private Set<String> attributeNames = new HashSet<>();
 
 
     public abstract T build();
 
-    public abstract boolean accepts(DicomAttribute attribute);
+    public boolean accepts(DicomAttribute attribute) {
+        // ignore unnamed attributes and duplicates
+       return !attribute.getName().isEmpty() && !attributeNames.contains(attribute.getName());
+    }
 
     public DicomObjectBuilder<T> attribute(DicomAttribute attribute) {
         if (!accepts(attribute))
             throw new IllegalStateException("illegal attribute passed into builder: " + attribute.getName());
 
         attributes.add(attribute);
+        attributeNames.add(attribute.getName());
         return this;
     }
 
