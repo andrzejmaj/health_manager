@@ -55,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .authorizeRequests()
 
-                .antMatchers(HttpMethod.OPTIONS,"/medcom/**")
+                .antMatchers(HttpMethod.OPTIONS,"/**")
                     .permitAll()
                 .antMatchers("/medcom/**")
                     .hasAnyRole("DOCTOR", "ADMIN")
