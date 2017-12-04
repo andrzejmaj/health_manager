@@ -21,6 +21,4 @@ public interface BasePatientService {
             throw new NoSuchElementExistsException("Patient doesn't not exists");
         }
     }
-
-
 }

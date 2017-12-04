@@ -1,6 +1,7 @@
 package engineer.thesis.core.validator;
 
-import engineer.thesis.core.exception.NoContent;
+import engineer.thesis.core.exception.ForbiddenContentException;
+import engineer.thesis.core.exception.NoContentException;
 import engineer.thesis.core.exception.PasswordNotValidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -31,10 +32,17 @@ public class ControllerValidationExceptionHandler {
         return ex.getMessage();
     }
 
-    @ExceptionHandler(NoContent.class)
+    @ExceptionHandler(NoContentException.class)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
     void proccessNoContent() {
+    }
+
+    @ExceptionHandler(ForbiddenContentException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    String processForbiddenException(ForbiddenContentException ex) {
+        return ex.toString();
     }
 
 }

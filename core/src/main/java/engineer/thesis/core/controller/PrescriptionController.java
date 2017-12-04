@@ -34,6 +34,11 @@ public class PrescriptionController {
         }
     }
 
+    @RequestMapping(path = RequestMappings.PRESCRIPTIONS.MY_PRESCRIPTIONS, method = RequestMethod.GET)
+    public ResponseEntity<?> getMine() {
+        return new ResponseEntity<Object>(prescriptionService.getMine(), HttpStatus.OK);
+    }
+
     @RequestMapping(path = RequestMappings.PRESCRIPTIONS.PRESCRIPTIONS, method = RequestMethod.POST)
     public ResponseEntity<?> save(@RequestBody @Valid PrescriptionDTO prescriptionDTO) {
         try {

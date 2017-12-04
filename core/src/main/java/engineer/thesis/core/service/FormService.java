@@ -1,6 +1,7 @@
 package engineer.thesis.core.service;
 
 import engineer.thesis.core.exception.DataIntegrityException;
+import engineer.thesis.core.exception.ForbiddenContentException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.DefaultValuesSetDTO;
 import engineer.thesis.core.model.dto.FormDTO;
@@ -8,9 +9,13 @@ import engineer.thesis.core.model.entity.DefaultValuesSet;
 import engineer.thesis.core.model.entity.Form;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
 import engineer.thesis.core.repository.FormRepository;
+import engineer.thesis.core.repository.UserRepository;
+import engineer.thesis.core.security.model.SecurityUser;
+import engineer.thesis.core.service.Interface.BaseService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import engineer.thesis.core.validator.FormDataValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class FormService implements IFormService {
+public class FormService implements IFormService, BaseService {
 
     @Autowired
     private FormRepository formRepository;
@@ -33,23 +38,28 @@ public class FormService implements IFormService {
     @Autowired
     private FormDataValidator formDataValidator;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public FormDTO getFormById(Long id) throws NoSuchElementExistsException {
         Optional<Form> form = Optional.ofNullable(formRepository.findByIdAndActiveIsTrue(id));
         if (!form.isPresent()) {
             throw new NoSuchElementExistsException("Form doesn't exist");
         }
+        checkOwnership(form.get());
         return objectMapper.convert(form.get(), FormDTO.class);
     }
 
     @Override
     public List<FormDTO> getAllForms() {
-        return formRepository.findAllByActiveIsTrue().stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findAvailableForms(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getId()).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public List<FormDTO> getFormsByName(String name) {
-        return formRepository.findByNameContainingIgnoreCaseAndActiveIsTrue(name).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findByNameContainingIgnoreCaseAndActiveIsTrue(name, ((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())
+                .stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -65,6 +75,7 @@ public class FormService implements IFormService {
         if (form == null) {
             throw new NoSuchElementExistsException("Form doesn't exist");
         }
+        checkOwnership(form);
         form.setActive(false);
         formRepository.save(form);
 
@@ -73,9 +84,11 @@ public class FormService implements IFormService {
 
     @Override
     public String deleteForm(Long id) {
-        if (!doesFormExist(id)) {
+        Form form = formRepository.findOne(id);
+        if (form == null) {
             throw new NoSuchElementException("Form doesn't exist");
         }
+        checkOwnership(form);
         formRepository.delete(id);
         return "Form " + id + " deleted successfully";
     }
@@ -86,7 +99,7 @@ public class FormService implements IFormService {
         if (form == null) {
             throw new NoSuchElementExistsException("Form doesn't exist");
         }
-
+        checkOwnership(form);
         return defaultValuesSetRepository.findAllByForm_Id(id).stream().map(set -> objectMapper.convert(set, DefaultValuesSetDTO.class)).collect(Collectors.toList());
     }
 
@@ -96,6 +109,8 @@ public class FormService implements IFormService {
         if (form == null) {
             throw new NoSuchElementExistsException("Form doesn't exist");
         }
+        checkOwnership(form);
+
         defaultValuesSetDTO.setId(null);
         defaultValuesSetDTO.setFormId(id);
         DefaultValuesSet defaultValuesSet = objectMapper.convert(defaultValuesSetDTO, DefaultValuesSet.class);
@@ -116,6 +131,8 @@ public class FormService implements IFormService {
         if (defaultValuesSet == null) {
             throw new NoSuchElementExistsException("Values set doesn't exist");
         }
+
+        checkOwnership(defaultValuesSet.getForm());
 
         defaultValuesSetDTO.setFormId(defaultValuesSet.getForm().getId());
         DefaultValuesSet newDefaultValuesSet = objectMapper.convert(defaultValuesSetDTO, DefaultValuesSet.class);
@@ -138,6 +155,9 @@ public class FormService implements IFormService {
         if (defaultValuesSet == null) {
             throw new NoSuchElementExistsException("Default values set doesn't exist");
         }
+
+        checkOwnership(defaultValuesSet.getForm());
+
         defaultValuesSetRepository.delete(id);
         return "Set " + id + " successfully deleted";
     }
@@ -156,11 +176,17 @@ public class FormService implements IFormService {
                 }
         );
         form.setActive(true);
-
+        form.setOwner(userRepository.findOne(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId()));
         return form;
     }
 
     private Boolean doesFormExist(Long id) {
         return Optional.ofNullable(formRepository.findOne(id)).isPresent();
+    }
+
+    public void checkOwnership(Form form) {
+        if (!getCurrentLoggedUser().getId().equals(form.getOwner().getId())) {
+            throw new ForbiddenContentException();
+        }
     }
 }

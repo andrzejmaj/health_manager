@@ -13,6 +13,7 @@ import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.repository.MedicalCheckupRepository;
 import engineer.thesis.core.repository.MedicalHistoryRepository;
 import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.service.Interface.BaseService;
 import engineer.thesis.core.service.Interface.IMedicalHistoryService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class MedicalHistoryService implements IMedicalHistoryService {
+public class MedicalHistoryService implements IMedicalHistoryService, BaseService {
 
     @Autowired
     private MedicalHistoryRepository medicalHistoryRepository;
@@ -42,7 +43,6 @@ public class MedicalHistoryService implements IMedicalHistoryService {
     @Override
     public List<ResponseMedicalHistoryDTO> getAllByPatientIdFromPeriod(Long id, Date start, Date end) throws NoSuchElementExistsException, DataIntegrityException {
         try {
-
             if (start == null && end == null) {
                 return medicalHistoryRepository.findAllByPatient_Id(id)
                         .stream().map(this::mapToDTO).collect(Collectors.toList());
@@ -57,6 +57,12 @@ public class MedicalHistoryService implements IMedicalHistoryService {
             throw new DataIntegrityException(e.getMessage());
         }
     }
+
+    @Override
+    public List<ResponseMedicalHistoryDTO> getAllMineFromPeriod(Date start, Date end) throws DataIntegrityException, NoSuchElementExistsException {
+        return getAllByPatientIdFromPeriod(patientRepository.findByAccount_User_Email(getCurrentLoggedUser().getEmail()).getId(), start, end);
+    }
+
     @Override
     public RequestMedicalHistoryDTO save(Long patientId, RequestMedicalHistoryDTO requestMedicalHistoryDTO) throws NoSuchElementExistsException, DataIntegrityException {
         requestMedicalHistoryDTO.setId(null);
