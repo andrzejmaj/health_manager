@@ -54,12 +54,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and()
             .authorizeRequests()
-
                 .antMatchers(HttpMethod.OPTIONS,"/**")
                     .permitAll()
                 .antMatchers("/medcom/**")
                     .hasAnyRole("DOCTOR", "ADMIN")
-
                 .antMatchers(
                         RequestMappings.FORMS.FORMS,                                  //k
                         RequestMappings.FORMS.FORM,                                   //k

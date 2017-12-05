@@ -15,4 +15,6 @@ import javax.validation.constraints.NotNull;
 public class RegisterOnBehalfRequestDTO extends RegisterRequestDTO {
     @NotNull
     private UserRole role;
+    private SpecializationDTO specialization;
+
 }

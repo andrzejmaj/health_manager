@@ -93,7 +93,7 @@ public class UserController {
     @RequestMapping(path = RequestMappings.USERS.REGISTER, method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody @Validated(RegisterUserGroup.class) RegisterRequestDTO registerRequest) {
         try {
-            userService.registerUserByRole(registerRequest, UserRole.ROLE_PATIENT, false);
+            userService.registerUserByRole(registerRequest, UserRole.ROLE_PATIENT, false, null);
             return new ResponseEntity<>("Registration successful", HttpStatus.OK);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
@@ -104,7 +104,7 @@ public class UserController {
     @RequestMapping(path = RequestMappings.USERS.REGISTER_ON_BEHALF, method = RequestMethod.POST)
     public ResponseEntity<?> registerOnBehalf(@RequestBody @Valid RegisterOnBehalfRequestDTO request) {
         try {
-            userService.registerUserByRole(request, request.getRole(), true);
+            userService.registerUserByRole(request, request.getRole(), true, request.getSpecialization());
             return new ResponseEntity<>("Registration successful", HttpStatus.OK);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);

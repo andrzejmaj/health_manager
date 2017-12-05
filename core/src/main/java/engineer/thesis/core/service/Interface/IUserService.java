@@ -4,6 +4,7 @@ import engineer.thesis.core.exception.AlreadyExistsException;
 import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.dto.RegisterRequestDTO;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
+import engineer.thesis.core.model.dto.SpecializationDTO;
 import engineer.thesis.core.model.dto.UserDTO;
 import engineer.thesis.core.model.entity.User;
 import engineer.thesis.core.model.entity.UserRole;
@@ -15,7 +16,7 @@ import java.util.Optional;
 @Service
 public interface IUserService {
 
-    void registerUserByRole(RegisterRequestDTO request, UserRole userRole, Boolean isOnBehalf) throws AlreadyExistsException;
+    void registerUserByRole(RegisterRequestDTO request, UserRole userRole, Boolean isOnBehalf, SpecializationDTO specialization) throws AlreadyExistsException;
 
     UserDTO updateUser(UserDTO userDTO);
 
