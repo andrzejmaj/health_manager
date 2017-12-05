@@ -1,19 +1,14 @@
 package engineer.thesis.core.utils;
 
 
-import engineer.thesis.core.model.dto.FormFieldDefaultValueDTO;
-import engineer.thesis.core.model.dto.PrescriptionDTO;
-import engineer.thesis.core.model.dto.ResponseMedicalCheckupDTO;
-import engineer.thesis.core.model.dto.ShortPatientDTO;
-import engineer.thesis.core.model.entity.FormFieldDefaultValue;
-import engineer.thesis.core.model.entity.MedicalCheckup;
-import engineer.thesis.core.model.entity.Patient;
-import engineer.thesis.core.model.entity.Prescription;
+import engineer.thesis.core.model.dto.*;
+import engineer.thesis.core.model.entity.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 
 @Component
 public class CustomObjectMapper {
@@ -34,6 +29,7 @@ public class CustomObjectMapper {
         modelMapper.addMappings(new FormFieldDefaultValueDTOToModel());
         modelMapper.addMappings(new PrescriptionDTOToModel());
         modelMapper.addMappings(new MedicalCheckupToResponseMedicalCheckupDTO());
+        modelMapper.addMappings(new MedicalHistoryDTOToModel());
 
     }
 
@@ -64,6 +60,13 @@ public class CustomObjectMapper {
         @Override
         protected void configure() {
             map().setMedicalCheckupValues(null);
+        }
+    }
+
+    private class MedicalHistoryDTOToModel extends PropertyMap<RequestMedicalHistoryDTO, MedicalHistory> {
+        @Override
+        protected void configure() {
+            map().setDetectionDate(source.getDetectionDate() == null ? new Date() : source.getDetectionDate());
         }
     }
 }
