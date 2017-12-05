@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Data
 class MedicalCheckupValueDTO {
-    @NotNull
     private String value;
     @NotNull
     private Long formFieldId;
