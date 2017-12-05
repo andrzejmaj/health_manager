@@ -24,6 +24,9 @@ public class MedicalHistory {
     @Column(name = "diseases")
     private String diseaseName;
 
+    @Column(name = "symptoms")
+    private String symptoms;
+
     @Column(name = "detection_date")
     private Date detectionDate;
 
