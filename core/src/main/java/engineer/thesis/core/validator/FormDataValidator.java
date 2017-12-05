@@ -42,7 +42,7 @@ public class FormDataValidator {
             return false;
         }
 
-        List<FormAvailableValue> fieldAvailableValues = field.getFieldAvailableValues();
+        List<FormAvailableValue> fieldAvailableValues = field.getOptions();
 
         if (fieldAvailableValues != null && !fieldAvailableValues.isEmpty()) {
             boolean invalid = fieldAvailableValues.stream().noneMatch(formAvailableValue -> formAvailableValue.getValue().equals(value));
@@ -105,7 +105,7 @@ public class FormDataValidator {
     }
 
     private Boolean isSelectFieldValid(String value, FormField field) {
-        return field.getFieldAvailableValues().stream().anyMatch(f -> f.getValue().equals(value));
+        return field.getOptions().stream().anyMatch(f -> f.getValue().equals(value));
     }
 
     private Boolean isEmailValid(String value) {

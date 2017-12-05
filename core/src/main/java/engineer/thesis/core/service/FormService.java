@@ -166,8 +166,8 @@ public class FormService implements IFormService, BaseService {
     private Form convertFromDTO(FormDTO formDTO) {
         Form form = objectMapper.convert(formDTO, Form.class);
         form.getFormFields().forEach(field -> {
-                    if (field.getFieldAvailableValues() != null) {
-                        field.getFieldAvailableValues().forEach(value -> {
+            if (field.getOptions() != null) {
+                field.getOptions().forEach(value -> {
                             value.setFormField(field);
                             value.setId(null);
                         });

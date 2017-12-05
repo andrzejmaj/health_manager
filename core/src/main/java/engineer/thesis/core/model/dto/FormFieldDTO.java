@@ -25,6 +25,6 @@ public class FormFieldDTO {
     private String contextualText;
     private String warningText;
     private String errorText;
-    private List<FormAvailableValueDTO> fieldAvailableValues;
+    private List<FormAvailableValueDTO> options;
 
 }
