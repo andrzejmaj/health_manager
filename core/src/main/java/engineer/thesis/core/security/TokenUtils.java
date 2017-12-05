@@ -20,7 +20,7 @@ public class TokenUtils {
     private final String AUDIENCE_MOBILE = "mobile";
     private final String AUDIENCE_UNKNOWN = "unknown";
 
-    private Long expiration = 10000L;
+    private Long expiration = 65000L;
 
     private Date getCurrentDate() {
         return new Date(System.currentTimeMillis());
