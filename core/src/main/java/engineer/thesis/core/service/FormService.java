@@ -7,6 +7,7 @@ import engineer.thesis.core.model.dto.DefaultValuesSetDTO;
 import engineer.thesis.core.model.dto.FormDTO;
 import engineer.thesis.core.model.entity.DefaultValuesSet;
 import engineer.thesis.core.model.entity.Form;
+import engineer.thesis.core.model.entity.UserRole;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.repository.UserRepository;
@@ -185,7 +186,7 @@ public class FormService implements IFormService, BaseService {
     }
 
     public void checkOwnership(Form form) {
-        if (!getCurrentLoggedUser().getId().equals(form.getOwner().getId())) {
+        if (!getCurrentLoggedUser().getId().equals(form.getOwner().getId()) && form.getOwner().getRole().equals(UserRole.ROLE_DOCTOR)) {
             throw new ForbiddenContentException();
         }
     }
