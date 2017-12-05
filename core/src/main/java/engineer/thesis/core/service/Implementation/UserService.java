@@ -5,6 +5,7 @@ import engineer.thesis.core.exception.PasswordNotValidException;
 import engineer.thesis.core.exception.TokenExpiredException;
 import engineer.thesis.core.model.dto.RegisterRequestDTO;
 import engineer.thesis.core.model.dto.ResetPasswordDTO;
+import engineer.thesis.core.model.dto.SpecializationDTO;
 import engineer.thesis.core.model.dto.UserDTO;
 import engineer.thesis.core.model.entity.*;
 import engineer.thesis.core.repository.DoctorRepository;
@@ -51,13 +52,16 @@ public class UserService implements IUserService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private SpecializationService specializationService;
+
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
 
     @Transactional(rollbackFor = AlreadyExistsException.class)
     @Override
-    public void registerUserByRole(RegisterRequestDTO request, UserRole userRole, Boolean isOnBehalf) throws AlreadyExistsException {
+    public void registerUserByRole(RegisterRequestDTO request, UserRole userRole, Boolean isOnBehalf, SpecializationDTO specialization) throws AlreadyExistsException {
 
         if (isOnBehalf) {
             request.setPassword(generatePasswordForUser().replaceAll("-", "").substring(0, 16));
@@ -80,7 +84,12 @@ public class UserService implements IUserService {
                 break;
             }
             case ROLE_DOCTOR: {
+                SpecializationDTO s = null;
+                if (specialization != null && specialization.getDescription() != null) {
+                    s = specializationService.findExistingOrSaveNewByDescription(specialization.getDescription());
+                }
                 Doctor doctor = new Doctor();
+                doctor.setSpecialization(objectMapper.convert(s, Specialization.class));
                 doctor.setAccount(account);
                 doctorRepository.save(doctor);
                 break;

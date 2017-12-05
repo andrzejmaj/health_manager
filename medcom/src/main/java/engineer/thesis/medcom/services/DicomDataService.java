@@ -5,11 +5,13 @@ import engineer.thesis.medcom.model.core.DicomAttribute;
 import engineer.thesis.medcom.model.core.DicomObjectBuilder;
 import engineer.thesis.medcom.model.error.DataExtractionException;
 import lombok.Getter;
+import org.apache.log4j.Logger;
 import org.dcm4che3.io.DicomInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +21,8 @@ import java.util.stream.Stream;
  */
 @Service
 public class DicomDataService {
+
+    private final static Logger logger = Logger.getLogger(DicomDataService.class);
 
     private final DicomAttributesReader dicomAttributesReader;
 
@@ -77,12 +81,17 @@ public class DicomDataService {
         }
 
         void accept(DicomAttribute attribute) {
-            chain.stream()
+            Optional<DicomObjectBuilder> targetBuilder = chain.stream()
                     .filter(builder ->
                             builder.accepts(attribute))
-                    .findFirst()
-                    .ifPresent(builder ->
-                            builder.attribute(attribute));
+                    .findFirst();
+
+            if (targetBuilder.isPresent()) {
+                targetBuilder.get().attribute(attribute);
+            } else {
+                logger.debug("attribute rejected: " + attribute);
+            }
+
         }
     }
 }
