@@ -51,7 +51,11 @@ public class AppointmentController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/accounts/appointments")
     public ResponseEntity<?> getMine() {
-        return new ResponseEntity<>(this.getAppointments(patientRepository.findByAccount_User_Email(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getEmail()).getId()), HttpStatus.OK);
+
+        return new ResponseEntity<>(appointmentRepository.findByPatientId(patientRepository.findByAccount_User_Email(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getEmail()).getId())
+                .stream()
+                .map(appointment -> customObjectMapper.convert(appointment, AppointmentDTO.class))
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/patients/{patientId}/appointments")
