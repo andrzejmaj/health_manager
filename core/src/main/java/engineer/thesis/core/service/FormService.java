@@ -49,18 +49,18 @@ public class FormService implements IFormService, BaseService {
             throw new NoSuchElementExistsException("Form doesn't exist");
         }
         checkOwnership(form.get());
-        return objectMapper.convert(form.get(), FormDTO.class);
+        return convertToDTO(form.get());
     }
 
     @Override
     public List<FormDTO> getAllForms() {
-        return formRepository.findAvailableForms(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getId()).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findAvailableForms(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getId()).stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<FormDTO> getFormsByName(String name) {
         return formRepository.findByNameContainingIgnoreCaseAndActiveIsTrue(name, ((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())
-                .stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+                .stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
