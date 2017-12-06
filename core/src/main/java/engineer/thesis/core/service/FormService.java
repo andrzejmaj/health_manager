@@ -189,11 +189,11 @@ public class FormService implements IFormService, BaseService {
                     .filter(f -> Objects.equals(f.getId(), fieldDTO.getId()))
                     .findFirst();
 
-            first.ifPresent(field -> fieldDTO.setOptions(
+            first.ifPresent(field -> fieldDTO.setOptions(field.getOptions() != null ?
                     field.getOptions()
                             .stream()
                             .map(FormAvailableValue::getValue)
-                            .collect(Collectors.toList())));
+                            .collect(Collectors.toList()) : null));
         });
 
         return dto;
