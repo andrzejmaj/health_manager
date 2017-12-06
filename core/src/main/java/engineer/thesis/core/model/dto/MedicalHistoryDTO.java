@@ -17,6 +17,5 @@ class MedicalHistoryDTO {
     @NotNull
     private String diseaseName;
     private String symptoms;
-    @NotNull
     private Date detectionDate;
 }

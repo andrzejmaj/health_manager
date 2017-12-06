@@ -1,14 +1,8 @@
 package engineer.thesis.core.utils;
 
 
-import engineer.thesis.core.model.dto.FormFieldDefaultValueDTO;
-import engineer.thesis.core.model.dto.PrescriptionDTO;
-import engineer.thesis.core.model.dto.ResponseMedicalCheckupDTO;
-import engineer.thesis.core.model.dto.ShortPatientDTO;
-import engineer.thesis.core.model.entity.FormFieldDefaultValue;
-import engineer.thesis.core.model.entity.MedicalCheckup;
-import engineer.thesis.core.model.entity.Patient;
-import engineer.thesis.core.model.entity.Prescription;
+import engineer.thesis.core.model.dto.*;
+import engineer.thesis.core.model.entity.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
@@ -34,7 +28,8 @@ public class CustomObjectMapper {
         modelMapper.addMappings(new FormFieldDefaultValueDTOToModel());
         modelMapper.addMappings(new PrescriptionDTOToModel());
         modelMapper.addMappings(new MedicalCheckupToResponseMedicalCheckupDTO());
-
+        modelMapper.addMappings(new FormFieldDTOToModel());
+        modelMapper.addMappings(new FormFieldModelToDTO());
     }
 
     private class PatientShortPatientMap extends PropertyMap<Patient, ShortPatientDTO> {
@@ -64,6 +59,20 @@ public class CustomObjectMapper {
         @Override
         protected void configure() {
             map().setMedicalCheckupValues(null);
+        }
+    }
+
+    private class FormFieldModelToDTO extends PropertyMap<FormField, FormFieldDTO> {
+        @Override
+        protected void configure() {
+            map().setOptions(null);
+        }
+    }
+
+    private class FormFieldDTOToModel extends PropertyMap<FormFieldDTO, FormField> {
+        @Override
+        protected void configure() {
+            map().setOptions(null);
         }
     }
 }

@@ -59,6 +59,6 @@ public class FormField {
     @OneToMany(mappedBy = "formField", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @Cascade(CascadeType.ALL)
-    private List<FormAvailableValue> fieldAvailableValues;
+    private List<FormAvailableValue> options;
 
 }

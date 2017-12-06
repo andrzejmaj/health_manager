@@ -5,11 +5,13 @@ import engineer.thesis.core.model.dto.AppointmentDTO;
 import engineer.thesis.core.model.entity.Appointment;
 import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.PatientRepository;
+import engineer.thesis.core.security.model.SecurityUser;
 import engineer.thesis.core.service.Interface.IAppointmentService;
 import engineer.thesis.core.utils.CustomObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -45,6 +47,15 @@ public class AppointmentController {
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/accounts/appointments")
+    public ResponseEntity<?> getMine() {
+
+        return new ResponseEntity<>(appointmentRepository.findByPatientId(patientRepository.findByAccount_User_Email(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getEmail()).getId())
+                .stream()
+                .map(appointment -> customObjectMapper.convert(appointment, AppointmentDTO.class))
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/patients/{patientId}/appointments")

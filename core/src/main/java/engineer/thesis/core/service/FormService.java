@@ -5,9 +5,8 @@ import engineer.thesis.core.exception.ForbiddenContentException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.DefaultValuesSetDTO;
 import engineer.thesis.core.model.dto.FormDTO;
-import engineer.thesis.core.model.entity.DefaultValuesSet;
-import engineer.thesis.core.model.entity.Form;
-import engineer.thesis.core.model.entity.UserRole;
+import engineer.thesis.core.model.dto.FormFieldDTO;
+import engineer.thesis.core.model.entity.*;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.repository.UserRepository;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,18 +49,18 @@ public class FormService implements IFormService, BaseService {
             throw new NoSuchElementExistsException("Form doesn't exist");
         }
         checkOwnership(form.get());
-        return objectMapper.convert(form.get(), FormDTO.class);
+        return convertToDTO(form.get());
     }
 
     @Override
     public List<FormDTO> getAllForms() {
-        return formRepository.findAvailableForms(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getId()).stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+        return formRepository.findAvailableForms(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getId()).stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<FormDTO> getFormsByName(String name) {
         return formRepository.findByNameContainingIgnoreCaseAndActiveIsTrue(name, ((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())
-                .stream().map(form -> objectMapper.convert(form, FormDTO.class)).collect(Collectors.toList());
+                .stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -166,26 +166,40 @@ public class FormService implements IFormService, BaseService {
     private Form convertFromDTO(FormDTO formDTO) {
         Form form = objectMapper.convert(formDTO, Form.class);
         form.getFormFields().forEach(field -> {
-                    if (field.getFieldAvailableValues() != null) {
-                        field.getFieldAvailableValues().forEach(value -> {
-                            value.setFormField(field);
-                            value.setId(null);
-                        });
-                    }
-                    field.setForm(form);
-                    field.setId(null);
-                }
-        );
+            Optional<FormFieldDTO> first = formDTO.getFormFields().stream()
+                    .filter(dto -> Objects.equals(dto.getName(), field.getName())).findFirst();
+            first.ifPresent(formFieldDTO -> field.setOptions(
+                    formFieldDTO.getOptions()
+                            .stream()
+                            .map(x -> new FormAvailableValue(null, field, x))
+                            .collect(Collectors.toList())));
+            field.setForm(form);
+            field.setId(null);
+        });
         form.setActive(true);
         form.setOwner(userRepository.findOne(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId()));
         return form;
     }
 
-    private Boolean doesFormExist(Long id) {
-        return Optional.ofNullable(formRepository.findOne(id)).isPresent();
+    private FormDTO convertToDTO(Form form) {
+        FormDTO dto = objectMapper.convert(form, FormDTO.class);
+        dto.getFormFields().stream().forEach(fieldDTO -> {
+            Optional<FormField> first = form.getFormFields()
+                    .stream()
+                    .filter(f -> Objects.equals(f.getId(), fieldDTO.getId()))
+                    .findFirst();
+
+            first.ifPresent(field -> fieldDTO.setOptions(
+                    field.getOptions()
+                            .stream()
+                            .map(FormAvailableValue::getValue)
+                            .collect(Collectors.toList())));
+        });
+
+        return dto;
     }
 
-    public void checkOwnership(Form form) {
+    private void checkOwnership(Form form) {
         if (!getCurrentLoggedUser().getId().equals(form.getOwner().getId()) && form.getOwner().getRole().equals(UserRole.ROLE_DOCTOR)) {
             throw new ForbiddenContentException();
         }

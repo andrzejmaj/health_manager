@@ -72,13 +72,15 @@ public class MedicalHistoryService implements IMedicalHistoryService, BaseServic
         }
         requestMedicalHistoryDTO.setPatientId(patientId);
 
-        MedicalCheckup medicalCheckup = medicalCheckupRepository.findOne(requestMedicalHistoryDTO.getMedicalCheckupId());
-        if (medicalCheckup == null) {
-            throw new NoSuchElementExistsException("Medical Checkup doesn't exist");
+        if (requestMedicalHistoryDTO.getMedicalCheckupId() != null) {
+            MedicalCheckup medicalCheckup = medicalCheckupRepository.findOne(requestMedicalHistoryDTO.getMedicalCheckupId());
+            if (medicalCheckup == null) {
+                throw new NoSuchElementExistsException("Medical Checkup doesn't exist");
+            }
         }
 
         MedicalHistory medicalHistory = objectMapper.convert(requestMedicalHistoryDTO, MedicalHistory.class);
-
+        medicalHistory.setDetectionDate(medicalHistory.getDetectionDate() != null ? medicalHistory.getDetectionDate() : new Date());
         return objectMapper.convert(medicalHistoryRepository.save(medicalHistory), RequestMedicalHistoryDTO.class);
     }
 
