@@ -5,9 +5,8 @@ import engineer.thesis.core.exception.ForbiddenContentException;
 import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.DefaultValuesSetDTO;
 import engineer.thesis.core.model.dto.FormDTO;
-import engineer.thesis.core.model.entity.DefaultValuesSet;
-import engineer.thesis.core.model.entity.Form;
-import engineer.thesis.core.model.entity.UserRole;
+import engineer.thesis.core.model.dto.FormFieldDTO;
+import engineer.thesis.core.model.entity.*;
 import engineer.thesis.core.repository.DefaultValuesSetRepository;
 import engineer.thesis.core.repository.FormRepository;
 import engineer.thesis.core.repository.UserRepository;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -166,13 +166,13 @@ public class FormService implements IFormService, BaseService {
     private Form convertFromDTO(FormDTO formDTO) {
         Form form = objectMapper.convert(formDTO, Form.class);
         form.getFormFields().forEach(field -> {
-//            Optional<FormFieldDTO> first = formDTO.getFormFields().stream()
-//                    .filter(dto -> Objects.equals(dto.getId(), field.getId())).findFirst();
-//            first.ifPresent(formFieldDTO -> field.setOptions(
-//                    formFieldDTO.getOptions()
-//                            .stream()
-//                            .map(x -> new FormAvailableValue(null, field, x))
-//                            .collect(Collectors.toList())));
+            Optional<FormFieldDTO> first = formDTO.getFormFields().stream()
+                    .filter(dto -> Objects.equals(dto.getName(), field.getName())).findFirst();
+            first.ifPresent(formFieldDTO -> field.setOptions(
+                    formFieldDTO.getOptions()
+                            .stream()
+                            .map(x -> new FormAvailableValue(null, field, x))
+                            .collect(Collectors.toList())));
             field.setForm(form);
             field.setId(null);
         });
@@ -183,19 +183,19 @@ public class FormService implements IFormService, BaseService {
 
     private FormDTO convertToDTO(Form form) {
         FormDTO dto = objectMapper.convert(form, FormDTO.class);
-//        dto.getFormFields().stream().forEach(fieldDTO -> {
-//            Optional<FormField> first = form.getFormFields()
-//                    .stream()
-//                    .filter(f -> Objects.equals(f.getId(), fieldDTO.getId()))
-//                    .findFirst();
-//
-//            first.ifPresent(field -> fieldDTO.setOptions(
-//                    field.getOptions()
-//                            .stream()
-//                            .map(FormAvailableValue::getValue)
-//                            .collect(Collectors.toList())));
-//        });
-//
+        dto.getFormFields().stream().forEach(fieldDTO -> {
+            Optional<FormField> first = form.getFormFields()
+                    .stream()
+                    .filter(f -> Objects.equals(f.getId(), fieldDTO.getId()))
+                    .findFirst();
+
+            first.ifPresent(field -> fieldDTO.setOptions(
+                    field.getOptions()
+                            .stream()
+                            .map(FormAvailableValue::getValue)
+                            .collect(Collectors.toList())));
+        });
+
         return dto;
     }
 
