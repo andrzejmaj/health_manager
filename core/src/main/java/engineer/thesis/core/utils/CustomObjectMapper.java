@@ -8,6 +8,7 @@ import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.stream.Collectors;
 
 @Component
 public class CustomObjectMapper {
@@ -65,14 +66,14 @@ public class CustomObjectMapper {
     private class FormFieldModelToDTO extends PropertyMap<FormField, FormFieldDTO> {
         @Override
         protected void configure() {
-            map().setOptions(null);
+            map().setOptions(source.getOptions().stream().map(FormAvailableValue::getValue).collect(Collectors.toList()));
         }
     }
 
     private class FormFieldDTOToModel extends PropertyMap<FormFieldDTO, FormField> {
         @Override
         protected void configure() {
-            map().setOptions(null);
+            map().setOptions(source.getOptions().stream().map(op -> new FormAvailableValue(null, map(), op)).collect(Collectors.toList()));
         }
     }
 }
