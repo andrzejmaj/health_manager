@@ -168,11 +168,11 @@ public class FormService implements IFormService, BaseService {
         form.getFormFields().forEach(field -> {
             Optional<FormFieldDTO> first = formDTO.getFormFields().stream()
                     .filter(dto -> Objects.equals(dto.getName(), field.getName())).findFirst();
-            first.ifPresent(formFieldDTO -> field.setOptions(
+            first.ifPresent(formFieldDTO -> field.setOptions(formFieldDTO.getOptions() != null ?
                     formFieldDTO.getOptions()
                             .stream()
                             .map(x -> new FormAvailableValue(null, field, x))
-                            .collect(Collectors.toList())));
+                            .collect(Collectors.toList()) : null));
             field.setForm(form);
             field.setId(null);
         });
