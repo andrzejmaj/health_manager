@@ -52,7 +52,7 @@ public class AppointmentController {
     @RequestMapping(method = RequestMethod.GET, path = "/accounts/appointments")
     public ResponseEntity<?> getMine() {
         try {
-            return new ResponseEntity<>(appointmentService.getById(patientRepository.findByAccount_User_Email(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmail()).getId()), HttpStatus.OK);
+            return new ResponseEntity<>(appointmentService.getById(patientRepository.findByAccount_User_Email(((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getDetails()).getEmail()).getId()), HttpStatus.OK);
         } catch (NoSuchElementExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
