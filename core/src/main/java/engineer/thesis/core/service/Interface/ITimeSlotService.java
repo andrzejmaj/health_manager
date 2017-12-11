@@ -1,5 +1,6 @@
 package engineer.thesis.core.service.Interface;
 
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.TimeSlotDTO;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,8 @@ import java.util.List;
 public interface ITimeSlotService {
 
     TimeSlotDTO getById(long id);
+
+    TimeSlotDTO delete(long id) throws NoSuchElementExistsException;
 
     TimeSlotDTO saveTimeSlot(TimeSlotDTO timeSlotDTO, long doctorId) throws IllegalArgumentException;
 

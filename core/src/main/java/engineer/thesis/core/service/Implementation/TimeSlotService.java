@@ -1,9 +1,12 @@
 package engineer.thesis.core.service.Implementation;
 
 import engineer.thesis.core.controller.TimeSlotController;
+import engineer.thesis.core.exception.NoSuchElementExistsException;
 import engineer.thesis.core.model.dto.TimeSlotDTO;
+import engineer.thesis.core.model.entity.Appointment;
 import engineer.thesis.core.model.entity.Doctor;
 import engineer.thesis.core.model.entity.TimeSlot;
+import engineer.thesis.core.repository.AppointmentRepository;
 import engineer.thesis.core.repository.DoctorRepository;
 import engineer.thesis.core.repository.TimeSlotRepository;
 import engineer.thesis.core.service.Interface.ITimeSlotService;
@@ -25,6 +28,9 @@ public class TimeSlotService implements ITimeSlotService {
     private TimeSlotRepository timeSlotRepository;
 
     @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
     private DoctorRepository doctorRepository;
 
     private static TimeSlotDTO mapToDTO(TimeSlot timeSlot) {
@@ -34,6 +40,21 @@ public class TimeSlotService implements ITimeSlotService {
     @Override
     public TimeSlotDTO getById(long id) {
         return mapToDTO(Optional.ofNullable(timeSlotRepository.getOne(id)).orElseThrow(() -> new NoSuchElementException("No timeslot with id " + id)));
+    }
+
+    @Override
+    public TimeSlotDTO delete(long id) throws NoSuchElementExistsException {
+        TimeSlot slot = timeSlotRepository.getOne(id);
+        if (slot == null) {
+            throw new NoSuchElementExistsException("Timeslot with id: " + id + " does not exist");
+        }
+        Appointment appointment = appointmentRepository.findByTimeSlotId(id);
+        if (appointment != null) {
+            throw new IllegalStateException(
+                    "There is appointment (id: " + appointment.getId() + ") tied to timeslot. Remove it  first");
+        }
+        timeSlotRepository.delete(id);
+        return mapToDTO(slot);
     }
 
     @Override
