@@ -1,3 +1,7 @@
+%% TODO:
+%% usunąć aktora 'administrator'. Nie ma administratora, jest recepcjonistka
+
+
 % By zmienic jezyk na angielski/polski, dodaj opcje do klasy english lub polish
 \documentclass[polish,12pt]{aghthesis}
 \usepackage[utf8]{inputenc}
@@ -28,6 +32,8 @@
 \maketitle
 
 \tableofcontents
+
+\newpage
 
 \section{Cel prac i wizja produktu}
 %\section{Project goals and vision}
@@ -115,11 +121,18 @@ Możemy wyróżnić następujące czynniki ryzyka:
   Wszystkie wyżej wymienione zdarzenia uniemożliwiłyby powstanie w pełni działającego produktu, ze względu na to że poszczególne moduły są od siebie współzależne. Ryzyko wystąpienia rozbieżności można zminimalizować poprzez częste uzgadnianie między zespołami wizji produktu oraz API tych funkcjonalności, które udostępniane są zależnym modułom. Takie dyskusje powinny odbywać się nie tylko przed rozpoczęciem prac implementacyjnych, ale także w ich trakcie.
   \item Nieefektywne wykorzystanie technologii:
   \begin{itemize}
-    \item front-endowych (\href{https://getbootstrap.com/}{Twitter Bootstrap}),
-    \item komunikacyjnych (HTTP Api),
+    \item front-endowych (\href{https://getbootstrap.com/}{Twitter Bootstrap}, \href{https://angular.io/}{Angular}),
+    \item komunikacyjnych (HTTP API),
     \item zapewniających bezpieczeństwo (\href{https://jwt.io/}{JWT}).
   \end{itemize}
-  Wyżej wymienione zdarzenia skutkowały by powstaniem brzydkiego, ciężkiego w obsłudze lecz działającego produktu.
+  Wyżej wymienione zdarzenia skutkowałyby powstaniem kosztownego w utrzymaniu lub niezapewniającego odpowiedniego poziomu bezpieczeństwa, lecz działającego produktu. Zapobieganie tego typu zagrożeniom polega na poznawaniu i stosowaniu najlepszych praktyk implementacji danej technologii.
+  \item Utrata członka zespołu z przyczyn losowych, np.:
+  \begin{itemize}
+      \item długotrwała choroba,
+      \item wypadek,
+      \item rezygnacja z udziału w pracy inżynierskiej.
+  \end{itemize}
+  Powyższe zdarzenia spowodowałyby konieczność przejęcia obowiązków utraconego członka zespołu przez resztę grupy, co mogłoby doprowadzić do opóźnień i w konsekwencji niezrealizowania pewnych funkcjonalności przed terminem oddania pracy. Niestety, niemożliwe jest znaczące zmniejszenie ryzyka wystąpienia tychże zdarzeń; możemy jedynie wdrażać system jasnego, przejrzystego podziału pracy, żeby nie powodowały zbyt dużego zamieszania w procesie tworzenia produktu, a pozostali członkowie zespołu mogli w łatwy sposób przejąć wyznaczone odpowiedzialności.
 \end{itemize}
 \section{Zakres funkcjonalności}
 %\section{Functional scope}
@@ -150,7 +163,7 @@ Ich możliwości wykorzystania systemu są opisane w \emph{wymaganiach funkcjona
 %opisy przeklejone z dyplom.iisg.agh.edu.pl
 %coś więcej sie dowiemu pewno dopiero na sporkaniu 10.04 lub 11.04
 \subsubsection{Moduł komunikacji ze sprzętem medycznym}
-Moduł komunikacji ze sprzętem medycznym takim jak aparat USG na przykład firm GE, Samsung, Toshiba lub Philips. Moduł umożliwia pobieranie wyników badań w tym zdjęć w formacie DICOM z urządzeń medycznych do systemu wspomagającego prowadzenie gabinetu lekarskiego.
+Moduł komunikacji ze sprzętem medycznym takim jak aparat USG. Moduł umożliwia pobieranie wyników badań (w tym zdjęć) w formacie DICOM z urządzeń medycznych do systemu wspomagającego prowadzenie gabinetu lekarskiego.
 \subsubsection{System wspomagający prowadzenie gabinetu lekarskiego}
 System wspomagający prowadzenie gabinetu lekarskiego zapewnia następujące funkcjonalności
 \begin{itemize}
@@ -351,7 +364,7 @@ Na architekturę produktu składa się:
 \begin{figure}[H]
     \centering
     \includegraphics{komunikacja-serwer-klient-okolny}
-    \caption{Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytania o dane i wysyłanie danych do aplikacji strony serwerowej za pomocą HTTP Api. Strona serwerowa komunikuje się z bazą danych za pomocą JDBC}
+    \caption{Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytania o dane i wysyłanie danych do aplikacji strony serwerowej za pomocą HTTP API. Strona serwerowa komunikuje się z bazą danych za pomocą JDBC}
     \label{fig:my_label}
 \end{figure}
 
@@ -806,16 +819,249 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
         \end{figure}  
     }
 \subsubsection{Lekarz}
-    \paragraph{Ustalanie grafiku}{}
-    \paragraph{Drukowanie grafiku}{}
-    \paragraph{Ustalanie terminów}{}
-    \paragraph{Rejestracja pacjenta}{}
-    \paragraph{Eksport kalendarza}{}
+    \paragraph{Logowanie}{
+      \begin{enumerate}
+          \item Za pomocą przeglądarki internetowej połącz się z serwerem udostępniającym usługę
+          \item Wpisz swój adres e-mail oraz swoje hasło
+      \end{enumerate}
+      \begin{figure}[H]
+          \includegraphics[width=0.7\textwidth]{gui-loginpage}
+          \caption{Strona logowania}
+      \end{figure}
+    }
+    \paragraph{Pulpit.}{Po zalogowaniu lekarz przenoszony jest na pulpit
+      \begin{figure}[H]
+          \includegraphics[width=0.7\textwidth]{gui-doc-dashboard}
+          \caption{Pulpit lekarza}
+      \end{figure} 
+    }
+    \paragraph{Dodawanie pacjenta}{
+        Należy kliknąć w kafelek \emph{Dodaj pacjenta} na pulpicie i wypełnić formularz
+        \begin{figure}[H]
+          \includegraphics[width=0.7\textwidth]{gui-add-patient}
+          \caption{Dodawanie pacjenta}
+        \end{figure}     
+    }
+    \paragraph{Dodawanie dostępnego terminu}{
+        Należy kliknąć w kafelek \emph{Dodaj nowy przedział godzinowy} na pulpicie i wypełnić formularz \\
+        Wymagane dane:
+        \begin{itemize}
+            \item Wybierz lekarza - lekarz do którego będzie przypisany termin
+            \item Data - data
+            \item Godzina rozpoczęcia
+            \item Godzina zakończenia
+            \item Pozwól na samo-zapis - określa czy na termin pacjenci mogą rejestrować się samodzielnie czy tylko przez recepcję
+        \end{itemize}
+        Po wypełnieniu wyżej wymienionych danych użytkownik może dodać pojedyńczy wolny termin wizyty. Aby dodać wiele terminów na raz, należy wypełnić pozostałe pola. Można dodać wiele terminów  w jednym dniu oraz ustawić tryb powtarzania tak, żeby dodać wiele terminów w wiele dni.
+        \begin{itemize}
+            \item Minuty na wizytę - czas pojedyńczej wizyty
+            \item Przerwa między wizytami (każdymi dwoma następującymi po sobie)
+            \item Tryb powtarzania \begin{itemize}
+                \item Bez powtarzania (domyśle) - dodawanie wielu terminów w jednym dniu
+                \item Codziennie
+                \item Co tydzień
+                \item Od poniedziałku do piątku - Tak jak dodawanie codzienne lecz z wyłączeniem sobót i niedziel
+            \end{itemize}
+            \item Data zakończenia - nie dotyczy trybu \emph{Bez powtażania}
+        \end{itemize}
+        \begin{figure}[H]
+          \includegraphics[width=0.7\textwidth]{gui-add-timeslot}
+          \caption{Dodawanie dostępnego terminu}
+        \end{figure}     
+    }
+    \paragraph{Grafik}{ Dostępny jest z pulpitu oraz listy lekarzy. Pokazuje wszystkie terminy dla wszystkich lekarzy w zadanym przedziale czasowym
+        \begin{figure}[H]
+          \includegraphics[width=0.7\textwidth]{gui-timetable}
+          \caption{Grafik}
+        \end{figure}        
+    }
+    \paragraph{Moje wizyty}{Lista umówionych wizyt, pozwala wyświetlić wizyty przyszłe i już odbyte w zależności od wybranego przedziału czasowego. Dostarczane informacje:
+    \begin{itemize}
+        \item Termin wizyty
+        \item Imię i nazwisko pacjenta
+        \item Priorytet
+        \item Powód wizyty (wypełniany przez pacjenta przy zapisie)
+        \item Numer gabinetu
+        \item odnośnik do szczegółowych informacji na temat wizyty
+    \end{itemize}
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-doc-myvisits}
+        \caption{Lista umówionych wizyt lekarza}
+        \end{figure}    
+    }
+    \paragraph{Widok kalendarza} { Lekarz widzi w kalendarzu swoje wolne terminy (zaznaczone na niebiesko) i zajęte swoje terminy (zaznaczone na czerwono) \\
+    Aby zobaczyć szczegóły dotyczące terminu należy na niego kliknąć
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-doc-cal}
+        \caption{Kalendarz lekarza}
+        \end{figure}  
+        }
+    \paragraph{Umawianie pacjenta na wizytę}{
+    Lekarz może umówić dowolnego pacjenta na wizytę klikając na swój wolny termin i wybierając nazwisko pacjenta z listy
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-doc-unenrolled}
+        \caption{Zapisywanie pacjenta na wizytę}
+        \end{figure}  
+    }
+     \paragraph{Przeglądanie danych pacjenta zapisanego na wizytę}{
+        \begin{enumerate}
+          \item Wybierz termin w kalendarzu
+          \item Klinkij na nazwisko pacjenta
+        \end{enumerate}
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-doc-enrolled}
+        \caption{Odwołanie terminu}
+        \end{figure}  
+    }
+     \paragraph{Odwołanie wizyty}{
+     Lekarz może odwołać umuwioną wizytę wybierając zajęty termimn i klikając \emph{Odwołaj wizytę}
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-doc-enrolled}
+        \caption{Odwołanie terminu}
+        \end{figure}  
+    }
+    \paragraph{Usuwanie terminu}{
+    Lekarz może usunąć swój wolny termin wybierając go w kalendarzu i klikając \emph{Usuń termin}
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-doc-unenrolled}
+        \caption{Usuwanie terminu}
+        \end{figure}  
+    }
+    \paragraph{Przesunięcie terminu}{
+    Lekarz może przesunąć dowolny termin (zajęty bądź nie)
+    \begin{enumerate}
+      \item Wybierz termin w kalendarzu
+      \item Kliknij \emph{Przenieś termin}
+      \item Wybierz nową datę rozpoczęcia i zakończenia wizyty
+      \item Kliknij \emph{Zapisz}
+    \end{enumerate}
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-doc-moveslot}
+        \caption{Przesuwanie terminu}
+        \end{figure}  
+    }
+    \paragraph{Eksport do kalendarza Google.}{ W oknie zapisanej wizyty i oknie zapisu można wyeksportować termin do kalendarza Google klikając \emph{Eksportuj do kalendarza Google}.
+    \begin{enumerate}
+      \item Kliknij \emph{Eksportuj do kalendarza Google}
+      \item W otorzonym okienku uzupełnij swoje dane logowania do konta Google
+    \end{enumerate}
+       \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-google-export}
+        \caption{Eksport do kalendarza Google}
+        \end{figure}  
+    }
 \subsubsection{Recepcjonistka}
-    \paragraph{Rejestracja pacjenta}{}
-    \paragraph{Zmiana terminu wizyty}{}
-
-
+    \paragraph{Logowanie}{
+      \begin{enumerate}
+          \item Za pomocą przeglądarki internetowej połącz się z serwerem udostępniającym usługę
+          \item Wpisz swój adres e-mail oraz swoje hasło
+      \end{enumerate}
+      \begin{figure}[H]
+          \includegraphics[width=0.7\textwidth]{gui-loginpage}
+          \caption{Strona logowania}
+      \end{figure}
+    }
+    \paragraph{Dodawanie pacjenta}{
+        Należy kliknąć w kafelek \emph{Dodaj pacjenta} na pulpicie i wypełnić formularz
+        \begin{figure}[H]
+          \includegraphics[width=0.7\textwidth]{gui-add-patient}
+          \caption{Dodawanie pacjenta}
+        \end{figure}     
+    }
+    \paragraph{Dodawanie lekarza}{
+        Należy kliknąć w kafelek \emph{Dodaj lekarza} na pulpicie i wypełnić formularz
+        \begin{figure}[H]
+          \includegraphics[width=0.7\textwidth]{gui-add-doctor}
+          \caption{Dodawanie lekarza}
+        \end{figure}     
+    }
+    \paragraph{Zmiana terminu wizyty}{
+      \begin{enumerate}
+        \item Wybierz termin w kalendarzu
+        \item Kliknij \emph{Przenieś termin}
+        \item Wybierz nowego lekarz obsługującego wizytę
+        \item Wybierz nową datę rozpoczęcia i zakończenia wizyty
+        \item Kliknij \emph{Zapisz}
+      \end{enumerate}
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-recep-moveslot}
+        \caption{Zmiana terminu wizyty}
+        \end{figure} 
+    }
+    \paragraph{Rejestracja pacjenta}{
+       \begin{itemize}
+           \item Najpierw wybór pacjenta - potem wybór lekarza
+           \begin{enumerate}
+             \item Wybierz \emph{Listę pacjentów} z menu po lewej
+             \item Kliknij \emph{Rejestruj wizytę} przy wybranym pacjencie
+               \begin{figure}[H]
+               \includegraphics[width=0.7\textwidth]{gui-recep-patientlist}
+               \caption{Lista pacjentów}
+               \end{figure} 
+             \item Wybierz lekarza z lity
+               \begin{figure}[H]
+               \includegraphics[width=0.7\textwidth]{gui-recep-register-for-patient}
+               \caption{Wybór lekarza}
+               \end{figure} 
+             \item Wybierz termin
+               \begin{figure}[H]
+               \includegraphics[width=0.7\textwidth]{gui-recep-reg-pat-cal}
+               \caption{Wybór terminu}
+               \end{figure}  
+             \item Potwierdź klikając \emph{Zapisz}
+               \begin{figure}[H]
+               \includegraphics[width=0.7\textwidth]{gui-recep-reg-pat-window}
+               \caption{Zatwierdzenie wyboru}
+               \end{figure}               
+           \end{enumerate}
+           \item Najpierw wybór lekarza - potem wybór pacjenta
+             \begin{enumerate}
+             \item Kliknij \emph{Lista lekarzy} z menu po lewej
+             \item Wybierz lekarza z listy
+                \begin{figure}[H]
+                 \includegraphics[width=0.7\textwidth]{gui-doctor-list}
+                 \caption{Lista lekarzy}
+                 \end{figure}  
+             \item Wybierz wolny termin
+                 \begin{figure}[H]
+                 \includegraphics[width=0.7\textwidth]{gui-doc-cal}
+                 \caption{Kalendarz lekarza}
+                 \end{figure}  
+            \item Wybierz pacjenta z listy
+                 \begin{figure}[H]
+                 \includegraphics[width=0.7\textwidth]{gui-doc-unenrolled}
+                 \caption{Wybór pacjenta}
+                 \end{figure}  
+             \end{enumerate}
+       \end{itemize}
+    }
+    \paragraph{Dodawanie dostępnego terminu}{
+        Należy kliknąć w kafelek \emph{Dodaj nowy przedział godzinowy} na pulpicie i wypełnić formularz \\
+        Wymagane dane:
+        \begin{itemize}
+            \item Wybierz lekarza - lekarz do którego będzie przypisany termin
+            \item Data - data
+            \item Godzina rozpoczęcia
+            \item Godzina zakończenia
+            \item Pozwól na samo-zapis - określa czy na termin pacjenci mogą rejestrować się samodzielnie czy tylko przez recepcję
+        \end{itemize}
+        Po wypełnieniu wyżej wymienionych danych użytkownik może dodać pojedyńczy wolny termin wizyty. Aby dodać wiele terminów na raz, należy wypełnić pozostałe pola. Można dodać wiele terminów  w jednym dniu oraz ustawić tryb powtarzania tak, żeby dodać wiele terminów w wiele dni.
+        \begin{itemize}
+            \item Minuty na wizytę - czas pojedyńczej wizyty
+            \item Przerwa między wizytami (każdymi dwoma następującymi po sobie)
+            \item Tryb powtarzania \begin{itemize}
+                \item Bez powtarzania (domyśle) - dodawanie wielu terminów w jednym dniu
+                \item Codziennie
+                \item Co tydzień
+                \item Od poniedziałku do piątku - Tak jak dodawanie codzienne lecz z wyłączeniem sobót i niedziel
+            \end{itemize}
+            \item Data zakończenia - nie dotyczy trybu \emph{Bez powtażania}
+        \end{itemize}
+        \begin{figure}[H]
+          \includegraphics[width=0.7\textwidth]{gui-add-timeslot}
+          \caption{Dodawanie dostępnego terminu}
+        \end{figure}     
+    }
 \listoffigures 
 \listoftables
 %%%%% KONIEC %%%%%%
