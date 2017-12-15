@@ -37,103 +37,89 @@
   wizja produktu, studium wykonalności i analiza zagrożeń.}
   
 \subsection{Opis problemu}
-Rejestracja pacjenta w gabinecie lekarskim wymaga następujących kroków:
+Jednym z głównych zadań gabinetu lekarskiego jest przyjmowanie pacjentów na wizyty u lekarza. Zanim pacjent będzie mógł odbyć wizytę, zazwyczaj konieczna jest jego rejestracja. W ogólnym przypadku może ona przebiegać według poniższych kroków:
 
 \begin{enumerate}
-  \item Pacjent znajduje numer telefonu do recepcji gabinetu
-  \item Pacjent dzwoni do recepcji gabinetu
-  \item Recepcjonistka odbiera telefon
-  \item Pacjent przedstawia cel wizyty bądź nazwisko lekarza
-  \item Recepcjonistka odszukuje w grafiku możliwe terminy wizyty
-  \item Recepcjonistka podaje pacjentowi możliwe terminy wizyty
-  \item Pacjent wybiera termin wizyty
-  \item Recepcjonistka wpisuje termin do grafiku lekarza
-  \item Pacjent wpisuje termin do swojego kalendarza
+  \item Pacjent znajduje numer telefonu do recepcji gabinetu.
+  \item Pacjent dzwoni do recepcji gabinetu.
+  \item Recepcjonistka odbiera telefon.
+  \item Pacjent przedstawia cel wizyty bądź nazwisko lekarza.
+  \item Recepcjonistka odszukuje w grafiku możliwe terminy wizyty.
+  \item Recepcjonistka podaje pacjentowi możliwe terminy wizyty.
+  \item Pacjent wybiera termin wizyty.
+  \item Recepcjonistka wpisuje termin do grafiku lekarza.
+  \item Pacjent wpisuje termin do swojego kalendarza.
 \end{enumerate}
 
 W powyższym modelu wyróżniamy następujące niedogodności i problemy:
-
 \begin{itemize}
 %todo tu można jeszcze więcej głupot napisać
-  \item Potrzeba szukania numeru telefonu do gabinetu
-  \item Konieczność obecności recepcjonistki odbierającej telefon
-  \item Brak synchronizacji dostępności terminu z lekarzem przyjmującym wizytę
-  \item Pacjent może źle zapisać lub zapomnieć o umówionym terminie wizyty
-  \item Lekarz nie jest automatycznie powiadamiany o nowej rezerwacji terminu wizyty
-  \item Lekarz, dowiedziawszy się o terminie wizyty, nie ma natychmiastowego dostępu do danych pacjenta
+  \item Potrzeba znalezienia przez pacjenta numeru telefonu do gabinetu.
+  \item Konieczność stałej obsługi linii telefonicznej przez recepcjonistkę w godzinach, w których pacjent ma możliwość rejestracji.
+  \item Konieczność prowadzenia przez gabinet rejestru wizyt.
+  \item Możliwość błędnego zapisania terminu lub zapomnienia przez pacjenta o umówionym terminie wizyty.
+  \item Konieczność powiadomienia lekarza o nowej rezerwacji terminu wizyty w sposób ustny bądź pisemny.
+  \item Brak natychmiastowego dostępu przez lekarza do danych pacjenta.
 \end{itemize}
 
 \subsection{Cel}
 Stworzyć system eliminujący podane wyżej problemy i niedogodności, a w szczególności:
 
 \begin{itemize}
-  \item Dostarczyć pacjentowi możliwość samodzielnej rejestracji na wizytę u lekarza
-  \item Dostarczyć pacjentowi widok kalendarza pozwalający na ogląd dostępnych terminów i ich wybór oraz ogląd terminów zarezerwowanych wizyt
-  \item Dostarczyć lekarzowi widok kalendarza pozwalający ustalić godziny przyjęć, oznaczyć określone terminy jako niedostępne, zobaczyć zajęte przez pacjentów terminy oraz odwołać wizyty
-  \item Ułatwić lekarzowi dostęp do danych medycznych pacjenta zapisanego na wizytę
-  \item Dostarczyć recepcjonistce widok kalendarza pozwalający na sprawne poinformowanie rejestrującego się pacjenta o dostępnych terminach oraz zapisać go na wizytę
-  \item Umożliwić wpisywanie danych osobowych oraz wypełnianie formularzy medycznych przez rejestrującego się pacjenta bądź przez recepcjonistkę pozyskującą dane od pacjenta
-  \item Przypominać pacjentowi o umówionych terminach wizyty przez wysłanie SMS-a
-  \item Ograniczyć potrzebę niezautomatyzowanej, papierowej pracy, tj. utrzymywania dokumentów związanych z wizytą
+  \item Dostarczyć pacjentowi możliwość samodzielnej rejestracji na wizytę u lekarza.
+  \item Dostarczyć pacjentowi widok kalendarza pozwalający na ogląd dostępnych terminów i ich wybór oraz ogląd terminów zarezerwowanych wizyt.
+  \item Dostarczyć lekarzowi widok kalendarza pozwalający ustalić godziny przyjęć, oznaczyć określone terminy jako niedostępne, zobaczyć zajęte przez pacjentów terminy oraz odwołać wizyty.
+  \item Ułatwić lekarzowi dostęp do danych medycznych pacjenta zapisanego na wizytę.
+  \item Dostarczyć recepcjonistce widok kalendarza pozwalający na sprawne poinformowanie rejestrującego się pacjenta o dostępnych terminach oraz zapisać go na wizytę.
+  \item Umożliwić wpisywanie danych osobowych oraz wypełnianie formularzy medycznych przez rejestrującego się pacjenta bądź przez recepcjonistkę pozyskującą dane od pacjenta.
+  \item Przypominać pacjentowi o umówionych terminach wizyty przez wysłanie SMS-a.
+  \item Umożliwić automatyczne gromadzenie danych związanych z wizytami.
 \end{itemize}
 
 \subsection{Motywacja}
-Uzyskanie tytułu inżyniera
+Motywacją była dla nas chęć zdobycia wiedzy z zakresu wytwarzania oprogramowania dla potrzeb medycznych, poznania specyfiki tej dziedziny, a także nauczenia się efektywnego wykorzystywania technologii używanych przez nas w procesie tworzenia produktu końcowego. Ponadto, jest to praca dyplomowa, na podstawie której dążymy do uzyskania tytułu inżyniera.
 
 \subsection{Wizja produktu}
-Produkt będzie miał architekturę trójwarstwową:
+Rozwiązaniem wymienionych wyżej problemów będzie aplikacja, do której użytkownicy będą mieli dostęp poprzez przeglądarkę internetową.
 
-\begin{itemize}
-  \item Aplikacja działająca w przeglądarce
-  \item Serwis HTTP API (REST)
-  \item Baza danych
-\end{itemize}
-
-\subsubsection{Aplikacja działająca w przeglądarce}
-
-W aplikacji będziemy rozróżniać trzy typy użytkowników:
+Aplikacja będzie rozróżniała trzy typy użytkowników:
 \begin{itemize}
     \item Administrator
     \item Lekarz
     \item Recepcjonistka
     \item Pacjent
 \end{itemize}
-Ich możliwości wykorzystania systemu są opisane w \emph{wymaganiach funkcjonalnych}. Aplikacja będzie wykorzystywała \href{https://getbootstrap.com/}{Twitter Bootstrap} (ustalone ze względu na wymaganie zachowania spójności wyglądu z produktami zależnymi)
 
-%Znam ludzi co biją jak na HTTP API mówi się REST)))
-\subsubsection{Serwis HTTP API}
-Serwis \emph{HTTP API} służy do komunikacji z produktami zależnymi, w szczególności z bazą danych. Nie będzie dostępny do bezpośredniego wykorzystania przez użytkownika.
+Pacjent będzie mógł utworzyć swoje konto i zarejestrować się na wybrany termin wizyty spośród dostępnych terminów u wybranego lekarza. Recepcjonistka będzie mogła w imieniu pacjenta utworzyć jego konto i zarejestrować go na wizytę. Lekarz będzie mógł dodawać nowe terminy wizyt, przeglądać stan rezerwacji swoich wizyt i dane pacjentów. Administrator będzie posiadał wszystkie wymienione wyżej uprawnienia i będzie mógł pełnić rolę nadzorcy systemu.
 
-\subsubsection[Baza danych]{Baza danych\footnote{W rzeczywistym produkcie baza danych będzie dostarczana przez osobny moduł}}
+Szczegółowe możliwości wykorzystania systemu przez każdy typ użytkowników są opisane w \emph{wymaganiach funkcjonalnych}.
 
-Użyjemy relacyjnej bazy danych - jest to ustalone ze względu na kompatybilność z produktami zależnymi.
-
-\subsection{Opis produktu}
-Produkt jest programem komputerowym więc nie posiada opisu jak rzeczy materialne. Poniżej przedstawiamy substytut w postaci opisu pracy z systemem:
-
-Użytkownik nie będzie musiał przeprowadzać instalacji produktu- produkt będzie aplikacją działającą w przeglądarce internetowej. Użytkownikowi przedstawi się ekran logowania. Użytkownik będzie miał możliwość zalogowania się jako Administrator, Lekarz, Recepcjonistka lub Pacjent. Dalszy ciąg pracy zależy od typu użytkownika, jednakże podstawowymi czynnościami wykonywanymi przez użytkownika jest przeglądanie/modyfikacja kalendarza wizyt oraz odczytywanie/zapisywanie danych pacjentów.
-
+Wszystkie dane dot. pacjentów, lekarzy, dostępnych terminów wizyt i rezerwacji będą gromadzone w bazie danych.
 
 \subsection{Studium wykonalności}
-Technologie wymienione \hyperref[subsec:analizaTechnologiczna]{\emph{Analizie technologicznej}} zostały uzgodnione przed rozpoczęciem prac z Klientem i pozostałymi zespołami - było to konieczne ze względu na wysokie sprzężenie modułów przygotowywanych przez zespoły. Dlatego jesteśmy przekonani że technologie zostały dobrane poprawnie i produkt jest wykonalny ze względu na dobrane technologie. \\
-Ograniczenia czasowe na wykonanie produktu zostały rozważone (miało to wpływ między innymi na \hyperref[subsec:wykorzystane-technologie-baza]{schemat bazy danych}). \\
-Pozostałe przeszkody w wykonaniu produktu są zawarte w \emph{Analizie zagrożeń}.
+Technologie wymienione w \hyperref[subsec:analizaTechnologiczna]{\emph{Analizie technologicznej}} zostały uzgodnione przed rozpoczęciem prac z Klientem i pozostałymi zespołami --- było to konieczne ze względu na wysokie sprzężenie modułów przygotowywanych przez zespoły. Dlatego jesteśmy przekonani że technologie zostały dobrane poprawnie i produkt jest wykonalny ze względu na dobrane technologie.
 
-\subsection{Analiza zagrożeń}
-Czynniki ryzyka
+Ograniczenia czasowe na wykonanie produktu zostały rozważone (miało to wpływ między innymi na \hyperref[subsec:wykorzystane-technologie-baza]{schemat bazy danych}).
+
+Ponadto, przeprowadziliśmy analizę zagrożeń, której wyniki przedstawiamy poniżej.
+
+\subsubsection{Analiza zagrożeń}
+Możemy wyróżnić następujące czynniki ryzyka:
 \begin{itemize}
-  \item Błąd synchronizacji między zespołami, a w szczególności \begin{itemize}
-    \item Niespójna wizja produktu
-    \item Niespójne API
-    \item Nie dokończenie swojej części produktu przez którąkolwiek z zależnych grup
+  \item Rozbieżności między zespołami, a w szczególności:
+  \begin{itemize}
+    \item niespójna wizja produktu,
+    \item niespójne API,
+    \item porzucenie swojej części produktu lub niezrealizowanie wspólnych funkcjonalności przez którąkolwiek z zależnych grup.
   \end{itemize}
-  Wszystie wyżej wymienione zdarzenia skutkowałyby nie powstaniem działającego produktu
-  \item Kiepskie wykorzystanie technologii \begin{itemize}
-    \item Front-endowych (\href{https://getbootstrap.com/}{Twitter Bootstrap})
-    \item Komunikacyjnych (HTTP Api)
-    \item Zapewniających bezpieczeństwo (\href{https://jwt.io/}{JWT})
+  Wszystkie wyżej wymienione zdarzenia uniemożliwiłyby powstanie w pełni działającego produktu, ze względu na to że poszczególne moduły są od siebie współzależne. Ryzyko wystąpienia rozbieżności można zminimalizować poprzez częste uzgadnianie między zespołami wizji produktu oraz API tych funkcjonalności, które udostępniane są zależnym modułom. Takie dyskusje powinny odbywać się nie tylko przed rozpoczęciem prac implementacyjnych, ale także w ich trakcie.
+  \item Nieefektywne wykorzystanie technologii:
+  \begin{itemize}
+    \item front-endowych (\href{https://getbootstrap.com/}{Twitter Bootstrap}),
+    \item komunikacyjnych (HTTP Api),
+    \item zapewniających bezpieczeństwo (\href{https://jwt.io/}{JWT}).
   \end{itemize}
-  Wyżej wymienione zdarzenia skutkowały by powstaniem brzydkiego, ciężkiego w obsłudze lecz działającego produktu
+  Wyżej wymienione zdarzenia skutkowały by powstaniem brzydkiego, ciężkiego w obsłudze lecz działającego produktu.
 \end{itemize}
 \section{Zakres funkcjonalności}
 %\section{Functional scope}
@@ -278,10 +264,12 @@ System wspomagający prowadzenie gabinetu lekarskiego zapewnia następujące fun
  
 \subsubsection{Wymagania niefunkcjonalne}
 \begin{itemize}
-    \item Aplikacja ma działać w przeglądarce internetowej
-    \item Aplikacja ma działać na komputerach stacjonarnych, laptopach oraz tabletach
-    \item Aplikacja ma działać dla wielu współbieżnych użytkowników
-    \item Aplikacja ma być łatwa w obsłudze dla personelu gabinetu lekarskiego oraz pacjentów
+    \item Aplikacja ma wykorzystywać \href{https://getbootstrap.com/}{Twitter Bootstrap} do stworzenia interfejsu użytkownika --- jest to ustalone ze względu na wymaganie zachowania spójności wyglądu z produktami zależnymi.
+    \item W warstwie bazodanowej ma być używana relacyjna baza danych --- jest to ustalone ze względu na kompatybilność z produktami zależnymi.
+    \item Aplikacja ma działać w przeglądarce internetowej.
+    \item Aplikacja ma działać na komputerach stacjonarnych, laptopach oraz tabletach.
+    \item Aplikacja ma działać dla wielu współbieżnych użytkowników.
+    \item Aplikacja ma być łatwa w obsłudze dla personelu gabinetu lekarskiego oraz pacjentów.
 \end{itemize}
 
 
@@ -625,8 +613,12 @@ Rozważaliśmy wprowadzenie podziału ze względu na kompetencje techniczne, czy
 \end{itemize}
 Uznaliśmy to za zabyteczne ponieważ produkt składa się głównie z kodu front-endowego i taki podział funkcji spowodowałby nierównomierny podział prac. Zamiast tego każdy członek zespołu odpowiadał za stworzenie front-endowej i back-endowej części funkcjonalności którą wdrażał.
 
-\subsection{Wyznaczanie zadań i podział prac}
-Wykorzystywaliśmy Jira-ę, hostowaną przez IISG. Po każdym spotkaniu z Klientem szef zespołu przetwarzał wymagane przez Klienta funkcjonalności na Jira-owe bilety. Każdy bilet opisywał jedną funkcjonalność. Bilety były posortowane wegług ważności (to znaczy: funckjonalności które należało zaimplementować do następnego spotkania z klientem były najwyżej, najniżej były nasze pomysły których Klient nie wymagał). Członkowie zespołu, według czasu i możliwości, przypisywali sobie zadania i wykonywali je.
+\subsection{Wyznaczanie i rozdział zadań}
+Wykorzystywaliśmy Jira-ę, hostowaną przez IISG. Po każdym spotkaniu z Klientem szef zespołu przetwarzał wymagane przez Klienta funkcjonalności na Jira-owe bilety. Każde zadanie opisywało jedną funkcjonalność. Zadania były posortowane wegług ważności (to znaczy: funckjonalności które należało zaimplementować do następnego spotkania z klientem były najwyżej, najniżej były nasze pomysły których Klient nie wymagał). Członkowie zespołu, według czasu i możliwości, przypisywali sobie zadania i wykonywali je.
+ \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{jira-kanban}
+    \caption{Tablica Kanbanowa projeku PRZEMEK - element zwinnej metodyki tworzenia oprogramowania}
+    \end{figure}
 
 \subsection{Sposób wykonywania zadań}
 Produkt składa się de facto z dwóch powiązanych pod-projektów: części front-endowej i back-enbdowej. Te dwa pod-projekty były objęte systemem kontroli wersji Git. Dla każdego pod-projektu osobno członek zespołu tworzył Git-ową gałąź przypisaną funkcjonalności i na niej komitował kod wprowadzający funkcjowalność. Po zakończeniu pracy, pozostali członkowie zespołu przeglądali kod na gałęzi i ewentualnie prosili o wprowadzenie poprawek (code-review). Na końcu gałąź funkcjonalnościowa była dołączana do głównej gałęzi.
@@ -636,10 +628,50 @@ Produkt składa się de facto z dwóch powiązanych pod-projektów: części fro
 Do komunikacji bieżącej używaliśmy komunikatora Skype. Według potrzeb, umawialiśmy się na ta zwane call-e, podczas których przedstawiciele każdego z powiązanych zespołów omawiali stan prac i planowali przyszłą pracę.
 \subsubsection{Wymiana wiedzy}
 Używaliśmy Confluence-a, hostowanego przez IISG. Służył on jako pamięć długotrwała oraz punkt wymiany informacji między zespołami. Tam spisywaliśmy notatki ze spotkań (zarówno tych z Klientem jak i między-zespołowych), prowadziliśmy kalendarz przyszłych spotkań oraz spisywaliśmy różnorakie informacje które wydawały się nam przydatne. Do tego Confluence-a mieli dostęp również członkowie powiązanych zespołów.
-
+ \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{confluence-maszyna}
+    \caption{Strona na Confluence - oprogramowaniu wspomagającym współpracę przy tworzeniu oprogramowania}
+    \end{figure}
+    
 \subsection{Spotkania z Klientem}
 Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązanych zespołów był dr Piotr Nawrocki. Razem z zespołami powiązanymi prosiliśmy naszych Klientów o wspólne spotkania (3 zespoły i 2 Klientów), na co nasi Klienci chętnie przystali. Taka organizacja spotkań ułatwiła koordynację i integrację zespołów.
   
+  
+\subsection{Podział prac ze względu na osobę wykonującą}
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+    %%% TODO
+    %%% WSZYSTKO TRZEBA POROZDZIELAĆ NA JAK NAJDROBNIEJSZE SZCZEGÓLIKI
+    %%% TAK ŻEBY WYSZŁO ŻE DUŻO ZROBILIŚMY xDD
+    %%% TA CZĘŚĆ JEST WAŻNA BO O NIĄ NAWROCKI PROSIŁ 2 RAZY
+    %%% można np dopisać kto jakie endpointy dodawał
+    Wynik pracy & Osoba wykonująca \\ \hline \hline
+    Prototyp  porzucany front-endu\footnote{Nie został w żadnej części wykorzystany we właściwym produkcie ze względu na niezgodność wykorzystanych technologii} & Mihał Hamuda \\ \hline
+    Prototyp back-endu\footnote{Został częściowo wykorzystany we właściwym produkcie} & Filip Galas  \\ \hline
+    Wizja projektu\footnote{Tworzona na potrzeby Pracowni projektowej} & Wojciech Karpiel \\ \hline
+    Kalendarz wizyt & Michał Hamuda \\ \hline
+    Możliwość przenoszenia terminów & Wojciech Karpiel \\ \hline
+    Integracja kalendarza z \emph{Google Calendar} & Filip Galas \\ \hline
+    Rejestracja pacjenta przez recepcjonistkę & Michał Hamuda \\ \hline
+    Uwzględnienie roli użytkownika (\emph{aktora}) w kalendarzu & Wojciech Karpiel \\ \hline
+    Możliwość dodawania terminów wizyt & Filip Galas \\ \hline
+    Ładny wygląd i estetyka aplikacji & Michał Hamuda \\ \hline
+    Możliwość oznaczenia terminu jako dostępnego do rejestracji tylko przez recepcję & Wojciech Karpiel \\ \hline
+    Możliwość zapisywania się na wizytę & Wojciech Karpiel \\ \hline
+    Oznaczanie zajętych i wolnych wizyt kolorem w kalendarzu & Wojciech Karpiel \\ \hline
+    Grafik pracy lekarzy & Wojciech Karpiel \\ \hline
+    Usuwanie zaplanowanej wizyty & Wojciech Karpiel \\ \hline
+    Usuwanie dostępnego terminu wizyty & Wojciech Karpiel \\ \hline
+    Widok zarezerwowanych wizyt dla lekarza i pacjenta & Wojciech Karpiel \\ \hline
+    Dodawanie wielu terminów lekarza na raz & Wojciech Karpiel \\ \hline
+    Dokumentacja projektu & Wojciech Karpiel \\ \hline
+    Poprawki do dokumentacji & Filip Galas \\ \hline
+    Kontakty z Klientem & Wojciech Karpiel \\ \hline
+    Synchronizacja między zespołami & Wojciech Karpiel \\ \hline
+    Utrzymanie serwera (VM udzielona przez Klienta) z uruchomioną aplikacją & Wojciech Karpiel \\ \hline
+  \end{tabular}
+\end{center}
   %% Koniec organizacji pracy!
 
 
@@ -693,24 +725,99 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
 
 
 \subsection{Przewodnik użytkownika}
-\subsubsection{Administrator}
-\paragraph{Rejestracja użytkownika}{}
-\paragraph{Utrzymanie aplikacji}{}
-\subsubsection{Lekarz}
-\paragraph{Ustalanie grafiku}{}
-\paragraph{Drukowanie grafiku}{}
-\paragraph{Ustalanie terminów}{}
-\paragraph{Rejestracja pacjenta}{}
-\paragraph{Eksport kalendarza}{}
+%%TODO: Nie ma ogarniętego wdrożenia aplikacji więc nie ma co opowiadać administratorowi
+%\subsubsection{Administrator}
+%    \paragraph{Rejestracja użytkownika}{}
+%    \paragraph{Utrzymanie aplikacji}{}
 \subsubsection{Pacjent}
-\paragraph{Rejestracja}{}
-\paragraph{Logowanie}{}
-\paragraph{Zapis na wizytę}{}
-\paragraph{Eksport kalendarza}{}
+%    \paragraph{Rejestracja}{}
+    \paragraph{Logowanie}{
+    Pacjent otrzymuje od rejestrującej recepcjonistki dane dostępowe do swojego konta. \\
+    \begin{enumerate}
+        \item Za pomocą przeglądarki internetowej połącz się z serwerem udostępniającym usługę
+        \item Wpisz adres e-mail podany przy rejestracji oraz swoje hasło
+    \end{enumerate}
+    \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-loginpage}
+        \caption{Strona logowania}
+    \end{figure}
+    Po zalogowaniu użytkownik zostaje przeniesiony na pulpit
+    \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-patient-dashboard}
+        \caption{Pulpit pacjenta}
+    \end{figure}
+        
+    }
+    \paragraph{Moje wizyty}{Lista umówionych wizyt, pozwala wyświetlić wizyty przyszłe i już odbyte w zależności od wybranego przedziału czasowego. Dostarczane informacje:
+    \begin{itemize}
+        \item Termin wizyty
+        \item Imię i nazwisko lekarza
+        \item Numer gabinetu
+        \item odnośnik do szczegółowych informacji na temat wizyty
+    \end{itemize}
+    %%TODO WSTAWIĆ NOWY OBRAZEK JAK BĘDZIE NAPRAWIONY BUG ŻE PACJENT NIE MOŻE OTRZYMAĆ INFO O SAMYM SOBIE
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-patient-my-visits}
+        \caption{Lista umówionych wizyt pacjenta}
+    \end{figure}    
+    }
+    \paragraph{Lista lekarzy} pozwala na umówienie się na wizytę z konkretnym lekarzem
+    \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-doctor-list}
+        \caption{Lista lekarzy}
+    \end{figure}
+    Aby zobaczyć dostępne terminy dla danego lekarza należy kliknąć ikonkę kalendarzyka w wierszu zawierającym nazwisko danego lekarza
+    \paragraph{Kalendarz lekarza}{ pozwala zobaczyć
+    \begin{itemize}
+        \item Dostępne terminy wizyt - oznaczone kolorem niebieskim
+        \item Umówione wizyty - oznaczone kolorem czerwonym
+    \end{itemize}
+    
+    
+    \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-calendar-patient-month}
+        \caption{Kalendarz lekarza - widok miesiąca}
+    \end{figure}    
+    \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-calendar-patient-day}
+        \caption{Kalendarz lekarza - widok dnia}
+    \end{figure}    
+    }
+    \paragraph{Zapis na wizytę}{  - Po kliknięciu na dostępny (oznaczony kolorem niebieskim) termin w widoku kalendarza można się na umówić na wizytę klikając zielony przycisk \emph{Zapisz}. Powód wizyty (bądź inną informację do przekazania lekarzowi) można wpisać w pole \emph{Powód wizyty}
+    \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-patient-unenrolled-visit-window}
+        \caption{Okno zapisu na wizytę}
+    \end{figure}    
+    }
+    \paragraph{Odwołanie wizyty}{- Po kliknięciu na planowany (oznaczony kolorem czerwonym) termin w widoku kalendarza można odwołać wizytę klikając \emph{Odwołaj}        
+        \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-patient-enrolled-visit-window}
+        \caption{Okno zapisanej wizyty}
+        \end{figure}  
+    }
+    \paragraph{Eksport do kalendarza Google.}{ W oknie zapisanej wizyty i oknie zapisu można wyeksportować termin do kalendarza Google klikając \emph{Eksportuj do kalendarza Google}.
+    \begin{enumerate}
+      \item Kliknij \emph{Eksportuj do kalendarza Google}
+      \item W otorzonym okienku uzupełnij swoje dane logowania do konta Google
+    \end{enumerate}
+       \begin{figure}[H]
+        \includegraphics[width=0.7\textwidth]{gui-google-export}
+        \caption{Eksport do kalendarza Google}
+        \end{figure}  
+    }
+\subsubsection{Lekarz}
+    \paragraph{Ustalanie grafiku}{}
+    \paragraph{Drukowanie grafiku}{}
+    \paragraph{Ustalanie terminów}{}
+    \paragraph{Rejestracja pacjenta}{}
+    \paragraph{Eksport kalendarza}{}
 \subsubsection{Recepcjonistka}
-\paragraph{Rejestracja pacjenta}{}
-\paragraph{Zmiana terminu wizyty}{}
+    \paragraph{Rejestracja pacjenta}{}
+    \paragraph{Zmiana terminu wizyty}{}
 
+
+\listoffigures 
+\listoftables
 %%%%% KONIEC %%%%%%
 % o ile to mozliwe prosze uzywac odwolan \cite w konkretnych miejscach a nie \nocite
 
