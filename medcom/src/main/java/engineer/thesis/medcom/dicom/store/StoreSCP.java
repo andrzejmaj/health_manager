@@ -115,8 +115,6 @@ public class StoreSCP {
                 renameTo(as, file, finalFile);
 
                 databaseStorageService.store(finalFile, as);
-            } catch (DatabaseStorageException e) { // do not remove file from the disk
-                LOG.error("database persistence failure", e);
             } catch (Exception e) {
                 deleteFile(as, file);
                 throw new DicomServiceException(Status.ProcessingFailure, e);

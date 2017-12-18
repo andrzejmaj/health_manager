@@ -42,12 +42,12 @@ class DicomInstanceTest extends Specification {
         def builder = DicomInstance.builder()
 
         when:
-        builder.attribute(createAttribute(Tag.SOPClassUID, 'SOPClassUID_1'))
-        builder.attribute(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID_1'))
-        builder.attribute(createAttribute(Tag.SOPClassUID, 'SOPClassUID_2'))
-        builder.attribute(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID_2'))
-        builder.attribute(createAttribute(Tag.SOPClassUID, 'SOPClassUID_3'))
-        builder.attribute(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID_3'))
+        builder.accept(createAttribute(Tag.SOPClassUID, 'SOPClassUID_1'))
+        builder.accept(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID_1'))
+        builder.accept(createAttribute(Tag.SOPClassUID, 'SOPClassUID_2'))
+        builder.accept(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID_2'))
+        builder.accept(createAttribute(Tag.SOPClassUID, 'SOPClassUID_3'))
+        builder.accept(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID_3'))
         def instance = builder.build()
 
         then:
@@ -61,10 +61,10 @@ class DicomInstanceTest extends Specification {
     def 'Instance should have fields extracted from attributes'() {
         given:
         def instance = DicomInstance.builder()
-                .attribute(createAttribute(Tag.SOPClassUID, UID.CTImageStorage))
-                .attribute(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID'))
-                .attribute(createAttribute(Tag.InstanceCreationDate, '20170203'))
-                .attribute(createAttribute(Tag.InstanceCreationTime, '111530'))
+                .accept(createAttribute(Tag.SOPClassUID, UID.CTImageStorage))
+                .accept(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID'))
+                .accept(createAttribute(Tag.InstanceCreationDate, '20170203'))
+                .accept(createAttribute(Tag.InstanceCreationTime, '111530'))
                 .build()
 
         expect:
@@ -94,10 +94,10 @@ class DicomInstanceTest extends Specification {
     def 'Instance should create attributes map convertible to json'() {
         given:
         def instance = DicomInstance.builder()
-                .attribute(createAttribute(Tag.SOPClassUID, UID.CTImageStorage))
-                .attribute(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID'))
-                .attribute(createAttribute(Tag.SeriesDescription, 'test description 1'))
-                .attribute(createAttribute(Tag.SeriesDescription, 'test description 2'))
+                .accept(createAttribute(Tag.SOPClassUID, UID.CTImageStorage))
+                .accept(createAttribute(Tag.SOPInstanceUID, 'SOPInstanceUID'))
+                .accept(createAttribute(Tag.SeriesDescription, 'test description 1'))
+                .accept(createAttribute(Tag.SeriesDescription, 'test description 2'))
                 .build()
 
 
@@ -113,16 +113,16 @@ class DicomInstanceTest extends Specification {
     def 'Instance should lazily merge with other Instance'() {
         given:
         def instance1 = DicomInstance.builder()
-                .attribute(createAttribute(Tag.SOPClassUID, UID.CTImageStorage))
-                .attribute(createAttribute(Tag.SOPInstanceUID, 'base value'))
-                .attribute(createAttribute(Tag.SeriesDescription, 'base value'))
-                .attribute(createAttribute(Tag.ApplicatorDescription, 'base value'))
+                .accept(createAttribute(Tag.SOPClassUID, UID.CTImageStorage))
+                .accept(createAttribute(Tag.SOPInstanceUID, 'base value'))
+                .accept(createAttribute(Tag.SeriesDescription, 'base value'))
+                .accept(createAttribute(Tag.ApplicatorDescription, 'base value'))
                 .build()
         def instance2 = DicomInstance.builder()
-                .attribute(createAttribute(Tag.SOPClassUID, UID.CTImageStorage))
-                .attribute(createAttribute(Tag.SOPInstanceUID, 'new value'))
-                .attribute(createAttribute(Tag.SeriesDescription, 'new value'))
-                .attribute(createAttribute(Tag.AcquisitionContextDescription, 'new value'))
+                .accept(createAttribute(Tag.SOPClassUID, UID.CTImageStorage))
+                .accept(createAttribute(Tag.SOPInstanceUID, 'new value'))
+                .accept(createAttribute(Tag.SeriesDescription, 'new value'))
+                .accept(createAttribute(Tag.AcquisitionContextDescription, 'new value'))
                 .build()
         instance2.setSeriesInstanceUID('new value')
 

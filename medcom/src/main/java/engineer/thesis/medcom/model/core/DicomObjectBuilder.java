@@ -24,7 +24,7 @@ public abstract class DicomObjectBuilder<T extends DicomObject> implements Compa
        return !attribute.getName().isEmpty() && !attributeNames.contains(attribute.getName());
     }
 
-    public DicomObjectBuilder<T> attribute(DicomAttribute attribute) {
+    public DicomObjectBuilder<T> accept(DicomAttribute attribute) {
         if (!accepts(attribute))
             throw new IllegalStateException("illegal attribute passed into builder: " + attribute.getName());
 
