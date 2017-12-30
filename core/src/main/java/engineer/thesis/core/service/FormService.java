@@ -91,6 +91,7 @@ public class FormService implements IFormService, BaseService {
         }
         checkOwnership(form);
         form.setActive(false);
+        formRepository.save(form);
         return "Form " + id + " deleted successfully";
     }
 
