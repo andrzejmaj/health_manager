@@ -1,6 +1,7 @@
 package engineer.thesis.core.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -10,12 +11,15 @@ import java.util.Locale;
 @Component
 public class MailService {
 
+    @Value("${app.email.host}")
+    private String host;
+
     @Autowired
     private JavaMailSender mailSender;
 
     public SimpleMailMessage constructResetTokenEmail(
             String contextPath, Locale locale, String token, Long id, String email) {
-        String url = "http://localhost:3000/#/changePassword?id=" +
+        String url = host + "/#/changePassword?id=" +
                 id + "&token=" + token;
         String message = "Your password has been reset.\n Please click on link below to set your new password.";
         return constructEmail("Reset Password", message + " \r\n" + url, email);
