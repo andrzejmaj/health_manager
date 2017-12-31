@@ -90,7 +90,8 @@ public class FormService implements IFormService, BaseService {
             throw new NoSuchElementException("Form doesn't exist");
         }
         checkOwnership(form);
-        formRepository.delete(id);
+        form.setActive(false);
+        formRepository.save(form);
         return "Form " + id + " deleted successfully";
     }
 

@@ -58,4 +58,13 @@ public class TimeSlotController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/timeSlot/{timeSlotId}")
+    public ResponseEntity<?> removeAppointment(@PathVariable(name = "timeSlotId") long timeSlotId) {
+        try {
+            return new ResponseEntity<>(timeSlotService.delete(timeSlotId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
