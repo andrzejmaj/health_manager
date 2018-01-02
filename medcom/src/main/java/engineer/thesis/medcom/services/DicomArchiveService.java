@@ -3,6 +3,7 @@ package engineer.thesis.medcom.services;
 import engineer.thesis.core.model.dto.MedcomPatientDTO;
 import engineer.thesis.core.model.dto.PatientDTO2;
 import engineer.thesis.core.model.entity.Patient;
+import engineer.thesis.core.model.entity.medcom.Instance;
 import engineer.thesis.core.model.entity.medcom.Study;
 import engineer.thesis.core.repository.PatientRepository;
 import engineer.thesis.core.repository.medcom.InstanceRepository;
@@ -161,6 +162,13 @@ public class DicomArchiveService { // TODO generify
                     instance.setSeriesInstanceUID(instanceEntity.getSeries().getInstanceUID());
                     return instance;
                 })
+                .orElseThrow(() -> new InstanceNotFoundException(
+                        String.format("instance with instanceUID '%s' not found in the database!", instanceId)
+                ));
+    }
+
+    public Instance getInstanceEntity(String instanceId) {
+        return Optional.ofNullable(instanceRepository.findOne(instanceId))
                 .orElseThrow(() -> new InstanceNotFoundException(
                         String.format("instance with instanceUID '%s' not found in the database!", instanceId)
                 ));
