@@ -11,11 +11,11 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class MedicalHistoryDTO {
+class MedicalHistoryDTO {
     private Long id;
     private Long patientId;
     @NotNull
     private String diseaseName;
-    @NotNull
+    private String symptoms;
     private Date detectionDate;
 }
