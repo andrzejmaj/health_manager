@@ -1,7 +1,3 @@
-%% TODO:
-%% usunąć aktora 'administrator'. Nie ma administratora, jest recepcjonistka
-
-
 % By zmienic jezyk na angielski/polski, dodaj opcje do klasy english lub polish
 \documentclass[polish,12pt]{aghthesis}
 \usepackage[utf8]{inputenc}
@@ -17,7 +13,7 @@
 
 \author{Wojciech Karpiel\\ Michał Hamuda\\ Filip Galas}
 
-\titlePL{System rejestracji pacjentów - PRZEMEK\footnote{PRZEMEK - Produkt Rejestrujący Zapotrzebowanie na Ekspertyzę Medyczną Eliminując Kolejki}}
+\titlePL{System rejestracji pacjentów - PRZEMEK}
 \titleEN{Patient registration system}
 
 \fieldofstudy{Informatyka}
@@ -38,9 +34,8 @@
 \section{Cel prac i wizja produktu}
 %\section{Project goals and vision}
 \label{sec:cel-wizja}
-\emph{Charakterystyka problemu, motywacja projektu (w tym przegląd
-  istniejących rozwiązań prowadząca do uzasadnienia celu prac),
-  wizja produktu, studium wykonalności i analiza zagrożeń.}
+
+Poniżej znajduje się opis problemu który produkt rozwiązuje, celu produktu, analiza potencjalnych problemów przy tworzeniu produktu.
   
 \subsection{Opis problemu}
 Jednym z głównych zadań gabinetu lekarskiego jest przyjmowanie pacjentów na wizyty u lekarza. Zanim pacjent będzie mógł odbyć wizytę, zazwyczaj konieczna jest jego rejestracja. W ogólnym przypadku może ona przebiegać według poniższych kroków:
@@ -78,7 +73,6 @@ Stworzyć system eliminujący podane wyżej problemy i niedogodności, a w szcze
   \item Ułatwić lekarzowi dostęp do danych medycznych pacjenta zapisanego na wizytę.
   \item Dostarczyć recepcjonistce widok kalendarza pozwalający na sprawne poinformowanie rejestrującego się pacjenta o dostępnych terminach oraz zapisać go na wizytę.
   \item Umożliwić wpisywanie danych osobowych oraz wypełnianie formularzy medycznych przez rejestrującego się pacjenta bądź przez recepcjonistkę pozyskującą dane od pacjenta.
-  \item Przypominać pacjentowi o umówionych terminach wizyty przez wysłanie SMS-a.
   \item Umożliwić automatyczne gromadzenie danych związanych z wizytami.
 \end{itemize}
 
@@ -90,13 +84,12 @@ Rozwiązaniem wymienionych wyżej problemów będzie aplikacja, do której użyt
 
 Aplikacja będzie rozróżniała trzy typy użytkowników:
 \begin{itemize}
-    \item Administrator
-    \item Lekarz
-    \item Recepcjonistka
-    \item Pacjent
+    \item Lekarz,
+    \item Recepcjonistka,
+    \item Pacjent.
 \end{itemize}
 
-Pacjent będzie mógł utworzyć swoje konto i zarejestrować się na wybrany termin wizyty spośród dostępnych terminów u wybranego lekarza. Recepcjonistka będzie mogła w imieniu pacjenta utworzyć jego konto i zarejestrować go na wizytę. Lekarz będzie mógł dodawać nowe terminy wizyt, przeglądać stan rezerwacji swoich wizyt i dane pacjentów. Administrator będzie posiadał wszystkie wymienione wyżej uprawnienia i będzie mógł pełnić rolę nadzorcy systemu.
+Pacjent będzie mógł utworzyć swoje konto i zarejestrować się na wybrany termin wizyty spośród dostępnych terminów u wybranego lekarza. Recepcjonistka będzie mogła w imieniu pacjenta utworzyć jego konto i zarejestrować go na wizytę. Lekarz będzie mógł dodawać nowe terminy wizyt, przeglądać stan rezerwacji swoich wizyt i dane pacjentów
 
 Szczegółowe możliwości wykorzystania systemu przez każdy typ użytkowników są opisane w \emph{wymaganiach funkcjonalnych}.
 
@@ -138,27 +131,19 @@ Możemy wyróżnić następujące czynniki ryzyka:
 %\section{Functional scope}
 \label{sec:zakres-funkcjonalnosci}
 
-\emph{Kontekst użytkowania produktu (aktorzy, współpracujące systemy)
-  oraz specyfikacja wymagań funkcjonalnych i niefunkcjonalnych.}
-  
+Poniżej znajduje się opis zakresu problemów rozwązywanych przez produkt oraz opis powiązań z innymi produktami.
+
 \subsection{Aktorzy}
 W aplikacji będziemy rozróżniać trzy typy użytkowników:
 \begin{itemize}
-    \item Administrator
-    \item Lekarz
-    \item Recepcjonistka
-    \item Pacjent
+    \item Lekarz,
+    \item Recepcjonistka,
+    \item Pacjent.
 \end{itemize}
 Ich możliwości wykorzystania systemu są opisane w \emph{wymaganiach funkcjonalnych}. 
-
-\subsection{Przypdaki użycia}
-    \begin{figure}[H]
-        \includegraphics[width=\textwidth]{use-case-v1}
-        \caption{Przypdaki użycia systemu rejestracji pacjentów}
-    \end{figure}
     
 \subsection{Współpracujące systemy}
-\emph{Przemek} współpracuje z \emph{Modułem komunikacji ze sprzętem medycznym} oraz \emph{Systemem wspomagającym prowadzenie gabinetu lekarskiego} tworząc rozbudowany system medyczny.
+\emph{PRZEMEK} współpracuje z \emph{Modułem komunikacji ze sprzętem medycznym} oraz \emph{Systemem wspomagającym prowadzenie gabinetu lekarskiego} tworząc rozbudowany system medyczny.
 
 %opisy przeklejone z dyplom.iisg.agh.edu.pl
 %coś więcej sie dowiemu pewno dopiero na sporkaniu 10.04 lub 11.04
@@ -167,115 +152,97 @@ Moduł komunikacji ze sprzętem medycznym takim jak aparat USG. Moduł umożliwi
 \subsubsection{System wspomagający prowadzenie gabinetu lekarskiego}
 System wspomagający prowadzenie gabinetu lekarskiego zapewnia następujące funkcjonalności
 \begin{itemize}
-  \item Obsługa wizyty pacjenta (wywiad, zalecenia itp.)
-  \item Badania lekarskie (skierowanie, odbiór wyników - obrazki i opis)
+  \item Obsługa wizyty pacjenta (wywiad, zalecenia itp.),
+  \item Badania lekarskie (skierowanie, odbiór wyników - obrazki i opis).
 \end{itemize}
 
 \subsection{Specyfikacja wymagań}
+Opis wymagań z podziałem na wymagania \emph{funkcjonalne} i \emph{niefunkcjonalne}.
 
 \subsubsection{Wymagania funkcjonalne}
-\small\emph{Przedstawione wymagania są opracowane na podstawie wymagań gabinetu z USG, przez co wymagania specyficzne dla tego rodzaju gabinetu mieszają się z  wymaganiami dla gabinetów lekarskich w ogólności}
-%rzeczy dodane do podstawi z e-maila kończą się tagiem %[DW]
+Wymagania funkcjonalne opisują funkcję, którą system ma realizować. Są przedstawione są w formie \emph{diagramu przypadków użycia} (rys. \ref{use-case-v1}).
+\begin{figure}[H]
+        \includegraphics[width=\textwidth]{use-case-v1}
+        \caption{\emph{Diagram przypadków użycia} systemu rejestracji pacjentów.}
+        \label{use-case-v1}
+\end{figure}
+
+Opis przypadków użycia z rys. \ref{use-case-v1}:
 \begin{itemize}
-    \item System rejestracyjny będzie oparty na bazie danych pacjentek \begin{enumerate}
-      \item Imię
-      \item Nazwisko
-      \item Data urodzenia
-      \item Ciąża (kolejny numer)
-      \item Poród (kolejny numer)
-      \item PESEL
-      \item Adres
-      \item Telefon
-      \item Email
-      \item Osoby upoważnione
-      \item Lekarz kierujący
-      \item Miejsce pracy
-      \item Kategoria położnicza (norma; wada głowy/szyi; wada klatki piersiowej; wada serca; wada brzucha; wada kończyn; wada kręgosłupa; nieprawidłowość łożyska; małowodzie; wielowodzie; aneuploidia; inne-dodaj kategorię)
-      \item Kategoria ginekologiczna (norma; zmiany w szyjce; zmiany w macicy; zmiany w jajnikach; zmiany w jajowodach; onko-ginekologia; inne-dodaj kategorię)
-      \item \emph{Klasyfikacja kto jest lekarzem prowadzącym pacjentkę, czy pacjentka jest na usg, czy jest na wizytę, kto wykonywał badanie poprzednie}
-    \end{enumerate}
-    \item Recepcja rejestrując pacjentkę telefonicznie wprowadza: \begin{enumerate}
-      \item Imię - wymagane
-      \item Nazwisko - wymagane
-      \item Nr telefonu - wymagane
-      \item Nr pesel - opcjonalne
-      \item Klasyfikuje pacjentkę: - opcjonalnie \begin{itemize}
-          \item usg genetyczne \begin{itemize}
-              \item pierwszy trymestr
-              \item drugi trymestr
-              \item trzeci trymestr
-              \item przepływy maciczne
-              \item ocena dobrostany – Biometria
-              \item usg kontrolne – monitorowanie nieprawidłowości
-              \item echo serca płodu –ciąża zdrowa
-              \item usg drugiej opinii
-              \item usg nieprawidłowości
-          \end{itemize}
-          \item usg ginekologiczne
-          \item procedura diagnostyczna (biopsja kosmówki, amniopukcja)
-          \item wizyta lekarska (pacjentka ginekologiczna)
-          \item wizyta lekarska rozszerzona \begin{itemize}
-              \item założenie wkładki IUD
-              \item zabieg laserowy
-              \item zabieg
-          \end{itemize}
-          \item wizyta lekarska w ciąży
-          \item wizyta lekarska w wysokiej ciąży (wizyta + ktg)
-      \end{itemize}
-      \item Uwagi - opcjonalnie
-      \item adres e-mail - opcjonalnie 
-    \end{enumerate}
-    Do zarejestrowania pacjentki należy wpisać \textbf{wymagane dane} – bez tych danych miejsce nie może być zarejestrowane.
-    \item Z listy pacjentek w bazie danych filtrowanie pacjentek po:  (z poziomu recepcji) \begin{itemize}
-        \item Nazwisku
-        \item Dacie urodzenia
-        \item Peselu
-        \item Numerze telefonu
-    \end{itemize}
-    \item Kalendarz rejestracyjny \begin{itemize}
-        \item dostosowany do danego lekarza
-    \end{itemize}
-    \item Z poziomu administratora \begin{itemize}
-        \item ustala i formułuje grafik na dany okres czasu wg dyspozycyjności lekarza
-        \item wprowadza daty i godziny przyjęć poszczególnych lekarzy 
-        \item ma możliwość wprowadzać przerwy w przyjęciach 
-        \item klasyfikowanie lekarzy do grup (w zależności od wykonywanej procedury)
-    \end{itemize}
-    \emph{Takie rozwiązanie skróci czas rejestracji do minimum – pacjentka podaje temat wizyty (procedury) i w proponowanych lekarzach pojawiają się odpowiednie nazwiska}
-    \item Z poziomu lekarza \begin{itemize}
-        \item widok kalendarza przyjęć
-        \item możliwość zarejestrowania pacjentki 
-        \item identyfikacja kto rejestruje pacjentkę
-        \item formułuje swój grafik i ustala możliwe godziny przyjęć %[DW]
-    \end{itemize}
-    \item Z poziomu pacjenta \begin{itemize} %[DW] - cała sekcja
-      \item samodzielnie tworzy konto
-      \item samodzielnie rejestruje się na wizytę u lekarza
-      \item samodzielnie podaje swoje dane osobowo-medyczne (tych samych które wprowadza recepcja rejestrując pacjenta)
-      \item widok kalendarza swoich umówionych wizyt
-      \item widok kalendarza dostępnych terminów wizyty podczas rejestracji
-      \item ustawia przypomnienie dla siebie o zarezerwowanych terminach wizyt
-    \end{itemize}
-    \item Z poziomu recepcji \begin{itemize}
-        \item każda osoba rejestrująca zalogowana na własne konto lub posiadająca własny login
-        \item recepcja ma możliwość rejestrowania pacjentów z różnych komputerów
-        \item stworzenie blokowania danego terminu w momencie najechania na termin (aby uniknąć dublowania rejestracji równocześnie przez dwie panie w recepcji)
-        \item Możliwa rejestracja z poziomu kalendarza  - najechanie na dany dzień i daną godzinę – kliknięcie zarejestruj termin – przeniesienie do formularza wprowadzanie pacjentki
-        \item Weryfikowanie dublowanych terminów  ( w zależności od klasyfikacji pacjentki)  \\
-        \emph{Pacjentki które prowadzą ciąże mają zarezerwowane w kalendarzu kilka terminów wizyt. Pacjentki na usg prenatalne wpisują się kilkukrotnie do wielu lekarzy – takie pacjentki porzebujemy zweryfikować.} \\
-        Pacjentki zakwalifikowane np.: usg genetyczne pierwszy trymestr (jeśli jest kilka takich o takiej samej dacie urodzenia to wyskakuje na czerwono w momencie rejestracji)
-        \item stworzenie wspólnych powiązań pomiędzy lekarzami ultrasonografistami (grup lekarzy pracujących wspólnie) aby można było znaleźć wolne miejsce na daną procedurę \\
-        \emph{Pacjentka dzwoni i chce się zarejestrować na usg prenatalne I trymestru i powinny wyskoczyć wolne terminy np. Od dziś do ustalonej daty, we wszystkich grupach docelowych, czyli u wszystkich lekarzy wykonujących usg prenatalne}
-        \item każdy lekarz osobny kalendarz  tzn. odstępy między godzinami są różne u lekarzy o różne w każdej godzinie. \\
-        8:00 8:20 8:40 9:00  9:30 10:00 10:20
-        \item ważne jest aby formularz był stały ponieważ każdy ma inny system przyjmowania i wpisywanie samemu godzin pracy wprowadza duże zamieszanie, ilość pacjentek na dany dzień przyjęciowy się nie zgadza. 
-    \end{itemize}
-    \item SMS-y potwierdzające \\
-    Wysyłanie smsów potwierdzających zarezerwowany termin po zarezerwowaniu terminu oraz potwierdzających wizytę na kilka dni wcześniej (ilość dni możliwa do regulacji) 
-\end{itemize} 
-%koniec listy wymgaań funkcjonalnych
+    \item 
+        \begin{itemize}
+            \item Tytuł: Zapisz się na wizytę;
+            \item Główny aktor: Pacjent;
+            \item Zakres: Systemowy;
+            \item Poziom: Cel użytkownika;
+        \end{itemize}
+\item 
+        \begin{itemize}
+            \item Tytuł: Odwołaj swoją wizytę;
+            \item Główny aktor: Pacjent;
+            \item Zakres: Systemowy;
+            \item Poziom: Cel użytkownika;
+        \end{itemize}
+\item 
+        \begin{itemize}
+            \item Tytuł: Utwórz konto pacjenta;
+            \item Główny aktor: Pacjent lub Recepcjonistka;
+            \item Zakres: Systemowy;
+            \item Poziom: Cel użytkonika;
+        \end{itemize}
+\item 
+        \begin{itemize}
+            \item Tytuł: Eksportuj swoje wizyty do kalendarza Google;
+            \item Główny aktor: Pacjent lub Lekarz;
+            \item Zakres: Organizacji;
+            \item Poziom: Podfunkcja;
+        \end{itemize}
+\item 
+        \begin{itemize}
+            \item Tytuł: Zobacz grafik;
+            \item Główny aktor: Lekarz;
+            \item Zakres: Organizacji;
+            \item Poziom: Cel użytkownika;
+        \end{itemize}
+\item 
+        \begin{itemize}
+            \item Tytuł: Przeglądaj terminy i wizyty w kalendarzu;
+            \item Główny aktor: Pacjent, Recepjonistka lub Lekarz;
+            \item Zakres: Podfunkcja;
+            \item Poziom: Systemowy;
+        \end{itemize}
+\item 
+        \begin{itemize}
+            \item Tytuł: Usuń termin wizyty
+            \item Główny aktor: Pacjent lub Recepcjonistka,
+            \item Zakres: Cel użytkownika;
+            \item Poziom: Systemowy;
+        \end{itemize}
+\item 
+        \begin{itemize}
+            \item Tytuł: Odwołaj wizytę;
+            \item Główny aktor: Recepcjonistka lub Lekarz;
+            \item Zakres: Cel użytkownika;
+            \item Poziom: Systemowy;
+        \end{itemize}
+\item 
+        \begin{itemize}
+            \item Tytuł: Zapisz pacjenta na wizytę;
+            \item Główny aktor: Recepcjonistka;
+            \item Zakres:;
+            \item Poziom:;
+        \end{itemize}
+\item 
+        \begin{itemize}
+            \item Tytuł: Dodaj termin wizyty;
+            \item Główny aktor: Recepcjonistka lub Lekarz;
+            \item Zakres: Cel użytkownika;
+            \item Poziom: Systemowy;
+        \end{itemize}
+\end{itemize}
  
 \subsubsection{Wymagania niefunkcjonalne}
+Wymagania pozafunkcjonalne specyfikują kryteria osądzania działania systemu. Są one znane jako wymagania jakościowe.
 \begin{itemize}
     \item Aplikacja ma wykorzystywać \href{https://getbootstrap.com/}{Twitter Bootstrap} do stworzenia interfejsu użytkownika --- jest to ustalone ze względu na wymaganie zachowania spójności wyglądu z produktami zależnymi.
     \item W warstwie bazodanowej ma być używana relacyjna baza danych --- jest to ustalone ze względu na kompatybilność z produktami zależnymi.
@@ -290,52 +257,51 @@ System wspomagający prowadzenie gabinetu lekarskiego zapewnia następujące fun
 %\section{Selected realization aspects}
 \label{sec:wybrane-aspekty-realizacji}
 
-\emph{Przyjęte założenia, struktura i zasada działania systemu,
-  wykorzystane rozwiązania technologiczne wraz z uzasadnieniem
-  ich wyboru, istotne mechanizmy i zastosowane algorytmy}
+Poniżej opisano dziedzinę, strukturę i zasadę działania systemu.
 
 \subsection{Analiza technologiczna}
 \label{subsec:analizaTechnologiczna}
-Analiza odbywa się według warstw logicznych aplikacji opisanych w \emph{Wizji rozwiązania}
+Analiza odbywa się według warstw logicznych aplikacji, które zostaną bardziej szczegółowo omówione przy opisie architektury systemu.
 
-\subsubsection{Aplikacja użytkownika}
-Aplikacja będzie działała w przeglądarce internetowej. \\
+\subsubsection{Aplikacja przeglądarkowa}
 Wykorzystane technologie:
 \begin{itemize}
-  \item \href{https://pl.wikipedia.org/wiki/HTML}{HTML}
-  \item \href{https://pl.wikipedia.org/wiki/JavaScript}{JavaScript}
-  \item \href{https://jwt.io/}{JWT} - dla bezpieczeństwa komunikacji i utrzymania sesji użytkownika
+  \item \href{https://pl.wikipedia.org/wiki/HTML}{HTML},
+  \item \href{https://pl.wikipedia.org/wiki/JavaScript}{JavaScript},
+  \item \href{https://jwt.io/}{JWT} - dla bezpieczeństwa komunikacji i utrzymania sesji użytkownika.
 \end{itemize}
 
-Dla polepszenia satysfakcji klienta i uspójnienia wyglądu z innmi modułami wykorzystamy zręby
+Dla polepszenia satysfakcji klienta i uspójnienia wyglądu z innymi modułami wykorzystamy zręby
 \begin{itemize}
-  \item \href{https://getbootstrap.com/}{Twitter Bootstrap}
+  \item \href{https://getbootstrap.com/}{Twitter Bootstrap}.
 \end{itemize}
 
-\subsubsection{Serwer do komunikacji z innymi modułami}
+\subsubsection{Warstwa logiki biznesowej}
 Będzie to serwer HTTP API, komunikaty będziemy przesyłać w standardzie JSON \\
 Wykorzystane technologie:
 \begin{itemize}
-  \item \href{https://pl.wikipedia.org/wiki/Hypertext_Transfer_Protocol}{HTTP} - zwłaszcza metody \emph{GET} i \emph{POST}
-  \item \href{http://www.json.org/}{JSON}
-  \item \href{https://www.oracle.com/java/index.html}{Java}
+  \item \href{https://pl.wikipedia.org/wiki/Hypertext_Transfer_Protocol}{HTTP} - zwłaszcza metody \emph{GET} i \emph{POST},
+  \item \href{http://www.json.org/}{JSON},
+  \item \href{https://www.oracle.com/java/index.html}{Java}.
 \end{itemize}
 
 \subsubsection{Baza danych}
 \label{subsec:wykorzystane-technologie-baza}
-Wykorzystamy relacyjną bazę danych - dane pacjentów i rejestracji są relacyjne. Problemem tego pojeścia jest mała elastyczność. \\
+Wykorzystamy relacyjną bazę danych --- dane pacjentów i rejestracji są relacyjne. Problemem tego podejścia jest mała elastyczność. \\
 Elastyczność jest wymagana ze względu na potrzebę wspierania różnych formularzy dla pacjentów w zależności od typu gabinetu lekarskiego oraz różnych formularzy dla pacjentów w zależności od potrzeb lekarza. \\
-Ten problem rozwiążemy przechowująć pliki \emph{JSON}-owe w bazie danych. Jest to rozwiązanie kiepsce lecz usprawiedliwione prostotą implementacji. Stworzenie i poprawna implementacja relacyjnego modelu danych posiadającego wymaganą elastyczność wymagało by więcej czasu niż jesteśmy w stanie poświęcić pracy inżynierskiej \\
+Ten problem rozwiążemy przechowując pliki \emph{JSON}-owe w bazie danych. Jest to rozwiązanie mało eleganckie lecz usprawiedliwione prostotą implementacji. Stworzenie i poprawna implementacja relacyjnego modelu danych posiadającego wymaganą elastyczność wymagało by więcej czasu niż jesteśmy w stanie poświęcić pracy inżynierskiej. \\
 Wykorzystane technologie:
 \begin{itemize}
-  \item \href{https://www.postgresql.org/}{PostreSQL}
+  \item \href{https://www.postgresql.org/}{PostgreSQL}.
 \end{itemize}
 
 
 \subsection{Dziedzina problemu}
 
+Zadane środowisko w którym jest osadzony produkt.
+
 \subsubsection{Przeglądarka internetowa}
-Produktem jest przeglądarka internetowa. Przeglądarka to  program komputerowy służący do pobierania i wyświetlania stron internetowych udostępnianych przez serwery WWW\footnote{\href{https://pl.wikipedia.org/wiki/Przeglądarka_internetowa}}.
+Użytkownik komunikuje się z aplikacją za pośrednictwem przeglądarki internetowej. Przeglądarka to program komputerowy służący do pobierania i wyświetlania stron internetowych udostępnianych przez serwery WWW (rys. \ref{html-css-js} i \ref{http_diagram}).
 
 \begin{figure}[H]
     \centering
@@ -343,83 +309,182 @@ Produktem jest przeglądarka internetowa. Przeglądarka to  program komputerowy 
         \centering
         \includegraphics[width=0.9\textwidth]{html-css-js} % first figure itself
         \caption{Strony internetowe są tworzone z użyciem HTML-a, CSS-a i JavaScript-a}
+        \label{html-css-js}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{http_diagram} % second figure itself
         \caption{Przeglądarka internetowa pobiera strony internetowe używając protokołu HTTP}
+        \label{http_diagram}
     \end{minipage}
 \end{figure}
 
 
 \subsection{Wstęp - zarys architektury systemu}
-Na architekturę produktu składa się:
+Produkt posiada architekturę trójwarstwową. Składają się na nią:
 \begin{itemize}
-    \item Aplikacja przeglądarkowa (front-end)
-    \item Aplikacja strony serwerowej (back-end)
-    \item Baza danych
+    \item Aplikacja przeglądarkowa (warstwa prezentacji) --- udostępnia interfejs użytkownika, tworzy zapytania do warstwy logiki biznesowej, wysyła do niej dane i prezentuje otrzymane zeń wyniki,
+    \item Warstwa logiki biznesowej --- udostępnia właściwą (biznesową) funkcjonalność systemu, obsługując zapytania klienta (w tym wypadku aplikacji wykonującej się w przeglądarce); przetwarza dane klienta, a także wykonuje operacje na bazie danych,
+    \item Warstwa bazodanowa --- odpowiada za przechowywanie danych i udostępnia funkcjonalność ich zapisu i odczytu.
 \end{itemize}
 
+Na rysunku \ref{architektura} przedstawiona jest ogólna architektura całego systemu na wysokim poziomie abstrakcji.
 
 \begin{figure}[H]
     \centering
-    \includegraphics{komunikacja-serwer-klient-okolny}
-    \caption{Front-end jest aplikacją wykonującą się na urządzeniu użytkownika. Zapytania o dane i wysyłanie danych do aplikacji strony serwerowej za pomocą HTTP API. Strona serwerowa komunikuje się z bazą danych za pomocą JDBC}
-    \label{fig:my_label}
+    \includegraphics{architektura}
+    \caption{Architektura systemu na wysokim poziomie abstrakcji}
+    \label{architektura}
 \end{figure}
 
 
+\subsection{Aplikacja przeglądarkowa}
+Aplikacja przeglądarkowa udostępnia interfejs użytkownika i komunikuje się z warstwą logiki biznesowej. Aplikacja wykonuje się w przeglądarce internetowej na urządzeniu użytkownika.
+
+\subsubsection{Zarys architektury}
+Poniżej przedstawiamy poglądowy schemat architektury aplikacji przeglądarkowej (rys. \ref{front-schema}) i opis poszczególnych komponentów.
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{front-schema}
+    \caption{Poglądowy schemat architektury aplikacji przeglądarkowej}
+    \label{front-schema}
+\end{figure}
+
+Komponenty aplikacji przeglądarkowej:
+\begin{itemize}
+    \item Service - serwisy odpowiadają za wysyłanie zapytań do aplikacji serwerowej i odbieranie odpowiedzi.
+    \item Page - Trasowalna strona wyświetlana użytkownikowi.
+    \item Component - Strony korzystają z komponentów.
+\end{itemize}
+
+\subsubsection{Technologie}
+Technologie informatyczne wykorzystane przy tworzeniu produktu.
+\paragraph{Angular 2} - zręby aplikacji przeglądarkowej. Umożliwiają:
+\begin{itemize}
+    \item wysyłanie i odbieranie zapytań HTTP,
+    \item dynamiczną zmianę zawartości strony internetowej.
+\end{itemize}
+\subsubsection{Serwisy}
+Serwisy służą do wysyłania zapytań HTTP. Ich metody zwracają \emph{Promise}. Serwisy służące rejestracji pacjentów:
+\begin{itemize}
+    \item authentication service,
+    \item appointment service,
+    \item doctor service,
+    \item google calendar service,
+    \item patient service,
+    \item timeSlot service,
+    \item user service.
+\end{itemize}
+\paragraph{Zależności między serwisami} ---
+ graf pokazuje, których serwisów trzeba użyć aby uzyskać całość danych na temat danej encji. \\
+ Na przykład aby uzyskać całość danych na temat \emph{Appointment} trzeba znać \emph{TimeSlot}, \emph{Doctor}-a przyjmującego wizytę i \emph{Patient}-a zapisanego na wizytę.
+ \includegraphics[width=\textwidth]{services-dep}
+
+\subsubsection{Kalendarz terminów}
+Kalendarz jest kluczowym elementem interfejsu systemu rejestracji.
+\paragraph{Diagram zależności} pokazuje wszystkie zależności komponentu kalendarza.
+\includegraphics[width=\textwidth]{visitsCalendar_dep}
+\paragraph{Inicjalizacja kalendarza} ---
+inicjalizacja wygląda inaczej w zależności od tego, kto otwiera widok kalendarza.
+\begin{itemize}
+    \item Pacjent \\
+     \includegraphics[width=\textwidth]{patient-init-cal},
+    \item Doktor \\
+    \includegraphics[width=\textwidth]{doctor-init-cal},
+    \item Recepcjonistka \\
+    \includegraphics[width=\textwidth]{cal-recep-init}.
+\end{itemize}
+
+%\paragraph{Zapis i modyfikacja danych}
 
 
-\subsubsection{Zarys architektury aplikacji serwerowej}
+\paragraph{Eksport terminów z kalendarza do 'Google Calendar' \footnote{Specyfikacja API znajduje się \href{https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest}{tutaj}}} odbywa się wg schematu
+\begin{enumerate}
+    \item Zaloguj się - użytkownik zostaje przekierowany na stronę, logowania Google, po zalogowaniu aplikacja otrzymuje jego token oAuth
+    \item Dodaj wydarzenie do kalendarza,
+    \item Wyloguj się - token jest unieważniany.
+\end{enumerate}
+
+
+\subsubsection{Formularze}
+Formularze do tworzenia pacjentów, doktorów, terminów wizyt itp. są oparte o komponent \emph{DynamicForm} autorstwa powiązanego zespołu \emph{Health Manager}.
+Ich konfiguracją jest lista JSON-owa. Przykład dla tworzenia dostępnych terminów (\emph{createTimeslot.component.ts})
+\begin{verbatim}
+    [
+        {
+            type: 'select',
+            label: 'Doctor',
+            name: 'doctor',
+            placeholder: 'Select a doctor',
+            options: []
+        },
+        {
+            type: 'date',
+            label: 'Start Date-time',
+            name: 'startDateTime'
+        },
+        {
+            type: 'date',
+            label: 'End Date-time',
+            name: 'endDateTime'
+        },
+        {
+            type: 'checkbox',
+            label: 'Available for self-sign',
+            name: 'availableForSelfSign',
+            value: true
+        },
+        {
+            label: 'Submit',
+            name: 'submit',
+            type: 'button'
+        }
+    ];
+\end{verbatim}
+Każdy obiekt na liście konfigurującej odpowiada jednemu komponentowi do wprowadzania danych. Obiekty listy konfiguracji muszą mieć pola:
+\begin{itemize}
+    \item \texttt{type} --- typ komponentu, może przyjmować wartości: 'select', 'date', 'checkbox', 'input', 'button';
+    \item \texttt{label} --- nazwa widocza dla użytkownika, dowolny ciąg znaków;
+    \item \texttt{name} --- nazwa która będzie identyfikowała komponent w kodzie, niewidoczna dla użytkownika;
+    \item \texttt{value} [opcjonalne] --- domyślna wartość dla komponentu. Dostępne wartości zależą od rodzaju komponentu.
+\end{itemize}
+
+
+\subsection{Warstwa logiki biznesowej}
+Warstwa logiki biznesowej udostępnia właściwą funkcjonalność systemu jako \emph{usługę sieciową} (ang. \emph{web service}) zaprojektowaną wg zasad \emph{REST}\footnote{z ang. \emph{Representational State Transfer}} na protokole HTTP.
+
+\subsubsection{Zarys architektury}
+Poniżej przedstawiamy poglądowy schemat architektury warstwy logiki biznesowej (rys. \ref{backedn-schema}) i opis poszczególnych komponentów.
+
 \begin{figure}[H]
     \centering 
     \includegraphics[width=\textwidth]{backedn-schema}
-    \caption{Poglądowy schemat architektury aplikacji serwerowej}
+    \caption{Poglądowy schemat architektury warstwy logiki biznesowej}
+    \label{backedn-schema}
 \end{figure}
-    
+
+Komponenty warstwy logiki biznesowej:
 \begin{itemize}
-    \item Controller - warstwa odpowiedzialna za odbieranie zapytań HTTP i przetwarzanie ich na obiekty JVM-owe oraz za przetwarzanie odpowiedzi (obiektów JVM-owych) na waidomości HTTP i odsyłanie ich.
+    \item Controller - warstwa odpowiedzialna za odbieranie zapytań HTTP i przetwarzanie ich na obiekty JVM-owe oraz za przetwarzanie odpowiedzi (obiektów JVM-owych) na wiadomości HTTP i odsyłanie ich.
     \item Service - warstwa pośrednicząca międzu Controller-em a Repository-em. Przetwarza zapytania otrzymane od Controllera na zapytania dla Repository i przetwarza odpowiedzi od Repository na odpowiedzi dla Controller-a.
     \item Repository - warstwa odpowiedzialna za wykonywanie zapytań do bazy danych.
     \item Model - wspóny dla wyżej wymienionych warstw sposób reprezentacji encji jako obiektów JVM-kowych, który może być przetworzony na JSON-a (na potrzeby HTTP API) lub repotezentację bazodanową (na potrzeby bazy danych). Umożliwia komunikację pomiędzy Controller-em, Servic-em i Repository-em.
 \end{itemize}
-
-\subsubsection{Zarys architektury aplikacji przeglądarkowej}
-\begin{figure}[H]
-\includegraphics[width=\textwidth]{front-schema}
-\caption{Poglądowy schemat architektury aplikacji przeglądarkowej}
-\end{figure}
-\begin{itemize}
-    \item Service - serwisy odpowiadają za wysyłanie zapytań do aplikacji serwerowej i odbieranie odpowiedzi
-    \item Page - Trasowalna strona wyświatlana użytkownikowi
-    \item Component - Strony korzystają z komponentów
-\end{itemize}
-
-
-
-\subsection{Baza danych}
-Wykorzystano bazę PostgresSQL. 
-\begin{figure}[H]
-\caption{Schemat bazy danych jest tworzony ad-hoc przy starcie aplikacji przez \emph{Hibernate}-a}
-\includegraphics[width=\textwidth]{db-schema}
-\end{figure}
-
-\subsection{Aplikacja strony serwerowej}
 \subsubsection{Technologie}
-Wykorzystano język programowania Java, zrębów Spring i Hibernate.
+Wykorzystano język programowania Java oraz biblioteki Spring i Hibernate.
 \paragraph{Spring} pozwala na:
 \begin{itemize}
-    \item odbieranie i wysyłanie zapytań HTTP
-    \item używanie CRUD-owego API do bazy danych
+    \item odbieranie i wysyłanie zapytań HTTP,
+    \item używanie CRUD-owego API do bazy danych.
 \end{itemize}
 \paragraph{Hibernate} pozwala na:
 \begin{itemize}
-    \item Utworzenie schematu bazy danych na podstawie klas Java-owych
-    \item serializację i zapis obiektów Java-owych
-    \item odczyt z bazy obiektów Java-owuch
+    \item utworzenie schematu bazy danych na podstawie klas Javy,
+    \item serializację i zapis obiektów Javy,
+    \item odczyt z bazy obiektów Javy.
 \end{itemize}
 \subsubsection{Modelowane encje}
+Poniżej znajduje się spis (w formie obrazków) encji modelowanych na potrzeby produktu.
     \paragraph{Timeslot} - możliwy termin wizyty u danego lekarza.
     \begin{figure}[H]
     \includegraphics[width=0.7\textwidth]{TimeSlot}
@@ -461,128 +526,52 @@ Wykorzystano język programowania Java, zrębów Spring i Hibernate.
     \includegraphics[width=0.7\textwidth]{Specialization}
     \end{figure}
 \subsubsection{Powiązanie modelowanych encji}
+Powiązanie modelowanych encji odpowiada schematowi relacyjnej bazy danych.
 \paragraph{Wersja zwinięta} - Schemat bez widocznych pól
 \includegraphics[width=\textwidth]{java-entities-small}
 \paragraph{Wersja rozwinięta} - Schemat z widocznymi polami \\
 \includegraphics[width=\textwidth]{java-entities-big}
 
 \subsubsection{Obsługa zapytań}
-\paragraph{Schemat} -  
-obsługa zapytań HTTP przychodzących do serwera ma w większości przypadków następujący przebieg (opisany we wstępie):
+Obsługa wiadomości przychodzących do serwera.
+\paragraph{Schemat} --- 
+obsługa zapytań HTTP przychodzących do serwera logiki biznesowej ma w większości przypadków następujący przebieg (opisany we wstępie):
 \begin{enumerate}
-  \item \emph{Kontroler} odbiera zapytanie HTTP i przekazuje serwisowi
-  \item \emph{Serwis} sprawdza poprawność zapytania i wykonuje pod-zapytania do repozytorium
-  \item \emph{Repozytorium} pobiera potrzebne dane z bazy danych i zwraca serwisowi
-  \item \emph{Serwis} przekształca dane otrzymane od repozytorium w odpowiedź na zapytanie i przekazuje odpowiedź kontrolerowi
-  \item \emph{Kontroler} odsyła odpowiedź po HTTP
+  \item \emph{Kontroler} odbiera zapytanie HTTP i przekazuje serwisowi,
+  \item \emph{Serwis} sprawdza poprawność zapytania i wykonuje pod-zapytania do repozytorium,
+  \item \emph{Repozytorium} pobiera potrzebne dane z bazy danych i zwraca serwisowi,
+  \item \emph{Serwis} przekształca dane otrzymane od repozytorium w odpowiedź na zapytanie i przekazuje odpowiedź kontrolerowi,
+  \item \emph{Kontroler} odsyła odpowiedź po HTTP.
 \end{enumerate}
 
 \paragraph{Przykład - getTimeSlotById} - zapytanie o dane \emph{TimeSlot}-u na podstawie jego \emph{ID}
 \includegraphics[width=\textwidth]{timeSlotById}
 
-\paragraph{Przykład - getInIntervalForDoctor} - zapytanie o listę \emph{TimeSlot}-ów dla danego doktora w zadanym przedziale czasownym. \\
-Schemat opisany powyżej jest na tyle ogólny że równie dobrze modeluje prostrze zapytanie \emph{getTimeSlotById} jak i bardziej skomplikowane \emph{getInIntervalForDoctor}. Różnica w implementacji występuje na poziomie \emph{repozytorium}, które musi wykonać odpowiednio inne zapytania do bazy danych i \emph{serwisu} który inaczej sprawdza poprawność danych
+\paragraph{Przykład - getInIntervalForDoctor} --- zapytanie o listę \emph{TimeSlot}-ów dla danego doktora w zadanym przedziale czasowym. \\
+Schemat opisany powyżej jest na tyle ogólny że równie dobrze modeluje prostsze zapytanie \emph{getTimeSlotById} jak i bardziej skomplikowane \emph{getInIntervalForDoctor}. Różnica w implementacji występuje na poziomie \emph{repozytorium}, które musi wykonać odpowiednio inne zapytania do bazy danych i \emph{serwisu} który inaczej sprawdza poprawność danych
 \includegraphics[width=\textwidth]{inIntervalDorDoctor}
 
-\subsection{Aplikacja front-endowa}
-\subsubsection{Technologie}
-\paragraph{Angular 2} - zręby aplikacji przeglądarkowej. Umożliwiają:
-\begin{itemize}
-    \item wysyłanie i odbieranie zapytań HTTP
-    \item dynamiczną zmianę zawartości strony internetowej
-\end{itemize}
-\subsubsection{Serwisy}
-Serwisy służą do wysyłania zapytań HTTP. Ich metody zwracają \emph{Promise}. Serwisy służące rejestracji pacjentów:
-\begin{itemize}
-    \item authentication service
-    \item appointment service
-    \item doctor service
-    \item google calendar service
-    \item patient service
-    \item timeSlot service
-    \item user service
-\end{itemize}
-\paragraph{Zależności między serwisami}{
- Graf pokazuje których serwisów trzeba użyć any uzyskać całość danych na temat danej encji. \\
- Na przykład aby uzyskać całość danych na temat \emph{Appointment} trzeba znać \emph{TimeSlot}, \emph{Doctor}-a przyjmującego wizytę i \emph{Patient}-a zapisanego na wizytę.
- \includegraphics[width=\textwidth]{services-dep}
-}
 
-\subsubsection{Kalendarz terminów}
-Kalendarz jest centralną częścią frontowej części systemu rejestracji
-\paragraph{Diagram zależności} pokazuje wszystkie zależności komponentu kalendarza
-\includegraphics[width=\textwidth]{visitsCalendar_dep}
-\paragraph{Inicjalizacja kalendarza}
-Inicjalizacja wygląda inaczej w zależności od tego kto otwiera widok kalendarza.
-\begin{itemize}
-    \item Pacjent \\
-     \includegraphics[width=\textwidth]{patient-init-cal}
-    \item Doktor \\
-    \includegraphics[width=\textwidth]{doctor-init-cal}
-    \item Recepcjonistka \\
-    \includegraphics[width=\textwidth]{cal-recep-init}
-\end{itemize}
+\subsection{Baza danych}
+Warstwa bazodanowa odpowiada za persystencję danych. Wykorzystano relacyjną bazę danych \emph{PostgreSQL}.
 
-%\paragraph{Zapis i modyfikacja danych}
+Poniżej przedstawiamy schemat bazy danych (rys. \ref{db-schema}).
+
+\begin{figure}[H]
+    \caption{Schemat bazy danych jest tworzony ad-hoc przy starcie aplikacji przez \emph{Hibernate}-a}
+    \includegraphics[width=\textwidth]{db-schema}
+    \label{db-schema}
+\end{figure}
 
 
-\paragraph{Eksport terminów z kalendarza do 'Google Calendar'\footnote{Specyfikacja API znajduje się \href{https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest}{tutaj}}} odbywa się wg schematu
+\subsection{Komunikacja aplikacji przeglądarkowej i warstwy logiki biznesowej}
+Warstwa logiki biznesowej wystawia API, które zostało zaprojektowane w oparciu o zasady \emph{REST} (ang. \emph{Representational State Transfer}). Aplikacja przeglądarkowa i serwer logiki biznesowej komunikują się przez protokół HTTP, wymieniając pliki JSON.
+
+Przykład komunikacji:
+
 \begin{enumerate}
-    \item Zaloguj się - użytkownik zostaje przekierowany na stronę logowania Google, po zalogowaniu aplikacja otrzymuje jego token oAuth
-    \item Dodaj wydarzenie do kalendarza
-    \item Wyloguj się - token jest unieważniany
-\end{enumerate}
-
-
-\subsubsection{Formularze}
-Formularze do tworzenia pacjentów, doktorów, terminów wizyt itp. są oparte o komponent \emph{DynamicForm} autorstwa powiązanego zespołu \emph{Health Manager}.
-Ich konfiguracją jest lista JSON-owa. Przykład dla tworzenia dostępnych terminów (\emph{createTimeslot.component.ts})
-\begin{verbatim}
-    [
-        {
-            type: 'select',
-            label: 'Doctor',
-            name: 'doctor',
-            placeholder: 'Select a doctor',
-            options: []
-        },
-        {
-            type: 'date',
-            label: 'Start Date-time',
-            name: 'startDateTime'
-        },
-        {
-            type: 'date',
-            label: 'End Date-time',
-            name: 'endDateTime'
-        },
-        {
-            type: 'checkbox',
-            label: 'Available for self-sign',
-            name: 'availableForSelfSign',
-            value: true
-        },
-        {
-            label: 'Submit',
-            name: 'submit',
-            type: 'button'
-        }
-    ];
-\end{verbatim}
-Każdy obiekt na liście konfigurującej odpowiada jednemu komponentowi do wprowadzania danych. Obiekty listy konfiguracji muszą mieć pola:
-\begin{itemize}
-    \item type - typ komponentu, może przyjmować wartości: 'select', 'date', 'checkbox', 'input', 'button'.
-    \item label - nazwa widocza dla użytkownika, dowolny ciąg znaków
-    \item name - nazwa która będzie identyfikowała komponent w kodzie, niewidoczna dla użytkownika
-    \item value [opcjonalne] - domyślna wartość dla komponentu. Dostępne wartości zależą od rodzaju komponentu
-\end{itemize}
-
-\subsection{Komunikacja aplikacji przeglądarkowej i serwerowej}
-Aplikacja przeglądarkowa i serwerowa komunikują się przez protokół HTTP (sposób nazywany czasem \emph{RESTowym API}. W treści zapytań jest JSON.
-\paragraph{Przykład komunikacji:}{
-\begin{enumerate}
-  \item Lekarz, korzystając z aplikacji klienckiej, wysyła zapytanie o umówiony termin wizyty wysyłając HTTP GET na adres server-addr:8080/appointments/123. "123" to numer identyfikacyjny umówionej wizyty.
-  \item Serwer zwraca odpowiedź
+  \item Lekarz, korzystając z aplikacji klienckiej, wysyła zapytanie o umówiony termin wizyty będące zapytaniem HTTP GET na adres server-addr:8080/appointments/123. "123" to numer identyfikacyjny umówionej wizyty,
+  \item Serwer zwraca odpowiedź:
 \begin{verbatim}
 {    
   id: 123,
@@ -590,57 +579,54 @@ Aplikacja przeglądarkowa i serwerowa komunikują się przez protokół HTTP (sp
   timeSlotId: 432,
   tookPlace: false,
   officeNumber: 10,
-  data: "Podejrzenie shizofrenii bezobjawowej!",
+  data: "Podejrzenie schizofrenii bezobjawowej!",
   priority: LOW
 }
-\end{verbatim}
+\end{verbatim}.
 \end{enumerate}
 
-
-Wykaz formatu zapytań i odpowiedzi znajduje się w załączniku
-}
+Wykaz formatu zapytań i odpowiedzi znajduje się w załączniku.
 
 \section{Organizacja pracy}
 %\section{Work organization}
 \label{sec:organizacja-pracy}
 
-\emph{Struktura zespołu (role poszczególnych osób), krótki opis i
-  uzasadnienie przyjętej metodyki i/lub kolejności prac, planowane i
-  zrealizowane etapy prac ze wskazaniem udziału poszczególnych
-  członków zespołu, wykorzystane praktyki i narzędzia w zarządzaniu
-  projektem.}
+Poniżej opisano strukturę zespołu, metodykę pracy w obrębie zespołu i metodykę współpracy z powiązanymi zespołami.
   
-\subsection{Strunktura zespołu}
+\subsection{Struktura zespołu}
+Opis organizacji wewnątrz zespołu.
 \subsubsection{Hierarchia zarządzania}
-W zepole wyróżniony jest przywódca. Wyróżnianie innych funkcji wydało nam się zbędne.
+W zespole wyróżniony jest przywódca (wyróżnianie innych funkcji wydało nam się zbędne):
 \begin{itemize}
-    \item Wojciech Karpiel - szef, odpowiedzialny za komunikację z Klientem i współpracującymi zespołami
-    \item Fiip Galas - członek zespołu
-    \item Michał Hamuda - członek zespołu
+    \item Wojciech Karpiel --- szef, odpowiedzialny za komunikację z Klientem i współpracującymi zespołami,
+    \item Filip Galas --- członek zespołu,
+    \item Michał Hamuda --- członek zespołu.
 \end{itemize}
+
 \subsubsection{Podział technologiczny}
 Rozważaliśmy wprowadzenie podziału ze względu na kompetencje techniczne, czyli:
 \begin{itemize}
-    \item Osoba zajmująca się stroną serwerową
-    \item Osoba zajmująca się aplikacją przeglądarkową
+    \item osoba zajmująca się warstwą logiki biznesowej,
+    \item osoba zajmująca się aplikacją przeglądarkową.
 \end{itemize}
-Uznaliśmy to za zabyteczne ponieważ produkt składa się głównie z kodu front-endowego i taki podział funkcji spowodowałby nierównomierny podział prac. Zamiast tego każdy członek zespołu odpowiadał za stworzenie front-endowej i back-endowej części funkcjonalności którą wdrażał.
+Udało się nam zaimplementować niektóre funkcjonalności, działając wg tego schematu, jednak ostatecznie uznaliśmy to za zbyteczne, ponieważ produkt składa się głównie z kodu aplikacji przeglądarkowej i taki podział funkcji spowodowałby nierównomierny rozkład odpowiedzialności. Zamiast tego każdy członek zespołu odpowiadał za stworzenie front-endowej i back-endowej części funkcjonalności, którą wdrażał.
 
 \subsection{Wyznaczanie i rozdział zadań}
-Wykorzystywaliśmy Jira-ę, hostowaną przez IISG. Po każdym spotkaniu z Klientem szef zespołu przetwarzał wymagane przez Klienta funkcjonalności na Jira-owe bilety. Każde zadanie opisywało jedną funkcjonalność. Zadania były posortowane wegług ważności (to znaczy: funckjonalności które należało zaimplementować do następnego spotkania z klientem były najwyżej, najniżej były nasze pomysły których Klient nie wymagał). Członkowie zespołu, według czasu i możliwości, przypisywali sobie zadania i wykonywali je.
+Wykorzystywaliśmy system JIRA, udostępniany przez pracownię IISG. Po każdym spotkaniu z Klientem szef zespołu przetwarzał wymagane przez Klienta funkcjonalności na bilety JIRA. Każde zadanie opisywało jedną funkcjonalność. Zadania były posortowane według istotności (to znaczy: funkjonalności, które należało zaimplementować do następnego spotkania z klientem, były umieszczone najwyżej; najniżej były nasze pomysły, których Klient nie wymagał). Członkowie zespołu, według czasu i możliwości, przypisywali sobie zadania i wykonywali je.
  \begin{figure}[H]
     \includegraphics[width=0.7\textwidth]{jira-kanban}
-    \caption{Tablica Kanbanowa projeku PRZEMEK - element zwinnej metodyki tworzenia oprogramowania}
+    \caption{Tablica kanbanowa projektu PRZEMEK - element zwinnej metodyki tworzenia oprogramowania}
     \end{figure}
 
 \subsection{Sposób wykonywania zadań}
-Produkt składa się de facto z dwóch powiązanych pod-projektów: części front-endowej i back-enbdowej. Te dwa pod-projekty były objęte systemem kontroli wersji Git. Dla każdego pod-projektu osobno członek zespołu tworzył Git-ową gałąź przypisaną funkcjonalności i na niej komitował kod wprowadzający funkcjowalność. Po zakończeniu pracy, pozostali członkowie zespołu przeglądali kod na gałęzi i ewentualnie prosili o wprowadzenie poprawek (code-review). Na końcu gałąź funkcjonalnościowa była dołączana do głównej gałęzi.
+Produkt składa się de facto z dwóch powiązanych pod-projektów: części front-endowej i back-endowej. Te dwa pod-projekty były objęte systemem kontroli wersji --- Git. Dla każdego pod-projektu osobno członek zespołu tworzył gałąź Gita przypisaną danej funkcjonalności i do niej commitował kod wprowadzający funkcjonalność. Po zakończeniu pracy, pozostali członkowie zespołu przeglądali kod na gałęzi i ewentualnie prosili o wprowadzenie poprawek (code-review). Na końcu gałąź funkcjonalnościowa była dołączana do głównej gałęzi.
 
 \subsection{Komunikacja z powiązanymi zespołami}
+Opis organizacji współpracy z powiązanymi zespołami.
 \subsubsection{Komunikacja bieżąca}
-Do komunikacji bieżącej używaliśmy komunikatora Skype. Według potrzeb, umawialiśmy się na ta zwane call-e, podczas których przedstawiciele każdego z powiązanych zespołów omawiali stan prac i planowali przyszłą pracę.
+Do komunikacji bieżącej używaliśmy komunikatora Skype. Według potrzeb, umawialiśmy się na tak zwane call-e, podczas których przedstawiciele każdego z powiązanych zespołów omawiali stan prac i planowali przyszłą pracę.
 \subsubsection{Wymiana wiedzy}
-Używaliśmy Confluence-a, hostowanego przez IISG. Służył on jako pamięć długotrwała oraz punkt wymiany informacji między zespołami. Tam spisywaliśmy notatki ze spotkań (zarówno tych z Klientem jak i między-zespołowych), prowadziliśmy kalendarz przyszłych spotkań oraz spisywaliśmy różnorakie informacje które wydawały się nam przydatne. Do tego Confluence-a mieli dostęp również członkowie powiązanych zespołów.
+Używaliśmy systemu Confluence, udostępnianego przez pracownię IISG. Służył on jako pamięć długotrwała oraz punkt wymiany informacji między zespołami. Tam spisywaliśmy notatki ze spotkań (zarówno tych z Klientem jak i między-zespołowych), prowadziliśmy kalendarz przyszłych spotkań oraz spisywaliśmy różnorakie informacje, które wydawały się nam przydatne. Do Confluence-a mieli dostęp również członkowie powiązanych zespołów.
  \begin{figure}[H]
     \includegraphics[width=0.7\textwidth]{confluence-maszyna}
     \caption{Strona na Confluence - oprogramowaniu wspomagającym współpracę przy tworzeniu oprogramowania}
@@ -651,6 +637,7 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
   
   
 \subsection{Podział prac ze względu na osobę wykonującą}
+Tabelę utworzono na podstawie Kanbanu produktu.
 \begin{center}
   \begin{tabular}{ | l | l | }
     \hline
@@ -660,24 +647,40 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     %%% TA CZĘŚĆ JEST WAŻNA BO O NIĄ NAWROCKI PROSIŁ 2 RAZY
     %%% można np dopisać kto jakie endpointy dodawał
     Wynik pracy & Osoba wykonująca \\ \hline \hline
-    Prototyp  porzucany front-endu\footnote{Nie został w żadnej części wykorzystany we właściwym produkcie ze względu na niezgodność wykorzystanych technologii} & Mihał Hamuda \\ \hline
+    Prototyp  porzucany front-endu\footnote{Nie został w żadnej części wykorzystany we właściwym produkcie ze względu na niezgodność wykorzystanych technologii} & Michał Hamuda \\ \hline
+    Projekt HTTP API & Filip Galas \\ \hline
     Prototyp back-endu\footnote{Został częściowo wykorzystany we właściwym produkcie} & Filip Galas  \\ \hline
     Wizja projektu\footnote{Tworzona na potrzeby Pracowni projektowej} & Wojciech Karpiel \\ \hline
-    Kalendarz wizyt & Michał Hamuda \\ \hline
+    Podział części front-endowej na komponenty & Michał Hamuda \\ \hline
+    Osadzenie komponentów części front-endowej w ogólnym szkielecie aplikacji & Michał Hamuda \\ \hline
+    Konfiguracja bibliotek używanych w części front-endowej & Michał Hamuda \\ \hline
+    Kalendarz lekarza & Michał Hamuda \\ \hline
+     Kalendarz pacjenta & Michał Hamuda \\ \hline
     Możliwość przenoszenia terminów & Wojciech Karpiel \\ \hline
     Integracja kalendarza z \emph{Google Calendar} & Filip Galas \\ \hline
     Rejestracja pacjenta przez recepcjonistkę & Michał Hamuda \\ \hline
     Uwzględnienie roli użytkownika (\emph{aktora}) w kalendarzu & Wojciech Karpiel \\ \hline
     Możliwość dodawania terminów wizyt & Filip Galas \\ \hline
-    Ładny wygląd i estetyka aplikacji & Michał Hamuda \\ \hline
+    Stylistyka i estetyka aplikacji & Michał Hamuda \\ \hline
     Możliwość oznaczenia terminu jako dostępnego do rejestracji tylko przez recepcję & Wojciech Karpiel \\ \hline
+    Stworzenie widoku wizyty & Michał Hamuda \\ \hline
     Możliwość zapisywania się na wizytę & Wojciech Karpiel \\ \hline
+    HTTP API do rezerwacji wizyt & Filip Galas \\ \hline
     Oznaczanie zajętych i wolnych wizyt kolorem w kalendarzu & Wojciech Karpiel \\ \hline
     Grafik pracy lekarzy & Wojciech Karpiel \\ \hline
+    HTTP API do tworzenia i pobierania specjalizacji & Filip Galas \\ \hline
+    HTTP API do tworzenia i pobierania lekarzy & Filip Galas \\ \hline
+    HTTP API do pobierania zarezerwowanych terminów dla lekarza & Filip Galas \\ \hline
     Usuwanie zaplanowanej wizyty & Wojciech Karpiel \\ \hline
+    HTTP API do usuwania/edytowania wizyty & Filip Galas \\ \hline
     Usuwanie dostępnego terminu wizyty & Wojciech Karpiel \\ \hline
     Widok zarezerwowanych wizyt dla lekarza i pacjenta & Wojciech Karpiel \\ \hline
+    HTTP API do pobierania zajętych i wolnych terminów & Filip Galas \\ \hline
     Dodawanie wielu terminów lekarza na raz & Wojciech Karpiel \\ \hline
+    HTTP API do tworzenia terminów wizyt & Filip Galas \\ \hline
+    Poprawki do HTTP API & Wojciech Karpiel \\ \hline
+    Obsługa dwóch wersji językowych: polskiej i angielskiej & Michał Hamuda \\ \hline
+    User experience aplikacji & Michał Hamuda \\ \hline
     Dokumentacja projektu & Wojciech Karpiel \\ \hline
     Poprawki do dokumentacji & Filip Galas \\ \hline
     Kontakty z Klientem & Wojciech Karpiel \\ \hline
@@ -691,64 +694,62 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
 
 \section{Wyniki projektu}
 %\section{Project results}
-
 \label{sec:wyniki-projektu}
 
-\emph{Wskazanie wyników projektu (co konkretnie udało się uzyskało:
-  oprogramowanie, dokumentacja, raporty z testów/wdrożenia, itd.), prezentacja wyników
-  i ocena ich użyteczności (jak zostało to zweryfikowane --- np.\ wnioski
-  klienta/użytkownika, zrealizowane testy wydajnościowe, itd.),
-  istniejce ograniczenia i propozycje dalszych prac.}
+Opis produktu dla jego użytkowników oraz ludzi utrzymujących go.
 
 \subsection{Wymagania dla uruchomiania aplikacji}
+Wymagane technologie informatyczne do uruchomienia produktu.
 \subsubsection{Wymagania techniczne dla klienta}
+Wymagania dla korzystania z aplikacji przeglądarkowej.
 \begin{itemize}
-  \item  Połączenie z serwerem Health-Menagera (zazwyczaj realizowane przez sieć Internet)
-  \item Przeglądarka internetowa zdolna do obsługi ECMAScript-u w wersji 6 lub późniejszej (na przykład Mozilla Firefox w wersji 56.0)
+  \item  Połączenie z serwerem Health-Menagera (zazwyczaj realizowane przez sieć Internet),
+  \item Przeglądarka internetowa zdolna do obsługi ECMAScript-u w wersji 6 lub późniejszej (na przykład Mozilla Firefox w wersji 56.0).
 \end{itemize}
 
 \subsubsection{Wymagania techniczne dla serwera}
+Wymagania dla urzuchomienia aplikacji przeglądarkowej.
 \begin{itemize}
-    \item Połączenie z siecią komuterową w której znajdują się użytkownicy
-    \item Java Runtime Environment w wersi 8 lub późniejszej (na przykład \href{https://www.java.com/pl/download/manual.jsp}{JRE firmy Oracle}
-    \item Baza danych PostgreSQL
-    \item Serwer HTTP Tomcat
+    \item Połączenie z siecią komputerową w której znajdują się użytkownicy,
+    \item Java Runtime Environment w wersji 8 lub późniejszej (na przykład \href{https://www.java.com/pl/download/manual.jsp}{JRE firmy Oracle},
+    \item Baza danych PostgreSQL,
+    \item Serwer HTTP Tomcat.
 \end{itemize}
 
 \subsubsection{Wymagania techniczne dla programisty}
+Wymagania dla zestawienia środowiska rozwoju oprogramowania.
 \begin{itemize}
-    \item \href{https://www.npmjs.com/}{NPM - Next Popular Module}
-    \item Java Developement Kit w wersi 8 lub późniejszej
-    \item Gradle
-    \item Baza danych Postgresql
+    \item \href{https://www.npmjs.com/}{NPM - Next Popular Module},
+    \item Java Developement Kit w wersji 8 lub późniejszej,
+    \item Gradle,
+    \item Baza danych Postgresql.
 \end{itemize}
 
 
 \subsection{Konfiguracja aplikacji}
+Parametry potrzebne do poprawnego działania aplikacji.
 \subsubsection{Aplikacja przeglądarkowa}{Należy ustawić:
 \begin{itemize}
-    \item port na którym będzie wystawione GUI (przez HTTP)
-    \item Adres end-pointu back-endowego
+    \item port na którym będzie wystawione GUI (przez HTTP),
+    \item Adres end-pointu back-endowego.
 \end{itemize}}
 \subsubsection{Aplikacja serwerowa}{Należy ustawić:
 \begin{itemize}
-    \item Parametry połączenia z bazą danych
+    \item Parametry połączenia z bazą danych.
 \end{itemize}}
 \paragraph{Baza danych}{Prawidłowo skonfigurowana aplikacja serwerowa powinna utworzyć schemat bazy danych w przypadku jego nieistnienia}
 
 
 \subsection{Przewodnik użytkownika}
-%%TODO: Nie ma ogarniętego wdrożenia aplikacji więc nie ma co opowiadać administratorowi
-%\subsubsection{Administrator}
-%    \paragraph{Rejestracja użytkownika}{}
-%    \paragraph{Utrzymanie aplikacji}{}
+Przewodnik skierowany do użytkownika końcowego.
 \subsubsection{Pacjent}
+    Przewodnik pacjenta.
 %    \paragraph{Rejestracja}{}
     \paragraph{Logowanie}{
     Pacjent otrzymuje od rejestrującej recepcjonistki dane dostępowe do swojego konta. \\
     \begin{enumerate}
-        \item Za pomocą przeglądarki internetowej połącz się z serwerem udostępniającym usługę
-        \item Wpisz adres e-mail podany przy rejestracji oraz swoje hasło
+        \item Za pomocą przeglądarki internetowej połącz się z serwerem udostępniającym usługę,
+        \item Wpisz adres e-mail podany przy rejestracji oraz swoje hasło.
     \end{enumerate}
     \begin{figure}[H]
         \includegraphics[width=0.7\textwidth]{gui-loginpage}
@@ -763,10 +764,10 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     }
     \paragraph{Moje wizyty}{Lista umówionych wizyt, pozwala wyświetlić wizyty przyszłe i już odbyte w zależności od wybranego przedziału czasowego. Dostarczane informacje:
     \begin{itemize}
-        \item Termin wizyty
-        \item Imię i nazwisko lekarza
-        \item Numer gabinetu
-        \item odnośnik do szczegółowych informacji na temat wizyty
+        \item Termin wizyty,
+        \item Imię i nazwisko lekarza,
+        \item Numer gabinetu,
+        \item odnośnik do szczegółowych informacji na temat wizyty.
     \end{itemize}
     %%TODO WSTAWIĆ NOWY OBRAZEK JAK BĘDZIE NAPRAWIONY BUG ŻE PACJENT NIE MOŻE OTRZYMAĆ INFO O SAMYM SOBIE
         \begin{figure}[H]
@@ -782,8 +783,8 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     Aby zobaczyć dostępne terminy dla danego lekarza należy kliknąć ikonkę kalendarzyka w wierszu zawierającym nazwisko danego lekarza
     \paragraph{Kalendarz lekarza}{ pozwala zobaczyć
     \begin{itemize}
-        \item Dostępne terminy wizyt - oznaczone kolorem niebieskim
-        \item Umówione wizyty - oznaczone kolorem czerwonym
+        \item Dostępne terminy wizyt - oznaczone kolorem niebieskim,
+        \item Umówione wizyty - oznaczone kolorem czerwonym.
     \end{itemize}
     
     
@@ -809,9 +810,9 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
         \end{figure}  
     }
     \paragraph{Eksport do kalendarza Google.}{ W oknie zapisanej wizyty i oknie zapisu można wyeksportować termin do kalendarza Google klikając \emph{Eksportuj do kalendarza Google}.
-    \begin{enumerate}
+    \begin{enumerate},
       \item Kliknij \emph{Eksportuj do kalendarza Google}
-      \item W otorzonym okienku uzupełnij swoje dane logowania do konta Google
+      \item W otorzonym okienku uzupełnij swoje dane logowania do konta Google.
     \end{enumerate}
        \begin{figure}[H]
         \includegraphics[width=0.7\textwidth]{gui-google-export}
@@ -819,10 +820,11 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
         \end{figure}  
     }
 \subsubsection{Lekarz}
+Przewodnik lekarza.
     \paragraph{Logowanie}{
       \begin{enumerate}
-          \item Za pomocą przeglądarki internetowej połącz się z serwerem udostępniającym usługę
-          \item Wpisz swój adres e-mail oraz swoje hasło
+          \item Za pomocą przeglądarki internetowej połącz się z serwerem udostępniającym usługę,
+          \item Wpisz swój adres e-mail oraz swoje hasło.
       \end{enumerate}
       \begin{figure}[H]
           \includegraphics[width=0.7\textwidth]{gui-loginpage}
@@ -846,23 +848,23 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
         Należy kliknąć w kafelek \emph{Dodaj nowy przedział godzinowy} na pulpicie i wypełnić formularz \\
         Wymagane dane:
         \begin{itemize}
-            \item Wybierz lekarza - lekarz do którego będzie przypisany termin
-            \item Data - data
-            \item Godzina rozpoczęcia
-            \item Godzina zakończenia
-            \item Pozwól na samo-zapis - określa czy na termin pacjenci mogą rejestrować się samodzielnie czy tylko przez recepcję
+            \item Wybierz lekarza - lekarz do którego będzie przypisany termin,
+            \item Data - data,
+            \item Godzina rozpoczęcia,
+            \item Godzina zakończenia,
+            \item Pozwól na samo-zapis - określa czy na termin pacjenci mogą rejestrować się samodzielnie czy tylko przez recepcję.
         \end{itemize}
         Po wypełnieniu wyżej wymienionych danych użytkownik może dodać pojedyńczy wolny termin wizyty. Aby dodać wiele terminów na raz, należy wypełnić pozostałe pola. Można dodać wiele terminów  w jednym dniu oraz ustawić tryb powtarzania tak, żeby dodać wiele terminów w wiele dni.
         \begin{itemize}
-            \item Minuty na wizytę - czas pojedyńczej wizyty
-            \item Przerwa między wizytami (każdymi dwoma następującymi po sobie)
+            \item Minuty na wizytę - czas pojedyńczej wizyty,
+            \item Przerwa między wizytami (każdymi dwoma następującymi po sobie),
             \item Tryb powtarzania \begin{itemize}
-                \item Bez powtarzania (domyśle) - dodawanie wielu terminów w jednym dniu
-                \item Codziennie
-                \item Co tydzień
-                \item Od poniedziałku do piątku - Tak jak dodawanie codzienne lecz z wyłączeniem sobót i niedziel
+                \item Bez powtarzania (domyśle) - dodawanie wielu terminów w jednym dniu,
+                \item Codziennie,
+                \item Co tydzień,
+                \item Od poniedziałku do piątku - Tak jak dodawanie codzienne lecz z wyłączeniem sobót i niedziel;
             \end{itemize}
-            \item Data zakończenia - nie dotyczy trybu \emph{Bez powtażania}
+            \item Data zakończenia - nie dotyczy trybu \emph{Bez powtarzania}.
         \end{itemize}
         \begin{figure}[H]
           \includegraphics[width=0.7\textwidth]{gui-add-timeslot}
@@ -877,12 +879,12 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     }
     \paragraph{Moje wizyty}{Lista umówionych wizyt, pozwala wyświetlić wizyty przyszłe i już odbyte w zależności od wybranego przedziału czasowego. Dostarczane informacje:
     \begin{itemize}
-        \item Termin wizyty
-        \item Imię i nazwisko pacjenta
-        \item Priorytet
-        \item Powód wizyty (wypełniany przez pacjenta przy zapisie)
-        \item Numer gabinetu
-        \item odnośnik do szczegółowych informacji na temat wizyty
+        \item Termin wizyty,
+        \item Imię i nazwisko pacjenta,
+        \item Priorytet,
+        \item Powód wizyty (wypełniany przez pacjenta przy zapisie),
+        \item Numer gabinetu,
+        \item odnośnik do szczegółowych informacji na temat wizyty.
     \end{itemize}
         \begin{figure}[H]
         \includegraphics[width=0.7\textwidth]{gui-doc-myvisits}
@@ -905,8 +907,8 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     }
      \paragraph{Przeglądanie danych pacjenta zapisanego na wizytę}{
         \begin{enumerate}
-          \item Wybierz termin w kalendarzu
-          \item Klinkij na nazwisko pacjenta
+          \item Wybierz termin w kalendarzu,
+          \item Klinkij na nazwisko pacjenta.
         \end{enumerate}
         \begin{figure}[H]
         \includegraphics[width=0.7\textwidth]{gui-doc-enrolled}
@@ -914,7 +916,7 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
         \end{figure}  
     }
      \paragraph{Odwołanie wizyty}{
-     Lekarz może odwołać umuwioną wizytę wybierając zajęty termimn i klikając \emph{Odwołaj wizytę}
+     Lekarz może odwołać umówioną wizytę wybierając zajęty termin i klikając \emph{Odwołaj wizytę}
         \begin{figure}[H]
         \includegraphics[width=0.7\textwidth]{gui-doc-enrolled}
         \caption{Odwołanie terminu}
@@ -930,10 +932,10 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     \paragraph{Przesunięcie terminu}{
     Lekarz może przesunąć dowolny termin (zajęty bądź nie)
     \begin{enumerate}
-      \item Wybierz termin w kalendarzu
-      \item Kliknij \emph{Przenieś termin}
-      \item Wybierz nową datę rozpoczęcia i zakończenia wizyty
-      \item Kliknij \emph{Zapisz}
+      \item Wybierz termin w kalendarzu,
+      \item Kliknij \emph{Przenieś termin},
+      \item Wybierz nową datę rozpoczęcia i zakończenia wizyty,
+      \item Kliknij \emph{Zapisz}.
     \end{enumerate}
         \begin{figure}[H]
         \includegraphics[width=0.7\textwidth]{gui-doc-moveslot}
@@ -942,8 +944,8 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     }
     \paragraph{Eksport do kalendarza Google.}{ W oknie zapisanej wizyty i oknie zapisu można wyeksportować termin do kalendarza Google klikając \emph{Eksportuj do kalendarza Google}.
     \begin{enumerate}
-      \item Kliknij \emph{Eksportuj do kalendarza Google}
-      \item W otorzonym okienku uzupełnij swoje dane logowania do konta Google
+      \item Kliknij \emph{Eksportuj do kalendarza Google},
+      \item W otorzonym okienku uzupełnij swoje dane logowania do konta Google.
     \end{enumerate}
        \begin{figure}[H]
         \includegraphics[width=0.7\textwidth]{gui-google-export}
@@ -951,10 +953,11 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
         \end{figure}  
     }
 \subsubsection{Recepcjonistka}
+Przewodnik recepcjonistki.
     \paragraph{Logowanie}{
       \begin{enumerate}
-          \item Za pomocą przeglądarki internetowej połącz się z serwerem udostępniającym usługę
-          \item Wpisz swój adres e-mail oraz swoje hasło
+          \item Za pomocą przeglądarki internetowej połącz się z serwerem udostępniającym usługę,
+          \item Wpisz swój adres e-mail oraz swoje hasło.
       \end{enumerate}
       \begin{figure}[H]
           \includegraphics[width=0.7\textwidth]{gui-loginpage}
@@ -977,11 +980,11 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
     }
     \paragraph{Zmiana terminu wizyty}{
       \begin{enumerate}
-        \item Wybierz termin w kalendarzu
-        \item Kliknij \emph{Przenieś termin}
-        \item Wybierz nowego lekarz obsługującego wizytę
-        \item Wybierz nową datę rozpoczęcia i zakończenia wizyty
-        \item Kliknij \emph{Zapisz}
+        \item Wybierz termin w kalendarzu,
+        \item Kliknij \emph{Przenieś termin},
+        \item Wybierz nowego lekarz obsługującego wizytę,
+        \item Wybierz nową datę rozpoczęcia i zakończenia wizyty,
+        \item Kliknij \emph{Zapisz}.
       \end{enumerate}
         \begin{figure}[H]
         \includegraphics[width=0.7\textwidth]{gui-recep-moveslot}
@@ -992,83 +995,121 @@ Naszym Klientem był dr Bartłomiej Śnieżyński, natomiast Klientem powiązany
        \begin{itemize}
            \item Najpierw wybór pacjenta - potem wybór lekarza
            \begin{enumerate}
-             \item Wybierz \emph{Listę pacjentów} z menu po lewej
+             \item Wybierz \emph{Listę pacjentów} z menu po lewej,
              \item Kliknij \emph{Rejestruj wizytę} przy wybranym pacjencie
                \begin{figure}[H]
                \includegraphics[width=0.7\textwidth]{gui-recep-patientlist}
                \caption{Lista pacjentów}
-               \end{figure} 
+               \end{figure},
              \item Wybierz lekarza z lity
                \begin{figure}[H]
                \includegraphics[width=0.7\textwidth]{gui-recep-register-for-patient}
                \caption{Wybór lekarza}
-               \end{figure} 
+               \end{figure} ,
              \item Wybierz termin
                \begin{figure}[H]
                \includegraphics[width=0.7\textwidth]{gui-recep-reg-pat-cal}
                \caption{Wybór terminu}
-               \end{figure}  
+               \end{figure}  ,
              \item Potwierdź klikając \emph{Zapisz}
                \begin{figure}[H]
                \includegraphics[width=0.7\textwidth]{gui-recep-reg-pat-window}
                \caption{Zatwierdzenie wyboru}
-               \end{figure}               
-           \end{enumerate}
+               \end{figure}.            
+           \end{enumerate},
            \item Najpierw wybór lekarza - potem wybór pacjenta
              \begin{enumerate}
-             \item Kliknij \emph{Lista lekarzy} z menu po lewej
+             \item Kliknij \emph{Lista lekarzy} z menu po lewej,
              \item Wybierz lekarza z listy
                 \begin{figure}[H]
                  \includegraphics[width=0.7\textwidth]{gui-doctor-list}
                  \caption{Lista lekarzy}
-                 \end{figure}  
+                 \end{figure},  
              \item Wybierz wolny termin
                  \begin{figure}[H]
                  \includegraphics[width=0.7\textwidth]{gui-doc-cal}
                  \caption{Kalendarz lekarza}
-                 \end{figure}  
+                 \end{figure},  
             \item Wybierz pacjenta z listy
                  \begin{figure}[H]
                  \includegraphics[width=0.7\textwidth]{gui-doc-unenrolled}
                  \caption{Wybór pacjenta}
                  \end{figure}  
-             \end{enumerate}
+             \end{enumerate}.
        \end{itemize}
     }
     \paragraph{Dodawanie dostępnego terminu}{
         Należy kliknąć w kafelek \emph{Dodaj nowy przedział godzinowy} na pulpicie i wypełnić formularz \\
         Wymagane dane:
         \begin{itemize}
-            \item Wybierz lekarza - lekarz do którego będzie przypisany termin
-            \item Data - data
-            \item Godzina rozpoczęcia
-            \item Godzina zakończenia
-            \item Pozwól na samo-zapis - określa czy na termin pacjenci mogą rejestrować się samodzielnie czy tylko przez recepcję
+            \item Wybierz lekarza - lekarz do którego będzie przypisany termin,
+            \item Data - data,
+            \item Godzina rozpoczęcia,
+            \item Godzina zakończenia,
+            \item Pozwól na samo-zapis - określa czy na termin pacjenci mogą rejestrować się samodzielnie czy tylko przez recepcję.
         \end{itemize}
-        Po wypełnieniu wyżej wymienionych danych użytkownik może dodać pojedyńczy wolny termin wizyty. Aby dodać wiele terminów na raz, należy wypełnić pozostałe pola. Można dodać wiele terminów  w jednym dniu oraz ustawić tryb powtarzania tak, żeby dodać wiele terminów w wiele dni.
+        Po wypełnieniu wyżej wymienionych danych użytkownik może dodać pojedynczy wolny termin wizyty. Aby dodać wiele terminów na raz, należy wypełnić pozostałe pola. Można dodać wiele terminów  w jednym dniu oraz ustawić tryb powtarzania tak, żeby dodać wiele terminów w wiele dni.
         \begin{itemize}
-            \item Minuty na wizytę - czas pojedyńczej wizyty
-            \item Przerwa między wizytami (każdymi dwoma następującymi po sobie)
+            \item Minuty na wizytę - czas pojedynczej wizyty,
+            \item Przerwa między wizytami (każdymi dwoma następującymi po sobie),
             \item Tryb powtarzania \begin{itemize}
-                \item Bez powtarzania (domyśle) - dodawanie wielu terminów w jednym dniu
-                \item Codziennie
-                \item Co tydzień
-                \item Od poniedziałku do piątku - Tak jak dodawanie codzienne lecz z wyłączeniem sobót i niedziel
+                \item Bez powtarzania (domyślne) - dodawanie wielu terminów w jednym dniu,
+                \item Codziennie,
+                \item Co tydzień,
+                \item Od poniedziałku do piątku - Tak jak dodawanie codzienne lecz z wyłączeniem sobót i niedziel;
             \end{itemize}
-            \item Data zakończenia - nie dotyczy trybu \emph{Bez powtażania}
+            \item Data zakończenia - nie dotyczy trybu \emph{Bez powtarzania},
         \end{itemize}
         \begin{figure}[H]
           \includegraphics[width=0.7\textwidth]{gui-add-timeslot}
           \caption{Dodawanie dostępnego terminu}
         \end{figure}     
     }
+\newpage
 \listoffigures 
-\listoftables
+\newpage
 %%%%% KONIEC %%%%%%
 % o ile to mozliwe prosze uzywac odwolan \cite w konkretnych miejscach a nie \nocite
 
-\nocite{artykul2011,ksiazka2011,narzedzie2011,projekt2011}
 
-\bibliography{bibliografia}
+
+\begin{thebibliography}{9}
+\bibitem{rest-doc}
+Roy T. Fielding, Richard N. Taylor, \emph{Principled Design of the Modern
+Web Architecture}
+\\\texttt{http://www.ics.uci.edu/\~{}taylor/documents/2002-REST-TOIT.pdf}
+
+\bibitem{jwt-doc} 
+Sebastián Peyrott, JWT Handbook, 
+\\\texttt{https://auth0.com/e-books/jwt-handbook}
+
+\bibitem{spring-doc}
+Pivotal Software, dokumentacja Springa, 
+\\\texttt{https://spring.io/guides}
+
+\bibitem{angular-doc} 
+Google, dokumentacja Angulara, 
+\\\texttt{https://angular.io/docs}
+
+\bibitem{java-doc} 
+Sun Microsystems, Oracle, dokumentacja Javy, 
+\\\texttt{https://docs.oracle.com/javase/7/docs/api/}
+ 
+\bibitem{latex-doc} 
+Michael Cribbin, Latex tutorial,
+\\\texttt{https://www.sharelatex.com/learn/}
+
+\bibitem{stackoverflow} 
+Stack Exchange, Inc., praca zbiorowa, zbiór pytań i odpowiedzi,
+\\\texttt{https://stackoverflow.com/}
+
+\bibitem{wikipedia} 
+Jimmy Wales, praca zbiorowa, encyklopedia
+\\\texttt{https://pl.wikipedia.org/}
+
+\end{thebibliography}
+
+%\nocite{artykul2011,ksiazka2011,narzedzie2011,projekt2011}
+%\bibliography{bibliografia}
 
 \end{document}
