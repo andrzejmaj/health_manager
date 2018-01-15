@@ -87,7 +87,7 @@ public class DicomDataService {
                     .findFirst();
 
             if (targetBuilder.isPresent()) {
-                targetBuilder.get().attribute(attribute);
+                targetBuilder.get().accept(attribute);
             } else {
                 logger.debug("attribute rejected: " + attribute);
             }

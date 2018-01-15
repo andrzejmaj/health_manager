@@ -42,7 +42,7 @@ public class DatabaseStorageService {
     private final InstanceRepository instanceRepository;
 
     private final DicomDataService dicomDataService;
-    private final CustomObjectMapper objectMapper;
+    private final CustomObjectMapper modelMapper;
 
     @Autowired
     public DatabaseStorageService(PatientRepository patientRepository,
@@ -58,7 +58,7 @@ public class DatabaseStorageService {
         this.seriesRepository = seriesRepository;
         this.instanceRepository = instanceRepository;
         this.dicomDataService = dicomDataService;
-        this.objectMapper = objectMapper;
+        this.modelMapper = objectMapper;
     }
 
     @Transactional
@@ -74,7 +74,7 @@ public class DatabaseStorageService {
 
         // modality
         Modality modalityEntity = modalityRepository.findOne(dicomData.getModality().getApplicationEntity());
-        modalityEntity = mergeEntity(modalityEntity, Modality.class, dicomData.getModality(), DicomModality.class);
+        modalityEntity = merge(modalityEntity, Modality.class, dicomData.getModality(), DicomModality.class);
 
         // patient
         String pesel = dicomData.getPatient().getPesel();
@@ -87,17 +87,17 @@ public class DatabaseStorageService {
         Instance instanceEntity = instanceRepository.findOne(dicomData.getInstance().getInstanceUID());
         if (instanceEntity != null)
             logger.warn(String.format("instance '%s' already persisted", dicomData.getInstance().getInstanceUID()));
-        instanceEntity = mergeEntity(instanceEntity, Instance.class, dicomData.getInstance(), DicomInstance.class);
+        instanceEntity = merge(instanceEntity, Instance.class, dicomData.getInstance(), DicomInstance.class);
 
 
         // series
         Series seriesEntity = seriesRepository.findOne(dicomData.getSeries().getInstanceUID());
-        seriesEntity = mergeEntity(seriesEntity, Series.class, dicomData.getSeries(), DicomSeries.class);
+        seriesEntity = merge(seriesEntity, Series.class, dicomData.getSeries(), DicomSeries.class);
 
 
         // study
         Study studyEntity = studyRepository.findOne(dicomData.getStudy().getInstanceUID());
-        studyEntity = mergeEntity(studyEntity, Study.class, dicomData.getStudy(), DicomStudy.class);
+        studyEntity = merge(studyEntity, Study.class, dicomData.getStudy(), DicomStudy.class);
 
 
         // persisitng
@@ -123,14 +123,14 @@ public class DatabaseStorageService {
     }
 
     // java type parameters kinda suck
-    private <Entity, Model extends DicomObject> Entity mergeEntity(Entity currentEntity, Class<Entity> entityClass,
-                                                                   Model extracted, Class<Model> modelClass) {
-        if (currentEntity == null) { // not in DB
-            return objectMapper.convert(extracted, entityClass);
+    private <Entity, Model extends DicomObject> Entity merge(Entity currentEntity, Class<Entity> entityClass,
+                                                             Model extractedModel, Class<Model> modelClass) {
+        if (currentEntity == null) { // not present in DB
+            return modelMapper.convert(extractedModel, entityClass);
         }
 
-        Model current = objectMapper.convert(currentEntity, modelClass);
-        current.lazyMerge(extracted);
-        return objectMapper.convert(current, entityClass);
+        Model currentModel = modelMapper.convert(currentEntity, modelClass);
+        currentModel.lazyMerge(extractedModel);
+        return modelMapper.convert(currentModel, entityClass);
     }
 }

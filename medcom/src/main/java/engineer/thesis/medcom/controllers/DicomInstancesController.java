@@ -1,10 +1,12 @@
 package engineer.thesis.medcom.controllers;
 
+import engineer.thesis.core.model.entity.medcom.Instance;
 import engineer.thesis.medcom.dicom.repository.ArchiveRepository;
 import engineer.thesis.medcom.dicom.store.StoreSCPAdapter;
 import engineer.thesis.medcom.model.error.ErrorMessage;
 import engineer.thesis.medcom.model.error.InstanceNotFoundException;
 import engineer.thesis.medcom.model.old.DicomInstance;
+import engineer.thesis.medcom.services.DicomArchiveService;
 import org.apache.log4j.Logger;
 import org.dcm4che3.data.UID;
 import org.dcm4che3.io.DicomOutputStream;
@@ -28,10 +30,13 @@ public class DicomInstancesController {
     private final static Logger logger = Logger.getLogger(StoreSCPAdapter.class);
 
     private final ArchiveRepository archiveRepository;
+    private final DicomArchiveService dicomArchiveService;
 
     @Autowired
-    public DicomInstancesController(ArchiveRepository archiveRepository) {
+    public DicomInstancesController(ArchiveRepository archiveRepository,
+                                    DicomArchiveService dicomArchiveService) {
         this.archiveRepository = archiveRepository;
+        this.dicomArchiveService = dicomArchiveService;
     }
 
     @GetMapping(RequestMappings.INSTANCES.GET_ALL)
@@ -46,18 +51,25 @@ public class DicomInstancesController {
                                     @PathVariable String seriesId,
                                     @PathVariable String instanceId) throws IOException {
 
-        // TODO: move this logic elsewhere
-        DicomOutputStream outputStream = new DicomOutputStream(response.getOutputStream(), UID.ExplicitVRLittleEndian);
-        File instance = archiveRepository.getInstanceFile(patientId, studyId, seriesId, instanceId)
+        File dicom = archiveRepository.getInstanceFile(patientId, studyId, seriesId, instanceId)
                 .orElseThrow(() -> new InstanceNotFoundException("instance not found!"));
 
-        Files.copy(instance.toPath(), outputStream);
-        response.flushBuffer();
-        // outputStream.close();
+        sendDicom(dicom, response);
+    }
 
-        // TODO: fix the headers not being added
-        response.setContentLength((int) Files.size(instance.toPath()));
-        response.setContentType("application/dicom");
+    @GetMapping(value = RequestMappings.INSTANCES.GET_DICOM)
+    public void getRawDicomInstance(HttpServletResponse response,
+                                    @PathVariable String instanceId) throws IOException {
+
+        Instance instance = dicomArchiveService.getInstanceEntity(instanceId);
+        File dicom = archiveRepository.getInstanceFile(
+                instance.getSeries().getStudy().getPatient().getAccount().getPersonalDetails().getPesel(),
+                instance.getSeries().getStudy().getInstanceUID(),
+                instance.getSeries().getInstanceUID(),
+                instanceId
+        ).orElseThrow(() -> new InstanceNotFoundException("instance not found!"));
+
+        sendDicom(dicom, response);
     }
 
     @ExceptionHandler(InstanceNotFoundException.class) // TODO global exception handler
@@ -66,6 +78,18 @@ public class DicomInstancesController {
     ErrorMessage handleException(InstanceNotFoundException ex) {
         logger.error(ex);
         return new ErrorMessage(ex.getMessage());
+    }
+
+    private void sendDicom(File dicom, HttpServletResponse response) throws IOException {
+        DicomOutputStream outputStream = new DicomOutputStream(response.getOutputStream(), UID.ExplicitVRLittleEndian);
+
+        Files.copy(dicom.toPath(), outputStream);
+        response.flushBuffer();
+        // outputStream.close();
+
+        // TODO: fix the headers not being added
+        response.setContentLength((int) Files.size(dicom.toPath()));
+        response.setContentType("application/dicom");
     }
 
 }
